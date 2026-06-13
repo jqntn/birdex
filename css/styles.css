@@ -201,6 +201,12 @@ a { color: var(--accent); text-decoration: none; }
 .fact { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--line-solid); padding-bottom: 5px; }
 .fact-label { color: var(--muted); } .fact-value { text-align: right; font-weight: 600; }
 .detail-status { margin-top: 8px; font-weight: 700; color: var(--accent); }
+.detail-ebird {
+  display: block; text-align: center; margin-top: 14px; padding: 11px;
+  border-radius: 11px; font-weight: 700; color: var(--text);
+  background: var(--surface-2); border: 1px solid var(--line-solid);
+}
+.detail-ebird:active { transform: scale(0.98); }
 
 .onboard { max-width: 480px; margin: 0 auto; padding: 26px 18px; text-align: center; }
 .onboard-logo { font-size: 3.4rem; }

@@ -2,7 +2,7 @@ import * as tax from '../data/taxonomy.js';
 import { state } from '../state.js';
 import { rarityTier } from '../data/rarity.js';
 import { isShiny } from '../data/rarity.js';
-import { RARITY, WIKI_SUMMARY_URL } from '../config.js';
+import { RARITY, WIKI_SUMMARY_URL, EBIRD_SPECIES_URL } from '../config.js';
 import { el, clear } from '../util/dom.js';
 import { t, getLocale } from '../i18n.js';
 import { silhouetteSVG } from './components.js';
@@ -66,8 +66,13 @@ export function openDetail(i) {
     el('div', { class: 'detail-status' }, caught ? `✓ ${t('caught')}` : t('notCaught'))
   );
 
+  const ebird = el('a', {
+    class: 'detail-ebird', href: EBIRD_SPECIES_URL(tax.speciesCode(i)),
+    target: '_blank', rel: 'noopener',
+  }, `${t('ebirdPage')} ↗`);
+
   const close_btn = el('button', { class: 'detail-close', type: 'button', onclick: close }, '✕');
-  box.append(close_btn, media, header, facts);
+  box.append(close_btn, media, header, facts, ebird);
 
   overlay.style.display = 'flex';
   loadThumb(sci, media);
