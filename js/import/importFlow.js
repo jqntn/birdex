@@ -1,0 +1,115 @@
+// Onboarding + CSV import. Guided welcome (open eBird, drop file), local parse,
+// derive, diff vs the previous import for NEW-lifer flashing, persist.
+
+import { state, emit } from '../state.js';
+import { patchSave } from '../persistence.js';
+import { parseLifelist } from '../csv/lifelistParser.js';
+import { deriveFromSightings } from './derive.js';
+import { reconcileAchievements } from '../render/achievements.js';
+import * as tax from '../data/taxonomy.js';
+import { el, clear } from '../util/dom.js';
+import { t } from '../i18n.js';
+import { EBIRD_LIFELIST_URL } from '../config.js';
+
+let cbImported = null;
+let cbSkip = null;
+
+export function setImportCallbacks({ onImported, onSkip }) {
+  cbImported = onImported;
+  cbSkip = onSkip;
+}
+
+// Recompute agg.seenInRegion + per-species outOfRegion when the region changes,
+// without needing the CSV again (uses the stored species map).
+export function recomputeRegionStats(save, regionSet) {
+  if (!save?.agg) return save;
+  let seen = 0;
+  for (const code in save.species) {
+    const i = tax.idxOfCode(code);
+    const inRegion = regionSet ? (i != null && regionSet.has(i)) : true;
+    save.species[code].outOfRegion = !inRegion;
+    if (inRegion) seen++;
+  }
+  save.agg.seenInRegion = seen;
+  return save;
+}
+
+export function importText(text) {
+  const parsed = parseLifelist(text);
+  const { species, caughtSet, agg, unmatched } = deriveFromSightings(parsed.sightings, state.regionSet);
+
+  const prev = state.save;
+  const hadPrevImport = !!prev?.importedAt;
+  const prevSnapshot = new Set(prev?.prevSnapshot || []);
+
+  const newCodes = Object.keys(species);
+  const newLifers = new Set();
+  if (hadPrevImport) {
+    for (const code of newCodes) {
+      if (!prevSnapshot.has(code)) {
+        const i = tax.idxOfCode(code);
+        if (i != null) newLifers.add(i);
+      }
+    }
+  }
+
+  const save = patchSave(prev, {
+    importedAt: Date.now(),
+    species,
+    agg,
+    prevSnapshot: newCodes,
+    skippedOnboarding: true,
+  });
+  const freshAchievements = reconcileAchievements(save, Date.now());
+  patchSave(save, {}); // persist achievements
+
+  emit({ save, caughtSet, newLifers });
+
+  const summary = { countable: parsed.countable, skipped: parsed.skipped, unmatched: unmatched.length, newLifers: newLifers.size, freshAchievements };
+  cbImported?.(summary);
+  return summary;
+}
+
+async function handleFile(file) {
+  const text = await file.text();
+  importText(text);
+}
+
+// --- onboarding view ---------------------------------------------------------
+export function renderOnboarding(root) {
+  clear(root);
+  const card = el('div', { class: 'onboard' },
+    el('div', { class: 'onboard-logo' }, '🪶'),
+    el('h1', { class: 'onboard-title' }, t('welcomeTitle')),
+    el('p', { class: 'onboard-sub' }, t('welcomeSub')),
+    el('ol', { class: 'onboard-steps' },
+      el('li', {}, t('step1'),
+        el('a', { class: 'btn primary', href: EBIRD_LIFELIST_URL, target: '_blank', rel: 'noopener' }, t('step1btn'))
+      ),
+      el('li', {}, t('step2'), dropzone())
+    ),
+    el('button', { class: 'btn ghost', type: 'button', onclick: () => cbSkip?.() }, t('skip'))
+  );
+  root.append(card);
+}
+
+export function dropzone() {
+  const input = el('input', { type: 'file', accept: '.csv,text/csv', style: { display: 'none' },
+    onchange: (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); } });
+  const zone = el('div', { class: 'dropzone', tabindex: '0' },
+    el('div', { class: 'dz-icon' }, '⬇'),
+    el('div', { class: 'dz-hint' }, t('dropHint')),
+    input
+  );
+  zone.addEventListener('click', () => input.click());
+  zone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') input.click(); });
+  zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('drag');
+    const f = e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+  return zone;
+}

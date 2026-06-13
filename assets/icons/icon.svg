@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Birdex">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d0432f"/>
+      <stop offset="1" stop-color="#8e2920"/>
+    </linearGradient>
+    <radialGradient id="lens" cx="38%" cy="32%" r="75%">
+      <stop offset="0" stop-color="#d6efff"/>
+      <stop offset="55%" stop-color="#4aa3e0"/>
+      <stop offset="100%" stop-color="#15314a"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <circle cx="256" cy="270" r="150" fill="#fff"/>
+  <circle cx="256" cy="270" r="132" fill="url(#lens)"/>
+  <circle cx="210" cy="222" r="40" fill="#fff" opacity="0.45"/>
+  <circle cx="150" cy="96" r="26" fill="#ffd23f"/>
+  <circle cx="216" cy="96" r="16" fill="#ff5b5b"/>
+  <circle cx="262" cy="96" r="16" fill="#5bd06a"/>
+</svg>
