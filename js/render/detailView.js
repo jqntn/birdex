@@ -62,7 +62,7 @@ export function openDetail(i) {
     caught ? fact(t('firstSeen'), rec?.date ? fmtDate(rec.date, getLocale()) : '—') : null,
     caught ? fact(t('lastSeen'), (rec?.lastDate || rec?.date) ? fmtDate(rec.lastDate || rec.date, getLocale()) : '—') : null,
     caught && rec?.country ? fact(t('location'), `${flagEmoji(rec.country)} ${COUNTRY_NAMES[rec.country] || rec.sp || rec.country}`) : null,
-    caught && rec?.count ? fact(t('count'), String(rec.count)) : null,
+    caught && (rec?.totalCount ?? rec?.count) ? fact(t('count'), String(rec?.totalCount ?? rec?.count)) : null,
     el('div', { class: 'detail-status' }, caught ? `✓ ${t('caught')}` : t('notCaught'))
   );
 
