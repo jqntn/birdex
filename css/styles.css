@@ -105,7 +105,7 @@ a { color: var(--accent); text-decoration: none; }
 .splash-mark { font-size: 3rem; animation: bob 1.4s ease-in-out infinite; }
 @keyframes bob { 50% { transform: translateY(-8px); } }
 
-.dex-scroll { height: 100%; overflow-y: auto; padding: 10px; }
+.dex-scroll { height: 100%; overflow-y: auto; overflow-anchor: none; padding: 10px; }
 .dex-spacer { width: 100%; }
 .dex-window { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .dex-empty { text-align: center; color: var(--muted); padding: 40px 0; }
@@ -278,7 +278,6 @@ a { color: var(--accent); text-decoration: none; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 @media (min-width: 760px) {
-  .dex-window { gap: 12px; }
   .card .sil { width: 76px; height: 60px; }
   .detail-media { height: 230px; }
 }
