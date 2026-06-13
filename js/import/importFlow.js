@@ -1,12 +1,12 @@
 import { state, emit } from '../state.js';
 import { patchSave } from '../persistence.js';
-import { parseLifelist } from '../csv/lifelistParser.js';
+import { parseEbirdData } from '../csv/ebirdParser.js';
 import { deriveFromSightings } from './derive.js';
 import { reconcileAchievements } from '../render/achievements.js';
 import * as tax from '../data/taxonomy.js';
 import { el, clear } from '../util/dom.js';
 import { t } from '../i18n.js';
-import { EBIRD_LIFELIST_URL } from '../config.js';
+import { EBIRD_EXPORT_URL } from '../config.js';
 
 let cbImported = null;
 let cbSkip = null;
@@ -30,7 +30,7 @@ export function recomputeRegionStats(save, regionSet) {
 }
 
 export function importText(text) {
-  const parsed = parseLifelist(text);
+  const parsed = parseEbirdData(text);
   const { species, caughtSet, agg, unmatched } = deriveFromSightings(parsed.sightings, state.regionSet);
 
   const prev = state.save;
@@ -78,7 +78,7 @@ export function renderOnboarding(root) {
     el('p', { class: 'onboard-sub' }, t('welcomeSub')),
     el('ol', { class: 'onboard-steps' },
       el('li', {}, t('step1'),
-        el('a', { class: 'btn primary', href: EBIRD_LIFELIST_URL, target: '_blank', rel: 'noopener' }, t('step1btn'))
+        el('a', { class: 'btn primary', href: EBIRD_EXPORT_URL, target: '_blank', rel: 'noopener' }, t('step1btn'))
       ),
       el('li', {}, t('step2'), dropzone())
     ),

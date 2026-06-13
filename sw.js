@@ -1,4 +1,4 @@
-const CACHE = 'birdex-20260613-225928';
+const CACHE = 'birdex-20260613-232324';
 const THUMBS = 'birdex-thumbs';
 const THUMBS_MAX = 600;
 
@@ -17,7 +17,7 @@ const PRECACHE = [
   './js/i18n.js',
   './js/util/dom.js', './js/util/hash.js', './js/util/format.js',
   './js/data/taxonomy.js', './js/data/regions.js', './js/data/rarity.js', './js/data/continents.js',
-  './js/csv/lifelistParser.js',
+  './js/csv/ebirdParser.js',
   './js/import/derive.js', './js/import/importFlow.js',
   './js/search/search.js',
   './js/render/components.js', './js/render/dexGrid.js', './js/render/filters.js',

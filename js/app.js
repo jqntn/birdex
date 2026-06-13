@@ -12,6 +12,7 @@ import { mountDetail, openDetail, close as closeDetail } from './render/detailVi
 import { renderStats } from './render/statsPage.js';
 import { renderBadges } from './render/achievements.js';
 import { setImportCallbacks, importText, renderOnboarding, dropzone, recomputeRegionStats } from './import/importFlow.js';
+import { EBIRD_EXPORT_URL } from './config.js';
 import { BUILD } from '../version.js';
 
 let baseIndices = [];
@@ -196,7 +197,7 @@ function renderImport(view) {
   view.append(
     el('div', { class: 'onboard' },
       el('h1', { class: 'onboard-title' }, t('reimport')),
-      el('a', { class: 'btn primary', href: 'https://ebird.org/lifelist?r=world&time=life&fmt=csv', target: '_blank', rel: 'noopener' }, t('step1btn')),
+      el('a', { class: 'btn primary', href: EBIRD_EXPORT_URL, target: '_blank', rel: 'noopener' }, t('step1btn')),
       dropzone(),
       el('button', { class: 'btn ghost', type: 'button', onclick: () => go('dex') }, '←')
     )

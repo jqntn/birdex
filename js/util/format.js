@@ -6,13 +6,24 @@ const MONTHS = {
 };
 export function parseEbirdDate(s) {
   if (!s) return null;
-  const m = String(s).trim().match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/);
+  const str = String(s).trim();
+  const p = (n) => String(n).padStart(2, '0');
+
+  // Full data export: ISO "YYYY-MM-DD" (optionally followed by a time).
+  const iso = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) {
+    const y = +iso[1], mon = +iso[2] - 1, d = +iso[3];
+    if (mon < 0 || mon > 11) return null;
+    return { y, m: mon, d, iso: `${y}-${p(mon + 1)}-${p(d)}` };
+  }
+
+  // Life list page: "25 May 2026".
+  const m = str.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/);
   if (!m) return null;
   const day = +m[1];
   const mon = MONTHS[m[2].slice(0, 3).toLowerCase()];
   const year = +m[3];
   if (mon == null) return null;
-  const p = (n) => String(n).padStart(2, '0');
   return { y: year, m: mon, d: day, iso: `${year}-${p(mon + 1)}-${p(day)}` };
 }
 

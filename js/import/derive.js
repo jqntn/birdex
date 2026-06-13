@@ -46,9 +46,14 @@ export function deriveFromSightings(sightings, regionSet) {
 
     species[code] = {
       count: rec.count,
+      totalCount: rec.totalCount,
+      timesSeen: rec.timesSeen,
       sp: rec.sp,
       country: rec.country,
       date: rec.date,
+      lastDate: rec.lastDate,
+      lastSp: rec.lastSp,
+      lastCountry: rec.lastCountry,
       exotic: rec.exotic,
       category: rec.category,
       shiny,
