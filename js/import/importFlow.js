@@ -1,6 +1,3 @@
-// Onboarding + CSV import. Guided welcome (open eBird, drop file), local parse,
-// derive, diff vs the previous import for NEW-lifer flashing, persist.
-
 import { state, emit } from '../state.js';
 import { patchSave } from '../persistence.js';
 import { parseLifelist } from '../csv/lifelistParser.js';
@@ -19,8 +16,6 @@ export function setImportCallbacks({ onImported, onSkip }) {
   cbSkip = onSkip;
 }
 
-// Recompute agg.seenInRegion + per-species outOfRegion when the region changes,
-// without needing the CSV again (uses the stored species map).
 export function recomputeRegionStats(save, regionSet) {
   if (!save?.agg) return save;
   let seen = 0;
@@ -61,7 +56,7 @@ export function importText(text) {
     skippedOnboarding: true,
   });
   const freshAchievements = reconcileAchievements(save, Date.now());
-  patchSave(save, {}); // persist achievements
+  patchSave(save, {});
 
   emit({ save, caughtSet, newLifers });
 
@@ -75,7 +70,6 @@ async function handleFile(file) {
   importText(text);
 }
 
-// --- onboarding view ---------------------------------------------------------
 export function renderOnboarding(root) {
   clear(root);
   const card = el('div', { class: 'onboard' },

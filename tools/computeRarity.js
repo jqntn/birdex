@@ -1,20 +1,3 @@
-// Compute real-world rarity tiers from how many COUNTRY lists each species
-// appears in. Tiers (0..4): Common, Uncommon, Rare, Endemic, Legendary.
-//
-//   occ = number of country region files a species appears in
-//   Legendary  if extinct || occ === 0 || (monotypicFamily && occ <= 3)
-//   Endemic    if occ === 1
-//   Rare       if occ <= 4    (>= 2)
-//   Uncommon   if occ <= 19   (>= 5)
-//   Common     otherwise (>= 20 countries — genuinely widespread)
-//
-// Bird ranges are heavily right-skewed: most species occur in only a few
-// countries, so these cutoffs keep cosmopolitan birds Common while leaving the
-// vast majority of the world's localized species as the chase tiers.
-//
-// If no country region files exist yet (no API key run), falls back to
-// extinct -> Legendary, everything else Common, and marks the file partial.
-
 import { writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -31,12 +14,10 @@ export function computeRarity(build = new Date().toISOString()) {
   const core = JSON.parse(readFileSync(join(DATA_DIR, 'taxonomy.core.json'), 'utf8'));
   const { count, extinct, familyIdx } = core;
 
-  // Monotypic families: exactly one species.
   const famCounts = new Map();
   for (const fi of familyIdx) famCounts.set(fi, (famCounts.get(fi) || 0) + 1);
   const monotypic = familyIdx.map((fi) => famCounts.get(fi) === 1);
 
-  // Occurrence counts from country files only (continents/world excluded).
   const occ = new Uint16Array(count);
   let countryFiles = 0;
   let files = [];
@@ -47,7 +28,7 @@ export function computeRarity(build = new Date().toISOString()) {
   }
   for (const f of files) {
     const code = f.replace(/\.json$/, '');
-    if (!COUNTRY_CODES.has(code)) continue; // skip world, continents, _index
+    if (!COUNTRY_CODES.has(code)) continue;
     const region = JSON.parse(readFileSync(join(REGIONS_DIR, f), 'utf8'));
     for (const idx of deltaUnpack(region.deltas)) occ[idx]++;
     countryFiles++;

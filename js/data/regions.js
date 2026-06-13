@@ -1,11 +1,7 @@
-// Region index + lazy per-region species sets. A region file stores ascending
-// deltas; we reconstruct a Set<idx> for O(1) membership. Only regions with a
-// vendored file appear in the picker (graceful when country lists aren't built).
-
 import { DATA } from '../config.js';
 
-let index = null; // { build, regions: [{code,type,en,fr,count,continent}] }
-const cache = new Map(); // code -> Set<idx>
+let index = null;
+const cache = new Map();
 
 async function getJSON(url) {
   const res = await fetch(url);
@@ -23,7 +19,6 @@ export function regionMeta(code) {
   return index?.regions.find((r) => r.code === code) || null;
 }
 
-// Returns Set<idx> for the region, or null for "world" (means all species).
 export async function loadRegion(code) {
   if (code === 'world') return null;
   if (cache.has(code)) return cache.get(code);

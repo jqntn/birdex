@@ -1,10 +1,3 @@
-// Orchestrate the full codegen pipeline. Region fetching needs EBIRD_API_KEY;
-// if it is missing, the build still completes with a keyless world list and a
-// partial rarity table (extinct→legendary), so the app is deployable.
-//
-//   node buildAll.js            full build (regions if key present)
-//   node buildAll.js --force    re-fetch all region files
-
 import { buildTaxonomy } from './fetchTaxonomy.js';
 import { buildRegions } from './fetchRegions.js';
 import { computeRarity } from './computeRarity.js';

@@ -1,17 +1,13 @@
-// Windowed dex grid: renders only the cards in (and just around) the viewport,
-// so 11,167 entries scroll smoothly on mobile. Fixed card geometry lets us map
-// scroll position → row range without measuring every node.
-
 import { state, subscribe } from '../state.js';
 import { card } from './components.js';
 import { el, clear } from '../util/dom.js';
 import { t } from '../i18n.js';
 
-const CARD_H = 132; // must match .card height in CSS
-const GAP = 10; // must match grid gap
+const CARD_H = 132;
+const GAP = 10;
 const CARD_MIN_W = 104;
 const ROW_H = CARD_H + GAP;
-const BUFFER = 3; // extra rows above/below the viewport
+const BUFFER = 3;
 
 let scroll, top, win, bottom, empty;
 let cols = 2;

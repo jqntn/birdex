@@ -1,5 +1,3 @@
-// Theme = a data-theme attribute on <html>; CSS custom properties do the rest.
-
 import { state, emit } from './state.js';
 
 export function applyTheme(theme = state.theme) {

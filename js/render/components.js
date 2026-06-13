@@ -1,13 +1,9 @@
-// Shared UI pieces. Grid entries use inline-SVG silhouettes (no per-species
-// image files) tinted by rarity + caught state — crisp, themeable, offline.
-
 import * as tax from '../data/taxonomy.js';
 import { rarityTier } from '../data/rarity.js';
 import { RARITY } from '../config.js';
 import { el } from '../util/dom.js';
 import { getLocale } from '../i18n.js';
 
-// A few generic bird silhouettes; pick by order so the grid isn't monotone.
 const SIL = {
   perch:
     'M48 22c-6 0-10 3-13 7-3-1-7-1-11 1-6 3-9 9-9 9s7-1 10 0c-4 4-6 9-6 9s6-4 10-4c-1 5 1 12 1 12l4-9c2 6 7 10 7 10s0-7 2-11c3 5 9 7 9 7s-3-6-3-10c4 2 9 1 9 1s-4-4-5-8c5-1 9-5 9-5s-9-2-13-1c2-4 1-9-2-12 1 3-1 6-3 7 0-2 0-7-6-9z',
@@ -34,7 +30,6 @@ export function silhouetteSVG(i) {
 
 export const rarityId = (i) => RARITY[rarityTier(i)].id;
 
-// A dex grid card.
 export function card(i, { caught, isNew } = {}) {
   const rid = rarityId(i);
   const name = caught ? tax.commonName(i, getLocale()) : tax.commonName(i, getLocale());

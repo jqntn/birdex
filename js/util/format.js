@@ -1,9 +1,5 @@
-// Formatting + parsing helpers shared across modules.
-
-// Normalize a scientific name for joining/hashing: lowercase, collapse spaces.
 export const normSci = (s) => String(s).toLowerCase().trim().replace(/\s+/g, ' ');
 
-// eBird date is "25 May 2026". Returns {y, m, d, iso} or null.
 const MONTHS = {
   jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
   jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11,
@@ -20,7 +16,6 @@ export function parseEbirdDate(s) {
   return { y: year, m: mon, d: day, iso: `${year}-${p(mon + 1)}-${p(day)}` };
 }
 
-// "JP-13" -> "JP"; "JP" -> "JP"; "" -> null.
 export const countryOf = (sp) => {
   if (!sp) return null;
   const c = String(sp).trim().split('-')[0];
@@ -29,7 +24,6 @@ export const countryOf = (sp) => {
 
 export const pct = (n, d) => (d > 0 ? Math.round((n / d) * 1000) / 10 : 0);
 
-// 2-letter ISO code -> flag emoji via regional-indicator code points.
 export function flagEmoji(cc) {
   if (!cc || cc.length !== 2) return '🏳️';
   const base = 0x1f1e6;

@@ -1,5 +1,3 @@
-// Central configuration. No build step — these are plain constants.
-
 export const LS_KEY = 'birdex:v1';
 
 export const EBIRD_LIFELIST_URL = 'https://ebird.org/lifelist?r=world&time=life&fmt=csv';
@@ -23,7 +21,6 @@ export const DEFAULT_THEME = 'dex-dark';
 export const SHINY_SALT = 'birdex-v1';
 export const SHINY_ODDS = 512;
 
-// Rarity tier ids (index = stored Uint8 value).
 export const RARITY = [
   { id: 'common', en: 'Common', fr: 'Commun' },
   { id: 'uncommon', en: 'Uncommon', fr: 'Peu commun' },
@@ -32,5 +29,4 @@ export const RARITY = [
   { id: 'legendary', en: 'Legendary', fr: 'Légendaire' },
 ];
 
-// CSV categories that count as a "lifer" (a real countable species).
 export const COUNTABLE_CATEGORIES = new Set(['species', 'issf']);

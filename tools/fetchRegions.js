@@ -1,10 +1,3 @@
-// Fetch per-country species lists from eBird, map species codes to taxonomy
-// indices, delta-pack, and write one small file per region. Derives continent
-// files as the union of member countries. Builds regions/_index.json.
-//
-// Requires EBIRD_API_KEY (env or tools/.env). World list is keyless and made by
-// fetchTaxonomy. Resumable: existing country files are reused unless --force.
-
 import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -36,7 +29,7 @@ export async function buildRegions({ force = false, build = new Date().toISOStri
   const codeToIdx = new Map(core.code.map((c, i) => [c, i]));
 
   const indexRegions = [{ code: 'world', type: 'world', en: 'World', fr: 'Monde', count: core.count }];
-  const continentSets = new Map(); // continent code -> Set<idx>
+  const continentSets = new Map();
 
   async function fetchOne(country) {
     const file = join(REGIONS_DIR, `${country.code}.json`);
@@ -55,7 +48,7 @@ export async function buildRegions({ force = false, build = new Date().toISOStri
         const indices = [];
         for (const c of codes) {
           const idx = codeToIdx.get(c);
-          if (idx !== undefined) indices.push(idx); // drop non-species / unknown codes
+          if (idx !== undefined) indices.push(idx);
         }
         writeFileSync(file, JSON.stringify({ code: country.code, count: indices.length, deltas: deltaPack(indices) }));
         return { country, count: indices.length, indices };
@@ -91,9 +84,6 @@ export async function buildRegions({ force = false, build = new Date().toISOStri
     for (const idx of indices) set.add(idx);
   }
 
-  // Continent files = union of member-country species. Continent region codes
-  // are prefixed "cont-" because raw continent codes (AF, AS, NA, SA) collide
-  // with ISO country codes (Afghanistan, American Samoa, Namibia, Saudi Arabia).
   for (const [cont, set] of continentSets) {
     const indices = [...set].sort((a, b) => a - b);
     const code = `cont-${cont}`;
@@ -102,7 +92,6 @@ export async function buildRegions({ force = false, build = new Date().toISOStri
     indexRegions.push({ code, type: 'continent', en: names.en, fr: names.fr, count: indices.length });
   }
 
-  // Order: world, continents, then countries alphabetically by English name.
   indexRegions.sort((a, b) => {
     const rank = { world: 0, continent: 1, country: 2 };
     if (rank[a.type] !== rank[b.type]) return rank[a.type] - rank[b.type];

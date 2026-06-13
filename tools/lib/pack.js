@@ -1,7 +1,3 @@
-// Delta-pack a sorted list of integer indices into ascending gaps.
-// A region's species set is a few hundred to a few thousand small indices;
-// storing ascending deltas keeps the JSON compact and gzips well.
-
 export function deltaPack(indices) {
   const sorted = [...indices].sort((a, b) => a - b);
   const deltas = [];

@@ -1,5 +1,3 @@
-// Stats page — pure CSS/SVG charts from the precomputed `agg`, no chart lib.
-
 import * as tax from '../data/taxonomy.js';
 import { state } from '../state.js';
 import { el, clear } from '../util/dom.js';
@@ -25,7 +23,6 @@ export function renderStats(root) {
     return;
   }
 
-  // Completion bars.
   const rDenom = regionSpeciesCount(state.region, total);
   const rm = regionMeta(state.region);
   root.append(
@@ -35,7 +32,6 @@ export function renderStats(root) {
     )
   );
 
-  // Biggest day hero.
   if (agg.biggestDay) {
     root.append(
       el('section', { class: 'stat-hero' },
@@ -45,7 +41,6 @@ export function renderStats(root) {
     );
   }
 
-  // Lifers per year (CSS column chart).
   const years = Object.keys(agg.byYear).sort();
   if (years.length) {
     const max = Math.max(...years.map((y) => agg.byYear[y]));
@@ -63,7 +58,6 @@ export function renderStats(root) {
     root.append(section(t('perYear'), chart));
   }
 
-  // Rarity distribution (stacked horizontal bar).
   const rdist = agg.byRarity;
   const rtotal = Object.values(rdist).reduce((a, b) => a + b, 0) || 1;
   const stack = el('div', { class: 'rarity-stack' });
@@ -77,7 +71,6 @@ export function renderStats(root) {
   );
   root.append(section(t('rarityDist'), el('div', {}, stack, legend)));
 
-  // Top families.
   const famCount = new Map();
   for (const code in save.species) {
     const i = tax.idxOfCode(code);
@@ -101,7 +94,6 @@ export function renderStats(root) {
     root.append(section(t('topFamilies'), rows));
   }
 
-  // Countries + continents chips.
   const countries = Object.entries(agg.byCountry).sort((a, b) => b[1] - a[1]);
   if (countries.length) {
     const chips = el('div', { class: 'chips' },

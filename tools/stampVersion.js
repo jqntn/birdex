@@ -1,6 +1,3 @@
-// Stamp a build id into version.js and the service worker's cache name so each
-// deploy invalidates the old SW cache. Run last in the codegen pipeline.
-
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';

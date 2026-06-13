@@ -1,14 +1,10 @@
-// Pure aggregation: turn parsed sightings + taxonomy/region/rarity into the
-// persisted species map, the caught index set, and the precomputed `agg` block.
-
 import * as tax from '../data/taxonomy.js';
 import { rarityTier, isShiny } from '../data/rarity.js';
 import { RARITY } from '../config.js';
 import { COUNTRY_CONTINENT } from '../data/continents.js';
 
-// sightings: Map<normSci, rec>; regionSet: Set<idx> | null (world)
 export function deriveFromSightings(sightings, regionSet) {
-  const species = {}; // code -> stored record
+  const species = {};
   const caughtSet = new Set();
   const byRarity = Object.fromEntries(RARITY.map((r) => [r.id, 0]));
   const byYear = {};
@@ -61,7 +57,6 @@ export function deriveFromSightings(sightings, regionSet) {
     };
   }
 
-  // Biggest single-day haul.
   let biggestDay = null;
   for (const [date, c] of Object.entries(byDate)) {
     if (!biggestDay || c > biggestDay.count) biggestDay = { date, count: c };

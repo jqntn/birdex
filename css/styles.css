@@ -1,5 +1,3 @@
-/* Birdex — cozy dark theme with retro-Pokédex chrome. Mobile-first. */
-
 :root {
   --bg: #1b1916;
   --surface: #272320;
@@ -57,7 +55,6 @@ a { color: var(--accent); text-decoration: none; }
 .muted { color: var(--muted); }
 .small { font-size: 0.82rem; }
 
-/* ---- topbar (dex device head) ---- */
 #topbar {
   height: var(--topbar-h);
   flex: 0 0 auto;
@@ -94,14 +91,12 @@ a { color: var(--accent); text-decoration: none; }
 .icon-btn:active { transform: scale(0.92); }
 #region-picker.sel { max-width: 38vw; }
 
-/* ---- selects ---- */
 .sel {
   height: 34px; border-radius: 9px; padding: 0 8px;
   background: var(--surface-2); color: var(--text);
   border: 1px solid var(--line-solid); font-size: 0.85rem; max-width: 100%;
 }
 
-/* ---- filters bar ---- */
 .filters {
   flex: 0 0 auto; display: flex; gap: 6px; padding: 8px 10px;
   background: var(--surface); border-bottom: 1px solid var(--line-solid);
@@ -112,7 +107,6 @@ a { color: var(--accent); text-decoration: none; }
 .seg-btn { padding: 5px 11px; border-radius: 7px; font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
 .seg-btn.active { background: var(--dex-red); color: #fff; }
 
-/* ---- main view ---- */
 #view { flex: 1 1 auto; min-height: 0; overflow: hidden; position: relative; }
 .panel { height: 100%; }
 .panel.scroll { overflow-y: auto; }
@@ -121,7 +115,6 @@ a { color: var(--accent); text-decoration: none; }
 .splash-mark { font-size: 3rem; animation: bob 1.4s ease-in-out infinite; }
 @keyframes bob { 50% { transform: translateY(-8px); } }
 
-/* ---- dex grid (windowed) ---- */
 .dex-scroll { height: 100%; overflow-y: auto; padding: 10px; }
 .dex-spacer { width: 100%; }
 .dex-window { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -140,7 +133,6 @@ a { color: var(--accent); text-decoration: none; }
 .card .sil path { fill: #000; }
 .card-name { font-size: 0.74rem; line-height: 1.15; max-height: 2.3em; overflow: hidden; font-weight: 600; }
 
-/* unseen = dark silhouette; caught = tinted by rarity + revealed */
 .card.unseen { filter: saturate(0.4); }
 .card.unseen .sil path { fill: var(--surface-2); }
 .card.unseen .card-name { color: var(--muted); }
@@ -170,7 +162,6 @@ a { color: var(--accent); text-decoration: none; }
 @keyframes newFlash { 50% { transform: scale(1.12); } }
 .card.is-new { box-shadow: 0 0 0 2px var(--accent), 0 0 14px rgba(255, 210, 63, 0.5); }
 
-/* ---- tabbar ---- */
 #tabbar {
   height: var(--tabbar-h); flex: 0 0 auto; display: flex;
   padding-bottom: env(safe-area-inset-bottom);
@@ -181,7 +172,6 @@ a { color: var(--accent); text-decoration: none; }
 .tab.active { color: var(--accent); }
 .tab.active .tab-ico { filter: none; transform: translateY(-1px); }
 
-/* ---- detail overlay ---- */
 .overlay {
   position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
@@ -222,7 +212,6 @@ a { color: var(--accent); text-decoration: none; }
 .fact-label { color: var(--muted); } .fact-value { text-align: right; font-weight: 600; }
 .detail-status { margin-top: 8px; font-weight: 700; color: var(--accent); }
 
-/* ---- onboarding ---- */
 .onboard { max-width: 480px; margin: 0 auto; padding: 26px 18px; text-align: center; }
 .onboard-logo { font-size: 3.4rem; }
 .onboard-title { font-size: 1.7rem; margin: 6px 0; }
@@ -243,7 +232,6 @@ a { color: var(--accent); text-decoration: none; }
 .dropzone.drag { border-color: var(--accent); background: rgba(255, 210, 63, 0.08); color: var(--text); }
 .dz-icon { font-size: 1.8rem; }
 
-/* ---- pages ---- */
 .page-head { display: flex; align-items: baseline; justify-content: space-between; padding: 16px 16px 6px; }
 .page-head h2 { font-size: 1.4rem; }
 .region-note { padding: 0 16px 6px; }
@@ -281,7 +269,6 @@ a { color: var(--accent); text-decoration: none; }
 .chips { display: flex; flex-wrap: wrap; gap: 7px; }
 .chip { background: var(--surface-2); border: 1px solid var(--line-solid); border-radius: 20px; padding: 5px 11px; font-size: 0.82rem; }
 
-/* ---- badges ---- */
 .badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; padding: 10px 14px 20px; }
 .badge { background: var(--surface); border: 1px solid var(--line-solid); border-radius: var(--radius); padding: 14px; text-align: center; }
 .badge.locked { opacity: 0.5; filter: grayscale(0.7); }
@@ -293,7 +280,6 @@ a { color: var(--accent); text-decoration: none; }
 .badge-bar span { display: block; height: 100%; background: var(--accent); }
 .badge-prog { font-size: 0.72rem; color: var(--muted); font-family: var(--mono); }
 
-/* ---- toast ---- */
 .toast {
   position: fixed; left: 50%; bottom: calc(var(--tabbar-h) + 16px); transform: translate(-50%, 20px);
   background: #000d; color: #fff; padding: 11px 18px; border-radius: 12px; font-size: 0.88rem;
@@ -301,7 +287,6 @@ a { color: var(--accent); text-decoration: none; }
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-/* ---- wider screens ---- */
 @media (min-width: 760px) {
   .dex-window { gap: 12px; }
   .card .sil { width: 76px; height: 60px; }

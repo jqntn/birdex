@@ -1,7 +1,3 @@
-// Fuzzy search over species (French + English + scientific names) via vendored
-// Fuse.js v7.1.0 (ESM). The index is built ONCE (at idle), not per keystroke —
-// the opposite of PokéChill's rebuild-on-every-render anti-pattern.
-
 import Fuse from '../../vendor/fuse.esm.js';
 import * as tax from '../data/taxonomy.js';
 import { loadNames } from '../data/taxonomy.js';
@@ -13,7 +9,6 @@ export async function buildIndex() {
   if (fuse) return fuse;
   if (building) return building;
   building = (async () => {
-    // Make sure both name locales are loaded so search is bilingual.
     await Promise.all([loadNames('fr'), loadNames('en')]);
     const n = tax.count();
     const docs = new Array(n);
@@ -36,8 +31,7 @@ export async function buildIndex() {
   return building;
 }
 
-// Returns an array of species indices matching the query, best-first.
 export function search(query) {
-  if (!fuse || !query.trim()) return null; // null = "no query, use full/filtered list"
+  if (!fuse || !query.trim()) return null;
   return fuse.search(query.trim()).map((r) => r.item.i);
 }

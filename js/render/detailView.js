@@ -1,7 +1,3 @@
-// Species detail overlay. A single reused modal (PokéChill's pattern), lazily
-// fetching one Wikipedia thumbnail by scientific name; silhouette stays as the
-// offline / on-miss fallback so the view never blocks on the network.
-
 import * as tax from '../data/taxonomy.js';
 import { state } from '../state.js';
 import { rarityTier } from '../data/rarity.js';
@@ -14,7 +10,7 @@ import { fmtDate, flagEmoji } from '../util/format.js';
 import { COUNTRY_NAMES } from '../data/continents.js';
 
 let overlay, box;
-const thumbCache = new Map(); // sci -> url | null
+const thumbCache = new Map();
 
 export function mountDetail(rootParent) {
   overlay = el('div', { class: 'overlay', id: 'detail-overlay', style: { display: 'none' } });
@@ -95,7 +91,7 @@ async function loadThumb(sci, media) {
     thumbCache.set(sci, url);
     if (url && overlay.style.display !== 'none') setThumb(media, url);
   } catch {
-    thumbCache.set(sci, null); // offline / miss → keep silhouette
+    thumbCache.set(sci, null);
   }
 }
 
@@ -103,8 +99,6 @@ function setThumb(media, url) {
   const img = new Image();
   img.className = 'detail-photo';
   img.alt = '';
-  // NB: do not set loading="lazy" — the image is created detached and only
-  // inserted in onload, and a lazy detached image never starts loading.
   img.onload = () => {
     const sil = media.querySelector('.detail-sil');
     if (sil) sil.replaceWith(img);

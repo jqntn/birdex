@@ -1,12 +1,3 @@
-// ISO 3166-1 alpha-2 country codes (eBird uses these as region codes for the
-// spplist endpoint) + English name + continent code. Continents are NOT valid
-// eBird region codes, so we fetch per country and derive continent membership
-// in-app from this table (emitted into regions/_index.json). "world" needs no
-// fetch — it is the full taxonomy.
-//
-// Continent codes: AF Africa, AN Antarctica, AS Asia, EU Europe,
-//                  NA North America, OC Oceania, SA South America.
-
 const RAW = `
 AD|Andorra|EU
 AE|United Arab Emirates|AS

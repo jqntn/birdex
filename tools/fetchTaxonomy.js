@@ -1,7 +1,3 @@
-// Fetch the eBird taxonomy (species only) in English + French, align by
-// SPECIES_CODE, sort by TAXON_ORDER into the canonical index, and emit the
-// vendored columnar data the app loads. Keyless — no API token required.
-
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -31,7 +27,6 @@ export async function buildTaxonomy(build = new Date().toISOString()) {
 
   const frByCode = new Map(frRows.map((r) => [r.SPECIES_CODE, r.COMMON_NAME]));
 
-  // Sort by numeric TAXON_ORDER → canonical index (dex number = index + 1).
   enRows.sort((a, b) => parseFloat(a.TAXON_ORDER) - parseFloat(b.TAXON_ORDER));
 
   const orderKeys = [];
@@ -61,7 +56,7 @@ export async function buildTaxonomy(build = new Date().toISOString()) {
       families.push({
         code: famCode,
         sci: r.FAMILY_SCI_NAME || '',
-        com: r.FAMILY_COM_NAME || '', // eBird does not localize family names
+        com: r.FAMILY_COM_NAME || '',
         orderIdx: oi,
       });
     }
@@ -79,7 +74,6 @@ export async function buildTaxonomy(build = new Date().toISOString()) {
   const count = sci.length;
 
   const orders = orderKeys.map((name, i) => {
-    // Family count per order, for "completable" UI hints.
     const famCount = families.filter((f) => f.orderIdx === i).length;
     return { name, familyCount: famCount };
   });
@@ -92,15 +86,12 @@ export async function buildTaxonomy(build = new Date().toISOString()) {
   writeFileSync(join(DATA_DIR, 'taxonomy.names.en.json'), JSON.stringify({ build, names: namesEn }));
   writeFileSync(join(DATA_DIR, 'taxonomy.names.fr.json'), JSON.stringify({ build, names: namesFr }));
 
-  // "world" region = every species. Keyless, so world completion always works.
-  // Also write a base region index (world only); fetchRegions augments it.
   mkdirSync(REGIONS_DIR, { recursive: true });
   const allIdx = Array.from({ length: count }, (_, i) => i);
   writeFileSync(
     join(REGIONS_DIR, 'world.json'),
     JSON.stringify({ code: 'world', count, deltas: deltaPack(allIdx) })
   );
-  // Only (re)create the base index if fetchRegions hasn't produced a richer one.
   const indexPath = join(REGIONS_DIR, '_index.json');
   let existing = null;
   try {
@@ -122,7 +113,6 @@ export async function buildTaxonomy(build = new Date().toISOString()) {
   return { count, orders: orders.length, families: families.length };
 }
 
-// Run standalone: node fetchTaxonomy.js
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('fetchTaxonomy.js')) {
   buildTaxonomy().catch((e) => {
     console.error(e);

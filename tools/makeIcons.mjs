@@ -1,7 +1,3 @@
-// Generate PWA PNG icons without any image dependency: rasterize a simple
-// Pokédex-style icon into an RGBA buffer and encode PNG via Node's zlib.
-// Mirrors assets/icons/icon.svg. Run: node tools/makeIcons.mjs
-
 import { deflateSync } from 'node:zlib';
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -38,11 +34,11 @@ function encodePNG(width, height, rgba) {
   const ihdr = Buffer.alloc(13);
   ihdr.writeUInt32BE(width, 0);
   ihdr.writeUInt32BE(height, 4);
-  ihdr[8] = 8; // bit depth
-  ihdr[9] = 6; // RGBA
+  ihdr[8] = 8;
+  ihdr[9] = 6;
   const raw = Buffer.alloc((width * 4 + 1) * height);
   for (let y = 0; y < height; y++) {
-    raw[y * (width * 4 + 1)] = 0; // filter: none
+    raw[y * (width * 4 + 1)] = 0;
     rgba.copy(raw, y * (width * 4 + 1) + 1, y * width * 4, (y + 1) * width * 4);
   }
   const idat = deflateSync(raw, { level: 9 });
@@ -58,7 +54,6 @@ function drawIcon(size, { maskable = false } = {}) {
   const buf = Buffer.alloc(size * size * 4);
   const S = size;
   const radius = maskable ? 0 : S * 0.19;
-  // Design coordinates scale relative to a 512 canvas.
   const k = S / 512;
   const lensX = S * 0.5, lensY = S * 0.527, lensR = 150 * k, ringR = 132 * k;
   const lights = [
@@ -72,7 +67,6 @@ function drawIcon(size, { maskable = false } = {}) {
     for (let x = 0; x < S; x++) {
       let col = null, a = 255;
 
-      // Rounded-rect background mask.
       let inside = true;
       if (!maskable) {
         const rx = Math.min(x, S - 1 - x), ry = Math.min(y, S - 1 - y);
@@ -80,18 +74,14 @@ function drawIcon(size, { maskable = false } = {}) {
       }
       if (!inside) { a = 0; }
       else {
-        // bg vertical gradient
         col = mix([208, 67, 47], [142, 41, 32], y / S);
-        // big white ring + lens
         const dl = dist(x, y, lensX, lensY);
         if (dl <= lensR) col = [255, 255, 255];
         if (dl <= ringR) {
-          // radial lens gradient: highlight -> blue -> dark
           const hx = lensX - ringR * 0.24, hy = lensY - ringR * 0.36;
           const dh = dist(x, y, hx, hy) / (ringR * 1.5);
           col = dh < 0.55 ? mix([214, 239, 255], [74, 163, 224], dh / 0.55) : mix([74, 163, 224], [21, 49, 74], Math.min(1, (dh - 0.55) / 0.45));
         }
-        // indicator lights
         for (const lt of lights) {
           if (dist(x, y, lt.x, lt.y) <= lt.r) col = lt.c;
         }

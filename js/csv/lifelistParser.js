@@ -1,11 +1,6 @@
-// Parse an eBird life list CSV (downloaded by the user) entirely in the browser.
-// Join key is the SCIENTIFIC NAME (the only column shared with the taxonomy —
-// Common Name is localized). Subspecies (issf) collapse to the parent binomial.
-
 import { COUNTABLE_CATEGORIES } from '../config.js';
 import { normSci, countryOf, parseEbirdDate } from '../util/format.js';
 
-// Minimal RFC-4180 parser (quoted fields, embedded commas/newlines, "" escape).
 function parseCSV(text) {
   if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
   const rows = [];
@@ -48,7 +43,7 @@ export function parseLifelist(text) {
     countable: col('Countable'),
   };
 
-  const sightings = new Map(); // normSci(joinSci) -> record
+  const sightings = new Map();
   let countable = 0, skipped = 0, dataRows = 0;
 
   for (let r = 1; r < rows.length; r++) {
@@ -60,7 +55,6 @@ export function parseLifelist(text) {
 
     const category = (cells[ci.category] || 'species').trim().toLowerCase();
     if (!COUNTABLE_CATEGORIES.has(category)) { skipped++; continue; }
-    // Honor explicit Countable=0 if present.
     if (ci.countable >= 0 && (cells[ci.countable] || '').trim() === '0') { skipped++; continue; }
 
     const joinSci = category === 'issf' ? parentBinomial(sciRaw) : sciRaw;
@@ -83,7 +77,6 @@ export function parseLifelist(text) {
       sightings.set(key, rec);
       countable++;
     } else if (rec.date && (!existing.date || rec.date < existing.date)) {
-      // Keep the earliest sighting (first record of the species).
       sightings.set(key, rec);
     }
   }

@@ -1,4 +1,3 @@
-// Tiny .env loader (no dependency). Reads tools/.env if present into process.env.
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -19,6 +18,5 @@ export function loadEnv() {
       if (!(key in process.env)) process.env[key] = val;
     }
   } catch {
-    // no .env file — rely on real environment variables
   }
 }

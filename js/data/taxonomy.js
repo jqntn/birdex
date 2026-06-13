@@ -1,6 +1,3 @@
-// Loads the vendored taxonomy and exposes accessors. Index `i` is the canonical
-// species id everywhere; dex number = i + 1 (core is pre-sorted by TAXON_ORDER).
-
 import { DATA, DEFAULT_LOCALE } from '../config.js';
 import { state } from '../state.js';
 import { normSci } from '../util/format.js';
@@ -30,7 +27,6 @@ export async function loadTaxonomy(locale = DEFAULT_LOCALE) {
   codeToIdx = new Map(core.code.map((code, i) => [code, i]));
   sciToIdx = new Map(core.sci.map((s, i) => [normSci(s), i]));
 
-  // Load the other locale lazily for cross-language search / fallback.
   const other = locale === 'en' ? 'fr' : 'en';
   loadNames(other).catch(() => {});
   return core.count;
@@ -60,7 +56,6 @@ export const families = () => meta?.families ?? [];
 export const orderName = (oi) => meta.orders[oi]?.name ?? '';
 export const family = (fi) => meta.families[fi];
 
-// Localized common name with fallback to the other locale, then scientific.
 export function commonName(i, locale = state.locale) {
   const primary = names[locale]?.[i];
   if (primary) return primary;
@@ -71,5 +66,5 @@ export function commonName(i, locale = state.locale) {
 export function familyName(fi, locale = state.locale) {
   const f = meta.families[fi];
   if (!f) return '';
-  return f.com || f.sci; // eBird family common names are English-only
+  return f.com || f.sci;
 }

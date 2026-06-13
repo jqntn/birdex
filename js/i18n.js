@@ -1,6 +1,3 @@
-// Localization. Species names come from the active-locale taxonomy names file
-// (French default, English fallback). UI strings live in the STRINGS table.
-
 import { state } from './state.js';
 
 export const getLocale = () => state.locale;

@@ -1,6 +1,3 @@
-// Single mutable state hub with pub/sub — the modern replacement for
-// PokéChill's bag of globals. Modules subscribe to keys they care about.
-
 import { DEFAULT_LOCALE, DEFAULT_REGION, DEFAULT_THEME } from './config.js';
 
 export const state = {
@@ -8,18 +5,18 @@ export const state = {
   region: DEFAULT_REGION,
   theme: DEFAULT_THEME,
 
-  save: null, // persisted derived state, or null before first import
-  caughtSet: new Set(), // species indices the user has caught (any region)
-  regionSet: null, // Set<idx> in the selected region, or null = world (all)
+  save: null,
+  caughtSet: new Set(),
+  regionSet: null,
 
   filters: { seen: 'all', orderIdx: null, familyIdx: null, rarity: null },
   query: '',
-  visible: [], // current filtered+searched index list driving the grid
+  visible: [],
 
-  newLifers: new Set(), // indices added by the latest import (for NEW flash)
+  newLifers: new Set(),
 };
 
-const subs = new Map(); // key -> Set<fn>
+const subs = new Map();
 
 export function subscribe(keys, fn) {
   for (const k of [].concat(keys)) {

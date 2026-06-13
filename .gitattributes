@@ -1,4 +1,3 @@
-# Normalize line endings to LF for all text; treat data/assets as binary.
 * text=auto eol=lf
 *.png binary
 *.ttf binary
