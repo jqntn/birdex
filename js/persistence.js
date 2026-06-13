@@ -1,11 +1,10 @@
-import { LS_KEY, DEFAULT_LOCALE, DEFAULT_REGION, DEFAULT_THEME } from './config.js';
+import { LS_KEY, DEFAULT_LOCALE, DEFAULT_REGION } from './config.js';
 
 const blankSave = () => ({
   version: 1,
   importedAt: null,
   locale: DEFAULT_LOCALE,
   region: DEFAULT_REGION,
-  theme: DEFAULT_THEME,
   skippedOnboarding: false,
   species: {},
   agg: null,

@@ -1,9 +1,8 @@
-import { DEFAULT_LOCALE, DEFAULT_REGION, DEFAULT_THEME } from './config.js';
+import { DEFAULT_LOCALE, DEFAULT_REGION } from './config.js';
 
 export const state = {
   locale: DEFAULT_LOCALE,
   region: DEFAULT_REGION,
-  theme: DEFAULT_THEME,
 
   save: null,
   caughtSet: new Set(),

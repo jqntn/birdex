@@ -1,6 +1,5 @@
 import { state, emit, subscribe } from './state.js';
 import { loadSave, patchSave, clearAll } from './persistence.js';
-import { applyTheme, toggleTheme } from './theme.js';
 import { t } from './i18n.js';
 import { $, el, clear } from './util/dom.js';
 import * as tax from './data/taxonomy.js';
@@ -20,9 +19,8 @@ let searchTimer = null;
 
 async function bootstrap() {
   const save = loadSave();
-  if (save) emit({ save, locale: save.locale, region: save.region, theme: save.theme });
+  if (save) emit({ save, locale: save.locale, region: save.region });
   document.documentElement.lang = state.locale;
-  applyTheme();
 
   showSplash();
   await Promise.all([tax.loadTaxonomy(state.locale), loadRarity(), loadRegionIndex()]);
@@ -88,7 +86,6 @@ function mountShell() {
   picker.addEventListener('change', (e) => switchRegion(e.target.value));
 
   $('#lang-btn').addEventListener('click', toggleLocale);
-  $('#theme-btn').addEventListener('click', () => { toggleTheme(); });
   $('#reimport-btn').addEventListener('click', () => go('import'));
 
   $('#tabbar').addEventListener('click', (e) => {

@@ -16,7 +16,6 @@ export const DATA = {
 
 export const DEFAULT_LOCALE = 'fr';
 export const DEFAULT_REGION = 'world';
-export const DEFAULT_THEME = 'dex-dark';
 
 export const SHINY_SALT = 'birdex-v1';
 export const SHINY_ODDS = 512;
