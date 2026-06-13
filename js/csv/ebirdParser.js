@@ -77,7 +77,9 @@ export function parseEbirdData(text) {
     const iso = parseEbirdDate(cells[ci.date])?.iso || null;
     const region = (cells[ci.region] || '').trim();
     const country = countryOf(region);
-    const cnt = parseInt((cells[ci.count] || '').trim(), 10) || 0;
+    // Every eBird row is a presence; "X" (present, uncounted) and blanks count as 1.
+    const rawCount = parseInt((cells[ci.count] || '').trim(), 10);
+    const cnt = Number.isFinite(rawCount) && rawCount > 0 ? rawCount : 1;
     const sub = ci.sub >= 0 ? (cells[ci.sub] || '').trim() : '';
 
     let a = agg.get(key);
