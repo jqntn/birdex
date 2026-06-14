@@ -152,6 +152,18 @@ a { color: var(--accent); text-decoration: none; }
 @keyframes newFlash { 50% { transform: scale(1.12); } }
 .card.is-new { box-shadow: 0 0 0 2px var(--accent), 0 0 14px rgba(255, 210, 63, 0.5); }
 
+.card-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.card.has-photo .card-num { z-index: 2; color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85); }
+.card.has-photo .card-name {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; max-height: none;
+  padding: 16px 6px 5px; color: #fff; background: linear-gradient(transparent, rgba(0, 0, 0, 0.82));
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+.card.has-photo .card-new { z-index: 3; }
+.card.has-photo.unseen { filter: none; }
+.card.has-photo.unseen .card-photo { filter: grayscale(1) brightness(0.62); }
+.card.has-photo.unseen .card-name { color: #dcdcdc; }
+
 #tabbar {
   height: var(--tabbar-h); flex: 0 0 auto; display: flex;
   padding-bottom: env(safe-area-inset-bottom);
@@ -185,6 +197,8 @@ a { color: var(--accent); text-decoration: none; }
 .detail-sil .sil { width: 130px; height: 110px; }
 .detail-sil .sil path { fill: var(--surface-2); }
 .detail-photo { width: 100%; height: 100%; object-fit: cover; }
+.detail-credit { display: block; margin: 0 0 12px; font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.3; }
+.detail-credit:hover { color: var(--text); text-decoration: underline; }
 .shiny-mark { position: absolute; top: 8px; right: 10px; color: #FF4671; -webkit-text-stroke: 2px #fff; paint-order: stroke fill; font-size: 1.6rem; animation: sparkle 1.6s ease-in-out infinite; }
 @keyframes sparkle { 0%, 100% { opacity: 1; transform: scale(1) rotate(0); } 50% { opacity: 0.5; transform: scale(1.25) rotate(20deg); } }
 .detail-box.shiny .detail-media { background: linear-gradient(135deg, #2a2330, #1b2330, #30262a); }

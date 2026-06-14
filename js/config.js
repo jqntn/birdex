@@ -2,8 +2,6 @@ export const LS_KEY = 'birdex:v1';
 
 export const EBIRD_EXPORT_URL = 'https://ebird.org/downloadMyData';
 export const EBIRD_SPECIES_URL = (code) => `https://ebird.org/species/${code}`;
-export const WIKI_SUMMARY_URL = (sci) =>
-  `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(sci.replace(/ /g, '_'))}`;
 
 export const DATA = {
   core: 'data/taxonomy.core.json',
@@ -14,6 +12,7 @@ export const DATA = {
   regionIndex: 'data/regions/_index.json',
   region: (code) => `data/regions/${code}.json`,
   demo: 'data/demo.csv',
+  media: 'data/media.json',
 };
 
 export const DEFAULT_LOCALE = 'fr';

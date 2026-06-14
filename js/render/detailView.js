@@ -2,15 +2,15 @@ import * as tax from '../data/taxonomy.js';
 import { state } from '../state.js';
 import { rarityTier } from '../data/rarity.js';
 import { isShiny } from '../data/rarity.js';
-import { RARITY, WIKI_SUMMARY_URL, EBIRD_SPECIES_URL } from '../config.js';
+import { RARITY, EBIRD_SPECIES_URL } from '../config.js';
 import { el, clear } from '../util/dom.js';
 import { t, getLocale } from '../i18n.js';
 import { silhouetteSVG } from './components.js';
+import { hasPhoto, photoUrl, photoCredit } from '../data/media.js';
 import { fmtDate, flagEmoji } from '../util/format.js';
 import { COUNTRY_NAMES } from '../data/continents.js';
 
 let overlay, box;
-const thumbCache = new Map();
 
 export function mountDetail(rootParent) {
   overlay = el('div', { class: 'overlay', id: 'detail-overlay', style: { display: 'none' } });
@@ -39,7 +39,18 @@ export function openDetail(i) {
   box.className = `detail-box r-${rid}${shiny ? ' shiny' : ''}`;
 
   const media = el('div', { class: 'detail-media' });
-  media.innerHTML = `<div class="detail-sil">${silhouetteSVG(i)}</div>`;
+  let credit = null;
+  if (hasPhoto(i)) {
+    const img = el('img', { class: 'detail-photo', src: photoUrl(i, 1280), alt: '' });
+    img.onerror = () => { media.classList.remove('has-photo'); media.innerHTML = `<div class="detail-sil">${silhouetteSVG(i)}</div>`; };
+    media.append(img);
+    media.classList.add('has-photo');
+    const c = photoCredit(i);
+    const txt = [c.by ? `© ${c.by}` : null, c.license || null, 'Wikimedia Commons'].filter(Boolean).join(' · ');
+    credit = el('a', { class: 'detail-credit', href: c.fileUrl, target: '_blank', rel: 'noopener' }, txt);
+  } else {
+    media.innerHTML = `<div class="detail-sil">${silhouetteSVG(i)}</div>`;
+  }
   if (shiny) media.insertAdjacentHTML('beforeend', '<span class="shiny-mark">✦</span>');
 
   const ext = tax.isExtinct(i) ? el('span', { class: 'tag tag-extinct' }, t('extinct')) : null;
@@ -72,44 +83,14 @@ export function openDetail(i) {
   }, `${t('ebirdPage')} ↗`);
 
   const close_btn = el('button', { class: 'detail-close', type: 'button', onclick: close }, '✕');
-  box.append(close_btn, media, header, facts, ebird);
+  box.append(close_btn, media);
+  if (credit) box.append(credit);
+  box.append(header, facts, ebird);
 
   overlay.style.display = 'flex';
-  loadThumb(sci, media);
 }
 
 function fact(label, value) {
   if (value == null || value === '') return null;
   return el('div', { class: 'fact' }, el('span', { class: 'fact-label' }, label), el('span', { class: 'fact-value' }, value));
-}
-
-async function loadThumb(sci, media) {
-  if (thumbCache.has(sci)) {
-    const url = thumbCache.get(sci);
-    if (url) setThumb(media, url);
-    return;
-  }
-  try {
-    const res = await fetch(WIKI_SUMMARY_URL(sci));
-    if (!res.ok) throw new Error(String(res.status));
-    const data = await res.json();
-    const url = data?.thumbnail?.source || null;
-    thumbCache.set(sci, url);
-    if (url && overlay.style.display !== 'none') setThumb(media, url);
-  } catch {
-    thumbCache.set(sci, null);
-  }
-}
-
-function setThumb(media, url) {
-  const img = new Image();
-  img.className = 'detail-photo';
-  img.alt = '';
-  img.onload = () => {
-    const sil = media.querySelector('.detail-sil');
-    if (sil) sil.replaceWith(img);
-    else media.prepend(img);
-    media.classList.add('has-photo');
-  };
-  img.src = url;
 }

@@ -4,6 +4,7 @@ import { t } from './i18n.js';
 import { $, el, clear } from './util/dom.js';
 import * as tax from './data/taxonomy.js';
 import { loadRarity } from './data/rarity.js';
+import { loadMedia } from './data/media.js';
 import { loadRegionIndex, regionList, loadRegion, regionMeta } from './data/regions.js';
 import { buildIndex, search } from './search/search.js';
 import { mountGrid } from './render/dexGrid.js';
@@ -24,7 +25,7 @@ async function bootstrap() {
   document.documentElement.lang = state.locale;
 
   showSplash();
-  await Promise.all([tax.loadTaxonomy(state.locale), loadRarity(), loadRegionIndex()]);
+  await Promise.all([tax.loadTaxonomy(state.locale), loadRarity(), loadRegionIndex(), loadMedia()]);
   baseIndices = Array.from({ length: tax.count() }, (_, i) => i);
 
   if (save?.species) {

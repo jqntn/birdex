@@ -1,4 +1,4 @@
-const CACHE = 'birdex-20260614-123218';
+const CACHE = 'birdex-20260614-134011';
 const THUMBS = 'birdex-thumbs';
 const THUMBS_MAX = 600;
 
@@ -25,11 +25,16 @@ const PRECACHE = [
   './data/taxonomy.core.json', './data/taxonomy.meta.json',
   './data/taxonomy.names.fr.json', './data/taxonomy.names.en.json',
   './data/rarity.json', './data/regions/_index.json', './data/regions/world.json',
+  './data/media.json',
 ];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting())
+    caches.open(CACHE).then((c) =>
+      Promise.all(PRECACHE.map((u) =>
+        fetch(u, { cache: 'reload' }).then((r) => (r.ok ? c.put(u, r) : null)).catch(() => null)
+      ))
+    ).then(() => self.skipWaiting())
   );
 });
 
