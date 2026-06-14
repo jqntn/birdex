@@ -3,7 +3,7 @@ import { rarityTier, isShiny } from '../data/rarity.js';
 import { RARITY } from '../config.js';
 import { COUNTRY_CONTINENT } from '../data/continents.js';
 
-export function deriveFromSightings(sightings, regionSet) {
+export function deriveFromSightings(sightings, regionSet, biggestDay = null) {
   const species = {};
   const caughtSet = new Set();
   const byRarity = Object.fromEntries(RARITY.map((r) => [r.id, 0]));
@@ -62,9 +62,11 @@ export function deriveFromSightings(sightings, regionSet) {
     };
   }
 
-  let biggestDay = null;
+  // Most new species (lifers) recorded on a single date: count species whose first
+  // sighting falls on that date. (Distinct-species-per-day lives in biggestDay, from the parser.)
+  let biggestLiferDay = null;
   for (const [date, c] of Object.entries(byDate)) {
-    if (!biggestDay || c > biggestDay.count) biggestDay = { date, count: c };
+    if (!biggestLiferDay || c > biggestLiferDay.count) biggestLiferDay = { date, count: c };
   }
 
   const agg = {
@@ -75,6 +77,7 @@ export function deriveFromSightings(sightings, regionSet) {
     byCountry,
     continents: [...continents],
     biggestDay,
+    biggestLiferDay,
     shinies,
   };
 

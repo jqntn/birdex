@@ -32,13 +32,16 @@ export function renderStats(root) {
     )
   );
 
-  if (agg.biggestDay) {
-    root.append(
-      el('section', { class: 'stat-hero' },
-        el('div', { class: 'hero-num' }, String(agg.biggestDay.count)),
-        el('div', { class: 'hero-label' }, `${t('biggestDay')} · ${agg.biggestDay.date}`)
-      )
-    );
+  const dayHero = (d, label) => el('section', { class: 'stat-hero' },
+    el('div', { class: 'hero-num' }, String(d.count)),
+    el('div', { class: 'hero-label' }, label),
+    el('div', { class: 'hero-sub' }, d.date)
+  );
+  if (agg.biggestLiferDay || agg.biggestDay) {
+    const row = el('div', { class: 'stat-hero-row' });
+    if (agg.biggestLiferDay) row.append(dayHero(agg.biggestLiferDay, t('biggestLiferDay')));
+    if (agg.biggestDay) row.append(dayHero(agg.biggestDay, t('biggestDay')));
+    root.append(row);
   }
 
   const years = Object.keys(agg.byYear).sort();

@@ -27,8 +27,8 @@ const CATALOG = [
   m('rare-legendary', 'rarity', '✨', 'Mythic Sighting', 'Observation mythique', 'See a legendary species', 'Voir une espèce légendaire', (c) => c.legendary, 1),
   m('rare-10', 'rarity', '💎', 'Rarity Hunter', 'Chasseur de raretés', 'See 10 rare-or-better species', 'Voir 10 espèces rares ou plus', (c) => c.rarePlus, 10),
 
-  m('bigday-10', 'time', '📅', 'Big Day', 'Grande journée', '10 lifers in one day', '10 oiseaux en une journée', (c) => c.biggestDay, 10),
-  m('bigday-25', 'time', '🔥', 'Fallout', 'Déferlante', '25 lifers in one day', '25 oiseaux en une journée', (c) => c.biggestDay, 25),
+  m('bigday-10', 'time', '📅', 'Big Day', 'Grande journée', '10 lifers in one day', '10 oiseaux en une journée', (c) => c.biggestLiferDay, 10),
+  m('bigday-25', 'time', '🔥', 'Fallout', 'Déferlante', '25 lifers in one day', '25 oiseaux en une journée', (c) => c.biggestLiferDay, 25),
   m('bigyear-100', 'time', '🗓️', 'Big Year', 'Grande année', '100 lifers in one year', '100 oiseaux en une année', (c) => c.biggestYear, 100),
 
   m('shiny-1', 'shiny', '🌟', "It's Shiny!", 'Chromatique !', 'Catch a shiny bird', 'Obtenir un oiseau chromatique', (c) => c.shinies, 1),
@@ -85,6 +85,7 @@ export function buildContext() {
     legendary: r.legendary || 0,
     rarePlus: (r.rare || 0) + (r.endemic || 0) + (r.legendary || 0),
     biggestDay: agg?.biggestDay?.count || 0,
+    biggestLiferDay: agg?.biggestLiferDay?.count || 0,
     biggestYear,
     shinies: agg ? (agg.shinies || []).length : 0,
     regionPct,

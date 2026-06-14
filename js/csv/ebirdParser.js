@@ -35,7 +35,7 @@ export const NON_SPECIES = /\bsp\.|\/| x |×|\(|\[/i;
 // earliest sighting (first seen / lifer) and the latest (last seen).
 export function parseEbirdData(text) {
   const rows = parseCSV(text);
-  if (!rows.length) return { sightings: new Map(), rows: 0, countable: 0, skipped: 0 };
+  if (!rows.length) return { sightings: new Map(), rows: 0, countable: 0, skipped: 0, biggestDay: null };
 
   const header = rows[0].map((h) => h.trim());
   const find = (...names) => {
@@ -54,6 +54,7 @@ export function parseEbirdData(text) {
   };
 
   const agg = new Map();
+  const dayMap = new Map();
   let dataRows = 0, countable = 0, skipped = 0;
 
   for (let r = 1; r < rows.length; r++) {
@@ -75,6 +76,12 @@ export function parseEbirdData(text) {
 
     const key = normSci(bin);
     const iso = parseEbirdDate(cells[ci.date])?.iso || null;
+    // Track distinct species seen per calendar date (lifers AND repeats) for the "biggest day".
+    if (iso) {
+      let day = dayMap.get(iso);
+      if (!day) dayMap.set(iso, (day = new Set()));
+      day.add(key);
+    }
     const region = (cells[ci.region] || '').trim();
     const country = countryOf(region);
     // Every eBird row is a presence; "X" (present, uncounted) and blanks count as 1.
@@ -105,6 +112,12 @@ export function parseEbirdData(text) {
     }
   }
 
+  // Biggest day = the date with the most distinct species observed (any species, not just new ones).
+  let biggestDay = null;
+  for (const [date, set] of dayMap) {
+    if (!biggestDay || set.size > biggestDay.count) biggestDay = { date, count: set.size };
+  }
+
   const sightings = new Map();
   for (const [key, a] of agg) {
     sightings.set(key, {
@@ -124,5 +137,5 @@ export function parseEbirdData(text) {
     });
   }
 
-  return { sightings, rows: dataRows, countable, skipped };
+  return { sightings, rows: dataRows, countable, skipped, biggestDay };
 }
