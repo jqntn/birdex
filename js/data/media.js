@@ -29,6 +29,15 @@ export function photoUrl(i, width) {
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(m.f)}?width=${width}`;
 }
 
+// Fallback for the grid: the generating endpoint at the same small size. Used only
+// when the direct CDN thumb 404s/429s (un-cached thumbnail), so it never hits the
+// special-page rate limit as a burst — only for the handful of cache misses.
+export function photoFallbackUrl(i) {
+  const m = items[i];
+  if (!m) return null;
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(m.f)}?width=250`;
+}
+
 // Attribution for the detail caption.
 export function photoCredit(i) {
   const m = items[i];

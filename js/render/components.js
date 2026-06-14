@@ -3,7 +3,7 @@ import { rarityTier } from '../data/rarity.js';
 import { RARITY } from '../config.js';
 import { el } from '../util/dom.js';
 import { getLocale } from '../i18n.js';
-import { hasPhoto, photoUrl } from '../data/media.js';
+import { hasPhoto, photoUrl, photoFallbackUrl } from '../data/media.js';
 
 const SIL = {
   perch:
@@ -42,7 +42,7 @@ export function card(i, { caught, isNew } = {}) {
   });
   node.innerHTML =
     `<span class="card-sil">${silhouetteSVG(i)}</span>` +
-    (photo ? `<img class="card-photo" src="${photoUrl(i, 240)}" alt="" onerror="this.remove()">` : '') +
+    (photo ? `<img class="card-photo" src="${photoUrl(i, 240)}" alt="" data-fb="${photoFallbackUrl(i)}" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb')}else{this.remove()}">` : '') +
     `<span class="card-num">#${String(tax.dexNumber(i)).padStart(4, '0')}</span>` +
     `<span class="card-name">${escapeHtml(name)}</span>`;
   if (isNew) node.insertAdjacentHTML('beforeend', '<span class="card-new">NEW</span>');
