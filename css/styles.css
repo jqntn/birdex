@@ -196,7 +196,23 @@ a { color: var(--accent); text-decoration: none; }
 }
 .detail-sil .sil { width: 130px; height: 110px; }
 .detail-sil .sil path { fill: var(--surface-2); }
-.detail-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.detail-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; cursor: zoom-in; }
+
+@keyframes fade { from { opacity: 0; } }
+.lightbox {
+  position: fixed; inset: 0; z-index: 3000; display: flex; align-items: center; justify-content: center;
+  padding: 4vh 4vw; background: rgba(0, 0, 0, 0.86); cursor: zoom-out;
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); animation: fade 0.15s ease;
+}
+.lightbox-img {
+  max-width: 92vw; max-height: 88vh; border-radius: 14px;
+  border: 3px solid var(--r-common); background: var(--surface);
+  box-shadow: 0 14px 48px rgba(0, 0, 0, 0.6); animation: pop 0.18s ease;
+}
+.lightbox.r-uncommon .lightbox-img { border-color: var(--r-uncommon); }
+.lightbox.r-rare .lightbox-img { border-color: var(--r-rare); }
+.lightbox.r-endemic .lightbox-img { border-color: var(--r-endemic); }
+.lightbox.r-legendary .lightbox-img { border-color: var(--r-legendary); }
 .detail-credit { display: block; margin: 0 0 12px; font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.3; }
 .detail-credit:hover { color: var(--text); text-decoration: underline; }
 .shiny-mark { position: absolute; top: 8px; right: 10px; z-index: 2; color: #FF4671; -webkit-text-stroke: 2px #fff; paint-order: stroke fill; font-size: 1.6rem; animation: sparkle 1.6s ease-in-out infinite; }

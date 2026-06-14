@@ -16,26 +16,27 @@ export async function loadMedia() {
 
 export const hasPhoto = (i) => !!items[i];
 
-// Grid (small): a direct CDN thumbnail at the 250px standard bucket — fast, browser-
-// cached, and not subject to the rate limit that throttles the ~20-request grid burst.
-// Detail (large): the Special:FilePath render endpoint — a single request per card
-// open, so its special-page rate limit is a non-issue, and it serves any width.
+// Direct CDN thumbnail at a standard bucket width (250 grid, 960 detail) — fast,
+// browser-cached, and not rate-limited like the Special:FilePath special page.
 export function photoUrl(i, width) {
   const m = items[i];
   if (!m) return null;
-  if (width <= 320) {
-    return `https://upload.wikimedia.org/wikipedia/commons/thumb/${m.h[0]}/${m.h}/${m.f}/250px-${m.f}`;
-  }
+  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${m.h[0]}/${m.h}/${m.f}/${width}px-${m.f}`;
+}
+
+// Fallback when a direct thumb 404s/429s (un-cached): the generating endpoint at the
+// same width. Used only for the handful of cache misses, so it never bursts the limit.
+export function photoFallbackUrl(i, width) {
+  const m = items[i];
+  if (!m) return null;
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(m.f)}?width=${width}`;
 }
 
-// Fallback for the grid: the generating endpoint at the same small size. Used only
-// when the direct CDN thumb 404s/429s (un-cached thumbnail), so it never hits the
-// special-page rate limit as a burst — only for the handful of cache misses.
-export function photoFallbackUrl(i) {
+// The original full-resolution image (no thumbnail), for the click-to-zoom view.
+export function originalUrl(i) {
   const m = items[i];
   if (!m) return null;
-  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(m.f)}?width=250`;
+  return `https://upload.wikimedia.org/wikipedia/commons/${m.h[0]}/${m.h}/${m.f}`;
 }
 
 // Attribution for the detail caption.

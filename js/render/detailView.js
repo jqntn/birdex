@@ -6,27 +6,51 @@ import { RARITY, EBIRD_SPECIES_URL } from '../config.js';
 import { el, clear } from '../util/dom.js';
 import { t, getLocale } from '../i18n.js';
 import { silhouetteSVG } from './components.js';
-import { hasPhoto, photoUrl, photoCredit } from '../data/media.js';
+import { hasPhoto, photoUrl, photoFallbackUrl, originalUrl, photoCredit } from '../data/media.js';
 import { regionName } from '../data/regions.js';
 import { fmtDate, flagEmoji } from '../util/format.js';
 import { COUNTRY_NAMES } from '../data/continents.js';
 
-let overlay, box;
+let overlay, box, lightbox, lightboxImg;
 
 export function mountDetail(rootParent) {
   overlay = el('div', { class: 'overlay', id: 'detail-overlay', style: { display: 'none' } });
   box = el('div', { class: 'detail-box' });
   overlay.append(box);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+  lightbox = el('div', { class: 'lightbox', style: { display: 'none' } });
+  lightboxImg = el('img', { class: 'lightbox-img', alt: '' });
+  lightbox.append(lightboxImg);
+  lightbox.addEventListener('click', closeLightbox);
+
   document.addEventListener('keydown', (e) => {
-    if (overlay.style.display !== 'none' && (e.key === 'Escape')) close();
+    if (e.key !== 'Escape') return;
+    if (lightbox.style.display !== 'none') closeLightbox();
+    else if (overlay.style.display !== 'none') close();
   });
-  rootParent.append(overlay);
+  rootParent.append(overlay, lightbox);
 }
 
 export function close() {
+  if (lightbox.style.display !== 'none') closeLightbox();
   overlay.style.display = 'none';
   if (location.hash.startsWith('#/species/')) history.back();
+}
+
+function openLightbox(i, rid) {
+  lightbox.className = `lightbox r-${rid}`;
+  // Show the already-loaded detail thumb instantly, then swap to the full-res original.
+  lightboxImg.src = photoUrl(i, 960);
+  const full = new Image();
+  full.onload = () => { if (lightbox.style.display !== 'none') lightboxImg.src = full.src; };
+  full.src = originalUrl(i);
+  lightbox.style.display = 'flex';
+}
+
+function closeLightbox() {
+  lightbox.style.display = 'none';
+  lightboxImg.removeAttribute('src');
 }
 
 export function openDetail(i) {
@@ -46,8 +70,13 @@ export function openDetail(i) {
     const c = photoCredit(i);
     const txt = [c.by ? `© ${c.by}` : null, c.license || null, 'Wikimedia Commons'].filter(Boolean).join(' · ');
     credit = el('a', { class: 'detail-credit', href: c.fileUrl, target: '_blank', rel: 'noopener' }, txt);
-    const img = el('img', { class: 'detail-photo', src: photoUrl(i, 1280), alt: '' });
-    img.onerror = () => { img.remove(); media.classList.remove('has-photo'); credit.remove(); };
+    const img = el('img', { class: 'detail-photo', src: photoUrl(i, 960), alt: '', title: t('viewFull') });
+    let triedFallback = false;
+    img.onerror = () => {
+      if (!triedFallback) { triedFallback = true; img.src = photoFallbackUrl(i, 960); }
+      else { img.remove(); media.classList.remove('has-photo'); credit.remove(); }
+    };
+    img.addEventListener('click', () => openLightbox(i, rid));
     media.append(img);
     media.classList.add('has-photo');
   }
