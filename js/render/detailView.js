@@ -29,7 +29,32 @@ export function mountDetail(rootParent) {
     if (lightbox.style.display !== 'none') closeLightbox();
     else if (overlay.style.display !== 'none') close();
   });
+  window.addEventListener('resize', () => { if (overlay.style.display !== 'none') fitCreditAuthor(); });
   rootParent.append(overlay, lightbox);
+}
+
+// Truncate the author to fit on one line, appending our own ellipsis after trimming
+// trailing whitespace — so the credit always has exactly one space before the "·"
+// (the browser's text-overflow:ellipsis can leave a stray space depending on the cut).
+let measureCtx;
+function fitCreditAuthor() {
+  const credit = box && box.querySelector('.detail-credit');
+  const author = credit && credit.querySelector('.credit-author');
+  if (!author || !author.dataset.full) return;
+  const meta = credit.querySelector('.credit-meta');
+  const full = author.dataset.full;
+  const cs = getComputedStyle(author);
+  measureCtx = measureCtx || document.createElement('canvas').getContext('2d');
+  measureCtx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  const avail = credit.clientWidth - (meta ? meta.offsetWidth : 0) - 6;
+  if (avail <= 0 || measureCtx.measureText(full).width <= avail) { author.textContent = full; return; }
+  const ellW = measureCtx.measureText('…').width;
+  let lo = 1, hi = full.length;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    if (measureCtx.measureText(full.slice(0, mid)).width + ellW <= avail) lo = mid; else hi = mid - 1;
+  }
+  author.textContent = full.slice(0, lo).replace(/\s+$/, '') + '…';
 }
 
 export function close() {
@@ -71,7 +96,7 @@ export function openDetail(i) {
     const meta = [c.license, 'Wikimedia Commons'].filter(Boolean).join(' · ');
     // One line: the author shrinks with an ellipsis if long; license + source stay.
     credit = el('a', { class: 'detail-credit', href: c.fileUrl, target: '_blank', rel: 'noopener' },
-      c.by ? el('span', { class: 'credit-author' }, `© ${c.by}`) : null,
+      c.by ? el('span', { class: 'credit-author', dataset: { full: `© ${c.by}` } }, `© ${c.by}`) : null,
       el('span', { class: 'credit-meta' }, c.by ? ` · ${meta}` : meta)
     );
     const img = el('img', { class: 'detail-photo', src: photoUrl(i, 500), alt: '', title: t('viewFull') });
@@ -121,6 +146,7 @@ export function openDetail(i) {
   box.append(header, facts, ebird);
 
   overlay.style.display = 'flex';
+  fitCreditAuthor();
 }
 
 function fact(label, value) {
