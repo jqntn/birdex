@@ -13,6 +13,7 @@ export const DATA = {
   rarity: 'data/rarity.json',
   regionIndex: 'data/regions/_index.json',
   region: (code) => `data/regions/${code}.json`,
+  demo: 'data/demo.csv',
 };
 
 export const DEFAULT_LOCALE = 'fr';

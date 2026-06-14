@@ -1,5 +1,9 @@
 tools/.env
 
+MyEBirdData.csv
+tools/MyEBirdData.csv
+_test.csv
+
 node_modules/
 *.log
 

@@ -6,7 +6,7 @@ import { reconcileAchievements } from '../render/achievements.js';
 import * as tax from '../data/taxonomy.js';
 import { el, clear } from '../util/dom.js';
 import { t } from '../i18n.js';
-import { EBIRD_EXPORT_URL } from '../config.js';
+import { EBIRD_EXPORT_URL, DATA } from '../config.js';
 
 let cbImported = null;
 let cbSkip = null;
@@ -70,6 +70,21 @@ async function handleFile(file) {
   importText(text);
 }
 
+export async function loadDemo() {
+  if (state.save?.importedAt && !confirm(t('replaceConfirm'))) return;
+  try {
+    const res = await fetch(DATA.demo, { cache: 'no-cache' });
+    if (!res.ok) throw new Error(String(res.status));
+    importText(await res.text());
+  } catch {
+    alert(t('demoError'));
+  }
+}
+
+function demoButton() {
+  return el('button', { class: 'btn demo', type: 'button', onclick: () => loadDemo() }, t('demoBtn'));
+}
+
 export function renderOnboarding(root) {
   clear(root);
   const card = el('div', { class: 'onboard' },
@@ -82,6 +97,7 @@ export function renderOnboarding(root) {
       ),
       el('li', {}, t('step2'), dropzone())
     ),
+    demoButton(),
     el('button', { class: 'btn ghost', type: 'button', onclick: () => cbSkip?.() }, t('skip'))
   );
   root.append(card);

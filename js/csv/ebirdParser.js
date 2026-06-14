@@ -1,7 +1,7 @@
 import { COUNTABLE_CATEGORIES } from '../config.js';
 import { normSci, countryOf, parseEbirdDate } from '../util/format.js';
 
-function parseCSV(text) {
+export function parseCSV(text) {
   if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
   const rows = [];
   let row = [], field = '', q = false, i = 0;
@@ -23,12 +23,12 @@ function parseCSV(text) {
   return rows;
 }
 
-const binomial = (sci) => sci.trim().split(/\s+/).slice(0, 2).join(' ');
+export const binomial = (sci) => sci.trim().split(/\s+/).slice(0, 2).join(' ');
 
 // Markers of non-countable eBird taxa in the full data export: spuh ("Anas sp."),
 // slashes ("Anas crecca/carolinensis"), hybrids ("... x ..." / "×"), and
 // domestic/feral forms or group brackets ("(Domestic type)", "[Group]").
-const NON_SPECIES = /\bsp\.|\/| x |×|\(|\[/i;
+export const NON_SPECIES = /\bsp\.|\/| x |×|\(|\[/i;
 
 // Parses an eBird CSV (the full "Download My Data" export, or a life list) and
 // aggregates every observation down to one record per species, tracking the

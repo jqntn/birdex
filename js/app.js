@@ -11,7 +11,7 @@ import { mountFilters, filterPredicate } from './render/filters.js';
 import { mountDetail, openDetail, close as closeDetail } from './render/detailView.js';
 import { renderStats } from './render/statsPage.js';
 import { renderBadges } from './render/achievements.js';
-import { setImportCallbacks, importText, renderOnboarding, dropzone, recomputeRegionStats } from './import/importFlow.js';
+import { setImportCallbacks, importText, renderOnboarding, dropzone, recomputeRegionStats, loadDemo } from './import/importFlow.js';
 import { EBIRD_EXPORT_URL } from './config.js';
 import { BUILD } from '../version.js';
 
@@ -199,6 +199,7 @@ function renderImport(view) {
       el('h1', { class: 'onboard-title' }, t('reimport')),
       el('a', { class: 'btn primary', href: EBIRD_EXPORT_URL, target: '_blank', rel: 'noopener' }, t('step1btn')),
       dropzone(),
+      el('button', { class: 'btn demo', type: 'button', onclick: () => loadDemo() }, t('demoBtn')),
       el('button', { class: 'btn ghost', type: 'button', onclick: () => go('dex') }, '←')
     )
   );
