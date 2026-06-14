@@ -19,7 +19,14 @@ const UA = 'Birdex/1.0 (https://jqntn.github.io/birdex) media-manifest-builder';
 const BATCH = 50;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const strip = (html) => (html ? String(html).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : '');
+
+const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+const decodeEntities = (s) => String(s).replace(
+  /&(?:#(\d+)|#x([0-9a-f]+)|(amp|lt|gt|quot|apos|nbsp));/gi,
+  (m, dec, hex, name) => (dec ? String.fromCodePoint(+dec) : hex ? String.fromCodePoint(parseInt(hex, 16)) : ENT[name.toLowerCase()] ?? m)
+);
+// Strip HTML tags AND decode entities (Commons Artist values are HTML, e.g. "Fish &amp; Wildlife").
+const strip = (html) => (html ? decodeEntities(String(html).replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim() : '');
 
 async function api(params) {
   const url = `${API}?${new URLSearchParams({ format: 'json', formatversion: '2', ...params })}`;
