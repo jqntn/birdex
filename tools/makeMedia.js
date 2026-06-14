@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 // Builds data/media.json: a per-species photo manifest sourced from Wikipedia /
 // Wikimedia Commons. For each species (by scientific name) it finds the article's
@@ -97,7 +98,8 @@ async function imageInfo(files) {
     if (/\.svg$/i.test(file)) { skipped++; continue; }
     const inf = info.get(file);
     if (!inf || inf.mime === 'image/svg+xml') { skipped++; continue; }
-    items[i] = { f: file, by: inf.by || '', l: inf.l || '' };
+    const h = createHash('md5').update(file).digest('hex').slice(0, 2);
+    items[i] = { f: file, h, by: inf.by || '', l: inf.l || '' };
     kept++;
   }
 
