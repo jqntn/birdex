@@ -225,12 +225,17 @@ function toast(msg, ms = 3500) {
 
 function registerSW() {
   if (!('serviceWorker' in navigator)) return;
+  const hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {});
   let refreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (refreshing) return;
     refreshing = true;
-    toast('↻ ' + (state.locale === 'fr' ? 'Nouvelle version' : 'New version'));
+    // A new service worker took control. If we already had one, this is an update —
+    // reload so the page actually runs the fresh precached assets instead of the
+    // stale ones it loaded with. (On first install there's no prior controller and
+    // the assets are already fresh, so no reload is needed.)
+    if (hadController) location.reload();
   });
 }
 
