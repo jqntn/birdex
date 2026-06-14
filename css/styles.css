@@ -216,8 +216,11 @@ a { color: var(--accent); text-decoration: none; }
 .lightbox.r-rare .lightbox-img { border-color: var(--r-rare); }
 .lightbox.r-endemic .lightbox-img { border-color: var(--r-endemic); }
 .lightbox.r-legendary .lightbox-img { border-color: var(--r-legendary); }
-.detail-credit { display: block; margin: 0 0 12px; font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.3; }
-.detail-credit:hover { color: var(--text); text-decoration: underline; }
+.detail-credit { display: flex; justify-content: center; align-items: baseline; max-width: 100%; margin: 0 0 12px; font-size: 0.72rem; color: var(--muted); line-height: 1.3; }
+.credit-author { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.credit-meta { flex: 0 0 auto; white-space: nowrap; }
+.detail-credit:hover { color: var(--text); }
+.detail-credit:hover .credit-author, .detail-credit:hover .credit-meta { text-decoration: underline; }
 .shiny-mark { position: absolute; top: 8px; right: 10px; z-index: 2; color: #FF4671; -webkit-text-stroke: 2px #fff; paint-order: stroke fill; font-size: 1.6rem; animation: sparkle 1.6s ease-in-out infinite; }
 @keyframes sparkle { 0%, 100% { opacity: 1; transform: scale(1) rotate(0); } 50% { opacity: 0.5; transform: scale(1.25) rotate(20deg); } }
 .detail-box.shiny .detail-media { background: linear-gradient(135deg, #2a2330, #1b2330, #30262a); }

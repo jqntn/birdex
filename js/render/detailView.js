@@ -68,8 +68,12 @@ export function openDetail(i) {
   let credit = null;
   if (hasPhoto(i)) {
     const c = photoCredit(i);
-    const txt = [c.by ? `© ${c.by}` : null, c.license || null, 'Wikimedia Commons'].filter(Boolean).join(' · ');
-    credit = el('a', { class: 'detail-credit', href: c.fileUrl, target: '_blank', rel: 'noopener' }, txt);
+    const meta = [c.license, 'Wikimedia Commons'].filter(Boolean).join(' · ');
+    // One line: the author shrinks with an ellipsis if long; license + source stay.
+    credit = el('a', { class: 'detail-credit', href: c.fileUrl, target: '_blank', rel: 'noopener' },
+      c.by ? el('span', { class: 'credit-author' }, `© ${c.by}`) : null,
+      el('span', { class: 'credit-meta' }, c.by ? ` · ${meta}` : meta)
+    );
     const img = el('img', { class: 'detail-photo', src: photoUrl(i, 500), alt: '', title: t('viewFull') });
     let triedFallback = false;
     img.onerror = () => {
