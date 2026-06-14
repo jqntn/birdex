@@ -72,7 +72,7 @@ export function openDetail(i) {
     // One line: the author shrinks with an ellipsis if long; license + source stay.
     credit = el('a', { class: 'detail-credit', href: c.fileUrl, target: '_blank', rel: 'noopener' },
       c.by ? el('span', { class: 'credit-author' }, `© ${c.by}`) : null,
-      el('span', { class: 'credit-meta' }, c.by ? ` · ${meta}` : meta)
+      el('span', { class: 'credit-meta' }, c.by ? ` · ${meta}` : meta)
     );
     const img = el('img', { class: 'detail-photo', src: photoUrl(i, 500), alt: '', title: t('viewFull') });
     let triedFallback = false;
