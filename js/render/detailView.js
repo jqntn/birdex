@@ -7,6 +7,7 @@ import { el, clear } from '../util/dom.js';
 import { t, getLocale } from '../i18n.js';
 import { silhouetteSVG } from './components.js';
 import { hasPhoto, photoUrl, photoCredit } from '../data/media.js';
+import { regionName } from '../data/regions.js';
 import { fmtDate, flagEmoji } from '../util/format.js';
 import { COUNTRY_NAMES } from '../data/continents.js';
 
@@ -71,7 +72,7 @@ export function openDetail(i) {
     fact(t('family'), tax.familyName(tax.familyIdxOf(i), getLocale())),
     caught ? fact(t('firstSeen'), rec?.date ? fmtDate(rec.date, getLocale()) : '—') : null,
     caught ? fact(t('lastSeen'), (rec?.lastDate || rec?.date) ? fmtDate(rec.lastDate || rec.date, getLocale()) : '—') : null,
-    caught && rec?.country ? fact(t('location'), `${flagEmoji(rec.country)} ${COUNTRY_NAMES[rec.country] || rec.sp || rec.country}`) : null,
+    caught && rec?.country ? fact(t('location'), `${flagEmoji(rec.country)} ${[regionName(rec.sp), COUNTRY_NAMES[rec.country] || rec.country].filter(Boolean).join(', ')}`) : null,
     caught && (rec?.totalCount ?? rec?.count) ? fact(t('count'), String(rec?.totalCount ?? rec?.count)) : null,
     el('div', { class: 'detail-status' }, caught ? `✓ ${t('caught')}` : t('notCaught'))
   );

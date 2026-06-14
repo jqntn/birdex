@@ -1,6 +1,7 @@
 import { DATA } from '../config.js';
 
 let index = null;
+let subNames = {};
 const cache = new Map();
 
 async function getJSON(url) {
@@ -13,6 +14,17 @@ export async function loadRegionIndex() {
   index = await getJSON(DATA.regionIndex);
   return index.regions;
 }
+
+export async function loadRegionNames() {
+  try {
+    subNames = (await getJSON(DATA.regionNames)).names || {};
+  } catch {
+    subNames = {};
+  }
+}
+
+// Readable name for an eBird subnational1 code (e.g. "FR-IDF" -> "Île-de-France").
+export const regionName = (code) => subNames[code] || null;
 
 export const regionList = () => index?.regions ?? [];
 export function regionMeta(code) {

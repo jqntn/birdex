@@ -11,6 +11,7 @@ export const DATA = {
   rarity: 'data/rarity.json',
   regionIndex: 'data/regions/_index.json',
   region: (code) => `data/regions/${code}.json`,
+  regionNames: 'data/regionNames.json',
   demo: 'data/demo.csv',
   media: 'data/media.json',
 };
