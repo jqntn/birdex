@@ -39,17 +39,16 @@ export function openDetail(i) {
   box.className = `detail-box r-${rid}${shiny ? ' shiny' : ''}`;
 
   const media = el('div', { class: 'detail-media' });
+  media.innerHTML = `<div class="detail-sil">${silhouetteSVG()}</div>`;
   let credit = null;
   if (hasPhoto(i)) {
-    const img = el('img', { class: 'detail-photo', src: photoUrl(i, 1280), alt: '' });
-    img.onerror = () => { media.classList.remove('has-photo'); media.innerHTML = `<div class="detail-sil">${silhouetteSVG(i)}</div>`; };
-    media.append(img);
-    media.classList.add('has-photo');
     const c = photoCredit(i);
     const txt = [c.by ? `© ${c.by}` : null, c.license || null, 'Wikimedia Commons'].filter(Boolean).join(' · ');
     credit = el('a', { class: 'detail-credit', href: c.fileUrl, target: '_blank', rel: 'noopener' }, txt);
-  } else {
-    media.innerHTML = `<div class="detail-sil">${silhouetteSVG(i)}</div>`;
+    const img = el('img', { class: 'detail-photo', src: photoUrl(i, 1280), alt: '' });
+    img.onerror = () => { img.remove(); media.classList.remove('has-photo'); credit.remove(); };
+    media.append(img);
+    media.classList.add('has-photo');
   }
   if (shiny) media.insertAdjacentHTML('beforeend', '<span class="shiny-mark">✦</span>');
 
