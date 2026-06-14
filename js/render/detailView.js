@@ -41,7 +41,7 @@ export function close() {
 function openLightbox(i, rid) {
   lightbox.className = `lightbox r-${rid}`;
   // Show the already-loaded detail thumb instantly, then swap to the full-res original.
-  lightboxImg.src = photoUrl(i, 960);
+  lightboxImg.src = photoUrl(i, 500);
   const full = new Image();
   full.onload = () => { if (lightbox.style.display !== 'none') lightboxImg.src = full.src; };
   full.src = originalUrl(i);
@@ -70,10 +70,10 @@ export function openDetail(i) {
     const c = photoCredit(i);
     const txt = [c.by ? `© ${c.by}` : null, c.license || null, 'Wikimedia Commons'].filter(Boolean).join(' · ');
     credit = el('a', { class: 'detail-credit', href: c.fileUrl, target: '_blank', rel: 'noopener' }, txt);
-    const img = el('img', { class: 'detail-photo', src: photoUrl(i, 960), alt: '', title: t('viewFull') });
+    const img = el('img', { class: 'detail-photo', src: photoUrl(i, 500), alt: '', title: t('viewFull') });
     let triedFallback = false;
     img.onerror = () => {
-      if (!triedFallback) { triedFallback = true; img.src = photoFallbackUrl(i, 960); }
+      if (!triedFallback) { triedFallback = true; img.src = photoFallbackUrl(i, 500); }
       else { img.remove(); media.classList.remove('has-photo'); credit.remove(); }
     };
     img.addEventListener('click', () => openLightbox(i, rid));
