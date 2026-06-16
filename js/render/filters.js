@@ -1,15 +1,18 @@
 import * as tax from '../data/taxonomy.js';
-import { state, emit } from '../state.js';
+import { state, emit, subscribe } from '../state.js';
 import { el, clear } from '../util/dom.js';
 import { t, getLocale } from '../i18n.js';
 import { RARITY } from '../config.js';
 import { rarityTier } from '../data/rarity.js';
 
 let onChange = null;
+let rootEl = null;
 
 export function mountFilters(root, opts = {}) {
   onChange = opts.onChange;
+  rootEl = root;
   render(root);
+  subscribe(['locale'], () => render(rootEl));
 }
 
 function render(root) {
