@@ -43,12 +43,13 @@ export function photoUrl(i, width) {
   return `https://upload.wikimedia.org/wikipedia/commons/thumb/${m.h[0]}/${m.h}/${m.f}/${name}`;
 }
 
-// Fallback when a direct thumb 404s/429s (un-cached): the generating endpoint at the
-// same width. Used only for the handful of cache misses, so it never bursts the limit.
+// Fallback when a direct thumb 404s/429s (un-cached): the generating endpoint at the same
+// bucketed width — so it never upscales and targets the exact thumb photoUrl wanted, rather
+// than pulling the full original. Used only for the handful of cache misses, never bursting.
 export function photoFallbackUrl(i, width) {
   const m = items[i];
   if (!m) return null;
-  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(m.f)}?width=${width}`;
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(m.f)}?width=${bucketWidth(width, m.w)}`;
 }
 
 // Attribution for the detail caption.
