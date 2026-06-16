@@ -66,7 +66,17 @@ async function leadImages(sci) {
   return out;
 }
 
-// Filename -> { by, l, mime } via Commons extmetadata (proxied through en.wikipedia).
+// Odd formats (TIFF/video) get a thumb name the app can't guess from the extension
+// (lossy/lossless, .jpg/.png, double-dash for video), so we derive a {w}/{f} template
+// from the server's own thumburl. Returns null for normal rasters (plain {w}px-{f}).
+const ODD_MIME = (mime) => mime === 'image/tiff' || mime.startsWith('video/') || mime === 'application/ogg';
+function thumbTemplate(file, ii) {
+  if (!ii.thumburl || !ODD_MIME(ii.mime || '')) return null;
+  const name = decodeURIComponent(new URL(ii.thumburl).pathname.split('/').pop());
+  return name.replace(/\d+px/, '{w}px').replace(file, '{f}');
+}
+
+// Filename -> { by, l, mime, w, t? } via Commons imageinfo (proxied through en.wikipedia).
 async function imageInfo(files) {
   const info = new Map();
   const uniq = [...new Set(files.filter(Boolean))];
@@ -74,14 +84,16 @@ async function imageInfo(files) {
     const slice = uniq.slice(i, i + BATCH);
     const q = (await api({
       action: 'query', titles: slice.map((f) => `File:${f}`).join('|'),
-      prop: 'imageinfo', iiprop: 'extmetadata|mime', iiextmetadatafilter: 'Artist|LicenseShortName',
+      prop: 'imageinfo', iiprop: 'extmetadata|mime|size|url', iiurlwidth: '1280',
+      iiextmetadatafilter: 'Artist|LicenseShortName',
     })).query || {};
     for (const p of q.pages || []) {
       const ii = p.imageinfo?.[0];
       if (!ii) continue;
       const file = p.title.replace(/^File:/, '').replace(/ /g, '_');
       const m = ii.extmetadata || {};
-      info.set(file, { by: strip(m.Artist?.value), l: strip(m.LicenseShortName?.value), mime: ii.mime || '' });
+      const t = thumbTemplate(file, ii);
+      info.set(file, { by: strip(m.Artist?.value), l: strip(m.LicenseShortName?.value), mime: ii.mime || '', w: ii.width || 0, ...(t ? { t } : {}) });
     }
     if ((i / BATCH) % 20 === 0) console.log(`[media] image info ${i}/${uniq.length}`);
     await sleep(100);
@@ -106,7 +118,7 @@ async function imageInfo(files) {
     const inf = info.get(file);
     if (!inf || inf.mime === 'image/svg+xml') { skipped++; continue; }
     const h = createHash('md5').update(file).digest('hex').slice(0, 2);
-    items[i] = { f: file, h, by: inf.by || '', l: inf.l || '' };
+    items[i] = { f: file, h, by: inf.by || '', l: inf.l || '', w: inf.w || 0, ...(inf.t ? { t: inf.t } : {}) };
     kept++;
   }
 
