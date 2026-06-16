@@ -16,8 +16,8 @@ export async function loadMedia() {
 
 export const hasPhoto = (i) => !!items[i];
 
-// Direct CDN thumbnail at a standard bucket width (250 grid, 960 detail) — fast,
-// browser-cached, and not rate-limited like the Special:FilePath special page.
+// Direct CDN thumbnail at a standard bucket width (250 grid, 500 detail, 1280 lightbox) —
+// fast, browser-cached, and not rate-limited like the Special:FilePath special page.
 export function photoUrl(i, width) {
   const m = items[i];
   if (!m) return null;
@@ -30,13 +30,6 @@ export function photoFallbackUrl(i, width) {
   const m = items[i];
   if (!m) return null;
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(m.f)}?width=${width}`;
-}
-
-// The original full-resolution image (no thumbnail), for the click-to-zoom view.
-export function originalUrl(i) {
-  const m = items[i];
-  if (!m) return null;
-  return `https://upload.wikimedia.org/wikipedia/commons/${m.h[0]}/${m.h}/${m.f}`;
 }
 
 // Attribution for the detail caption.

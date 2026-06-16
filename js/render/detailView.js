@@ -6,7 +6,7 @@ import { RARITY, EBIRD_SPECIES_URL } from '../config.js';
 import { el, clear } from '../util/dom.js';
 import { t, getLocale } from '../i18n.js';
 import { silhouetteSVG } from './components.js';
-import { hasPhoto, photoUrl, photoFallbackUrl, originalUrl, photoCredit } from '../data/media.js';
+import { hasPhoto, photoUrl, photoFallbackUrl, photoCredit } from '../data/media.js';
 import { regionName } from '../data/regions.js';
 import { fmtDate, flagEmoji } from '../util/format.js';
 import { COUNTRY_NAMES } from '../data/continents.js';
@@ -65,11 +65,18 @@ export function close() {
 
 function openLightbox(i, rid) {
   lightbox.className = `lightbox r-${rid}`;
-  // Show the already-loaded detail thumb instantly, then swap to the full-res original.
+  // Show the already-loaded detail thumb instantly, then swap to a 1280px thumbnail —
+  // consistent, browser-readable, and size-capped (vs. the raw original's unknown format/size).
   lightboxImg.src = photoUrl(i, 500);
   const full = new Image();
   full.onload = () => { if (lightbox.style.display !== 'none') lightboxImg.src = full.src; };
-  full.src = originalUrl(i);
+  let triedFallback = false;
+  full.onerror = () => {
+    if (triedFallback) return;            // give up; the 500px placeholder stays
+    triedFallback = true;
+    full.src = photoFallbackUrl(i, 1280); // generating endpoint resolves odd formats (TIFF→.jpg, etc.)
+  };
+  full.src = photoUrl(i, 1280);
   lightbox.style.display = 'flex';
 }
 
