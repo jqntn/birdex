@@ -66,5 +66,5 @@ export function commonName(i, locale = state.locale) {
 export function familyName(fi, locale = state.locale) {
   const f = meta.families[fi];
   if (!f) return '';
-  return f.com || f.sci;
+  return (locale === 'fr' ? f.sci : f.com) || f.sci;
 }

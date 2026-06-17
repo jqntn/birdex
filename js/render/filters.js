@@ -51,7 +51,7 @@ function render(root) {
       onChange?.();
     },
   }, el('option', { value: '' }, t('family')),
-    ...fams.map(({ fam, i }) => el('option', { value: i, selected: f.familyIdx === i }, fam.com || fam.sci)));
+    ...fams.map(({ i }) => el('option', { value: i, selected: f.familyIdx === i }, tax.familyName(i, getLocale()))));
 
   const rarSel = el('select', {
     class: 'sel',
