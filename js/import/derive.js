@@ -1,5 +1,5 @@
 import * as tax from '../data/taxonomy.js';
-import { rarityTier, isShiny } from '../data/rarity.js';
+import { rarityTier, shinyKey } from '../data/rarity.js';
 import { RARITY } from '../config.js';
 import { COUNTRY_CONTINENT } from '../data/continents.js';
 
@@ -11,7 +11,7 @@ export function deriveFromSightings(sightings, regionSet, biggestDay = null) {
   const byCountry = {};
   const byDate = {};
   const continents = new Set();
-  const shinies = [];
+  const shinyKeyByCode = new Map();
   const unmatched = [];
 
   let seenInRegion = 0;
@@ -29,8 +29,7 @@ export function deriveFromSightings(sightings, regionSet, biggestDay = null) {
     if (inRegion) seenInRegion++;
 
     const tier = RARITY[rarityTier(idx)].id;
-    const shiny = isShiny(rec.sci);
-    if (shiny) shinies.push(code);
+    shinyKeyByCode.set(code, shinyKey(rec.sci));
     byRarity[tier]++;
 
     if (rec.date) {
@@ -56,7 +55,7 @@ export function deriveFromSightings(sightings, regionSet, biggestDay = null) {
       lastCountry: rec.lastCountry,
       exotic: rec.exotic,
       category: rec.category,
-      shiny,
+      shiny: false,
       rarity: tier,
       outOfRegion: !inRegion,
     };
@@ -66,6 +65,13 @@ export function deriveFromSightings(sightings, regionSet, biggestDay = null) {
   for (const [date, c] of Object.entries(byDate)) {
     if (!biggestLiferDay || c > biggestLiferDay.count) biggestLiferDay = { date, count: c };
   }
+
+  const shinyTarget = Math.floor(caughtSet.size / 100);
+  const shinies = [...shinyKeyByCode.entries()]
+    .sort((a, b) => a[1] - b[1] || (a[0] < b[0] ? -1 : 1))
+    .slice(0, shinyTarget)
+    .map(([code]) => code);
+  for (const code of shinies) species[code].shiny = true;
 
   const agg = {
     liferCount: caughtSet.size,

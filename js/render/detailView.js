@@ -1,7 +1,6 @@
 import * as tax from '../data/taxonomy.js';
 import { state } from '../state.js';
 import { rarityTier } from '../data/rarity.js';
-import { isShiny } from '../data/rarity.js';
 import { RARITY, EBIRD_SPECIES_URL } from '../config.js';
 import { el, clear } from '../util/dom.js';
 import { t, getLocale } from '../i18n.js';
@@ -84,9 +83,9 @@ function closeLightbox() {
 export function openDetail(i) {
   const rid = RARITY[rarityTier(i)].id;
   const sci = tax.sciName(i);
-  const shiny = state.caughtSet.has(i) && isShiny(sci);
   const caught = state.caughtSet.has(i);
   const rec = caught ? state.save?.species?.[tax.speciesCode(i)] : null;
+  const shiny = !!rec?.shiny;
 
   clear(box);
   box.className = `detail-box r-${rid}${shiny ? ' shiny' : ''}`;

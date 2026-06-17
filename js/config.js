@@ -20,7 +20,6 @@ export const DEFAULT_LOCALE = 'fr';
 export const DEFAULT_REGION = 'world';
 
 export const SHINY_SALT = 'birdex-v1';
-export const SHINY_ODDS = 512;
 
 export const RARITY = [
   { id: 'common', en: 'Common', fr: 'Commun' },
