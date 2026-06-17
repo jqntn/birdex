@@ -148,8 +148,7 @@ export function openDetail(i) {
     target: '_blank', rel: 'noopener',
   }, `${t('ebirdPage')} ↗`);
 
-  const close_btn = el('button', { class: 'detail-close', type: 'button', onclick: close }, '✕');
-  box.append(close_btn, media);
+  box.append(media);
   if (credit) box.append(credit);
   box.append(header, facts, ebird);
 
