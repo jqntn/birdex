@@ -31,9 +31,10 @@ export function recomputeRegionStats(save, regionSet) {
 
 export function importText(text) {
   const parsed = parseEbirdData(text);
-  const { species, caughtSet, agg, unmatched } = deriveFromSightings(parsed.sightings, state.regionSet, parsed.biggestDay);
-
   const prev = state.save;
+  const prevShiny = prev?.species ? Object.keys(prev.species).filter((c) => prev.species[c].shiny) : [];
+  const { species, caughtSet, agg, unmatched } = deriveFromSightings(parsed.sightings, state.regionSet, parsed.biggestDay, prevShiny);
+
   const hadPrevImport = !!prev?.importedAt;
   const prevSnapshot = new Set(prev?.prevSnapshot || []);
 

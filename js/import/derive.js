@@ -3,7 +3,7 @@ import { rarityTier, shinyKey } from '../data/rarity.js';
 import { RARITY } from '../config.js';
 import { COUNTRY_CONTINENT } from '../data/continents.js';
 
-export function deriveFromSightings(sightings, regionSet, biggestDay = null) {
+export function deriveFromSightings(sightings, regionSet, biggestDay = null, prevShiny = []) {
   const species = {};
   const caughtSet = new Set();
   const byRarity = Object.fromEntries(RARITY.map((r) => [r.id, 0]));
@@ -67,10 +67,17 @@ export function deriveFromSightings(sightings, regionSet, biggestDay = null) {
   }
 
   const shinyTarget = Math.floor(caughtSet.size / 100);
-  const shinies = [...shinyKeyByCode.entries()]
-    .sort((a, b) => a[1] - b[1] || (a[0] < b[0] ? -1 : 1))
-    .slice(0, shinyTarget)
-    .map(([code]) => code);
+  const shinySet = new Set(prevShiny.filter((code) => shinyKeyByCode.has(code)));
+  if (shinySet.size < shinyTarget) {
+    const ranked = [...shinyKeyByCode.entries()]
+      .filter(([code]) => !shinySet.has(code))
+      .sort((a, b) => a[1] - b[1] || (a[0] < b[0] ? -1 : 1));
+    for (const [code] of ranked) {
+      if (shinySet.size >= shinyTarget) break;
+      shinySet.add(code);
+    }
+  }
+  const shinies = [...shinySet];
   for (const code of shinies) species[code].shiny = true;
 
   const agg = {
