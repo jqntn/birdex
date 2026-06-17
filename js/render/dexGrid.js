@@ -1,4 +1,5 @@
 import { state, subscribe } from '../state.js';
+import * as tax from '../data/taxonomy.js';
 import { card } from './components.js';
 import { el, clear } from '../util/dom.js';
 import { t } from '../i18n.js';
@@ -82,7 +83,9 @@ function render() {
   const frag = document.createDocumentFragment();
   for (let k = startIdx; k < endIdx; k++) {
     const i = list[k];
-    frag.append(card(i, { caught: state.caughtSet.has(i), isNew: state.newLifers.has(i) }));
+    const caught = state.caughtSet.has(i);
+    const shiny = caught && !!state.save?.species?.[tax.speciesCode(i)]?.shiny;
+    frag.append(card(i, { caught, isNew: state.newLifers.has(i), shiny }));
   }
   win.append(frag);
 }
