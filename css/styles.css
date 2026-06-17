@@ -207,7 +207,7 @@ a { color: var(--accent); text-decoration: none; }
   -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); animation: fade 0.15s ease;
 }
 .lightbox-img {
-  height: 80vh; width: auto; max-width: 94vw; object-fit: contain; border-radius: 14px;
+  max-width: 92vw; max-height: 92vh; box-sizing: border-box; border-radius: 14px;
   border: 3px solid var(--r-common); background: var(--surface);
   box-shadow: 0 14px 48px rgba(0, 0, 0, 0.6); animation: pop 0.18s ease;
 }
