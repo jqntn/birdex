@@ -93,7 +93,7 @@ async function imageInfo(files) {
       const file = p.title.replace(/^File:/, '').replace(/ /g, '_');
       const m = ii.extmetadata || {};
       const t = thumbTemplate(file, ii);
-      info.set(file, { by: strip(m.Artist?.value), l: strip(m.LicenseShortName?.value), mime: ii.mime || '', w: ii.width || 0, ...(t ? { t } : {}) });
+      info.set(file, { by: strip(m.Artist?.value), l: strip(m.LicenseShortName?.value), mime: ii.mime || '', w: ii.width || 0, h: ii.height || 0, ...(t ? { t } : {}) });
     }
     if ((i / BATCH) % 20 === 0) console.log(`[media] image info ${i}/${uniq.length}`);
     await sleep(100);
@@ -118,7 +118,8 @@ async function imageInfo(files) {
     const inf = info.get(file);
     if (!inf || inf.mime === 'image/svg+xml') { skipped++; continue; }
     const h = createHash('md5').update(file).digest('hex').slice(0, 2);
-    items[i] = { f: file, h, by: inf.by || '', l: inf.l || '', w: inf.w || 0, ...(inf.t ? { t: inf.t } : {}) };
+    const portrait = inf.h && inf.w && inf.h > inf.w;
+    items[i] = { f: file, h, by: inf.by || '', l: inf.l || '', w: inf.w || 0, ...(portrait ? { ph: inf.h } : {}), ...(inf.t ? { t: inf.t } : {}) };
     kept++;
   }
 

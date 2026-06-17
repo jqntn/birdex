@@ -6,7 +6,7 @@ import { RARITY, EBIRD_SPECIES_URL } from '../config.js';
 import { el, clear } from '../util/dom.js';
 import { t, getLocale } from '../i18n.js';
 import { silhouetteSVG } from './components.js';
-import { hasPhoto, photoUrl, photoFallbackUrl, photoCredit } from '../data/media.js';
+import { hasPhoto, photoUrl, photoFallbackUrl, containWidth, photoCredit } from '../data/media.js';
 import { regionName } from '../data/regions.js';
 import { fmtDate, flagEmoji } from '../util/format.js';
 import { COUNTRY_NAMES } from '../data/continents.js';
@@ -65,18 +65,19 @@ export function close() {
 
 function openLightbox(i, rid) {
   lightbox.className = `lightbox r-${rid}`;
-  // Show the already-loaded detail thumb instantly, then swap to a 1280px thumbnail —
-  // consistent, browser-readable, and size-capped (vs. the raw original's unknown format/size).
+  // Show the already-loaded detail thumb instantly, then swap to the contain-fit thumbnail —
+  // longest side ~1280 (so tall portraits aren't fetched at full height), browser-readable.
   lightboxImg.src = photoUrl(i, 500);
   const full = new Image();
   full.onload = () => { if (lightbox.style.display !== 'none') lightboxImg.src = full.src; };
+  const fw = containWidth(i, 1280);
   let triedFallback = false;
   full.onerror = () => {
-    if (triedFallback) return;            // give up; the 500px placeholder stays
+    if (triedFallback) return;          // give up; the 500px placeholder stays
     triedFallback = true;
-    full.src = photoFallbackUrl(i, 1280); // generating endpoint resolves odd formats (TIFF→.jpg, etc.)
+    full.src = photoFallbackUrl(i, fw); // generating endpoint resolves odd formats (TIFF→.jpg, etc.)
   };
-  full.src = photoUrl(i, 1280);
+  full.src = photoUrl(i, fw);
   lightbox.style.display = 'flex';
 }
 

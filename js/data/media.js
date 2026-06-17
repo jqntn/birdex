@@ -2,7 +2,8 @@ import { DATA } from '../config.js';
 
 // Per-species photo manifest from Wikimedia Commons (built by tools/makeMedia.js).
 // items[i] = { f: filename, h: md5(filename)[0:2], by: photographer, l: license,
-//   w: native pixel width, t?: thumb-name template for odd formats (TIFF/video) }.
+//   w: native pixel width, ph?: native pixel height (portrait items only),
+//   t?: thumb-name template for odd formats (TIFF/video) }.
 let items = {};
 
 export async function loadMedia() {
@@ -30,17 +31,36 @@ function bucketWidth(want, native) {
   return b;
 }
 
-// Direct CDN thumbnail at a standard bucket width (250 grid, 500 detail, 1280 lightbox),
-// stepped down to the source width so we never upscale — fast, browser-cached, and not
-// rate-limited like the Special:FilePath special page. Odd formats (TIFF/video) carry a name
-// template `t` because their thumb name isn't derivable from the extension (lossy/lossless,
+// Build the CDN thumb URL at an already-chosen bucket width. Odd formats (TIFF/video) carry a
+// name template `t` because their thumb name isn't derivable from the extension (lossy/lossless,
 // .jpg/.png, double-dash for video); everything else uses the plain {w}px-{f} form.
+function thumb(m, w) {
+  const name = m.t ? m.t.replace('{w}', w).replace('{f}', m.f) : `${w}px-${m.f}`;
+  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${m.h[0]}/${m.h}/${m.f}/${name}`;
+}
+
+// Direct CDN thumbnail by width (250 grid, 500 detail), stepped down to the source width so we
+// never upscale — fast, browser-cached, not rate-limited like Special:FilePath. For the
+// object-fit:cover grid/detail images, where width is the dimension that must be filled.
 export function photoUrl(i, width) {
   const m = items[i];
   if (!m) return null;
-  const w = bucketWidth(width, m.w);
-  const name = m.t ? m.t.replace('{w}', w).replace('{f}', m.f) : `${w}px-${m.f}`;
-  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${m.h[0]}/${m.h}/${m.f}/${name}`;
+  return thumb(m, bucketWidth(width, m.w));
+}
+
+// Request width for the object-fit:contain lightbox (height-constrained): keeps the LONGEST
+// side near `budget`. Landscape → budget on width; portrait (m.ph set) → budget on height, so
+// width = budget·w/h. Snapped to the nearest bucket that doesn't exceed the source width.
+export function containWidth(i, budget) {
+  const m = items[i];
+  if (!m) return budget;
+  const fit = m.ph ? (budget * m.w) / m.ph : budget;
+  let best = BUCKETS[0];
+  for (const x of BUCKETS) {
+    if (m.w && x > m.w) break;
+    if (Math.abs(x - fit) < Math.abs(best - fit)) best = x;
+  }
+  return best;
 }
 
 // Fallback when a direct thumb 404s/429s (un-cached): the generating endpoint at the same

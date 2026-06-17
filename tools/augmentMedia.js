@@ -63,7 +63,7 @@ const titleToFile = (title) => title.replace(/^File:/, '').replace(/ /g, '_');
     for (const p of q.pages || []) {
       const ii = p.imageinfo?.[0];
       if (!ii) continue;
-      meta.set(titleToFile(p.title), { w: ii.width || 0, mime: ii.mime || '' });
+      meta.set(titleToFile(p.title), { w: ii.width || 0, h: ii.height || 0, mime: ii.mime || '' });
     }
     if ((i / BATCH) % 20 === 0) console.log(`[augment] size ${i}/${files.length}`);
     await sleep(100);
@@ -86,20 +86,22 @@ const titleToFile = (title) => title.replace(/^File:/, '').replace(/ /g, '_');
     await sleep(100);
   }
 
-  // Apply: rebuild each item so key order stays { f, h, by, l, w, t? }.
-  let withW = 0, withT = 0, missing = 0;
+  // Apply: rebuild each item so key order stays { f, h, by, l, w, ph?, t? }.
+  let withW = 0, withPh = 0, withT = 0, missing = 0;
   for (const [f, keys] of fileToKeys) {
     const m = meta.get(f);
     const t = tmpl.get(f);
+    const portrait = m && m.w && m.h && m.h > m.w;
     if (!m || !m.w) missing++;
     for (const k of keys) {
       const it = items[k];
-      items[k] = { f: it.f, h: it.h, by: it.by || '', l: it.l || '', w: (m && m.w) || 0, ...(t ? { t } : {}) };
+      items[k] = { f: it.f, h: it.h, by: it.by || '', l: it.l || '', w: (m && m.w) || 0, ...(portrait ? { ph: m.h } : {}), ...(t ? { t } : {}) };
       if (m && m.w) withW++;
+      if (portrait) withPh++;
       if (t) withT++;
     }
   }
-  console.log(`[augment] set w on ${withW} items, t on ${withT} items, ${missing} files missing width`);
+  console.log(`[augment] set w on ${withW} items, ph on ${withPh} portraits, t on ${withT} items, ${missing} files missing width`);
 
   writeFileSync(DATA, JSON.stringify({ count: data.count, items }));
   console.log(`[augment] wrote ${DATA}`);
