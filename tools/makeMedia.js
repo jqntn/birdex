@@ -3,15 +3,6 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { createHash } from 'node:crypto';
 
-// Builds data/media.json: a per-species photo manifest sourced from Wikipedia /
-// Wikimedia Commons. For each species (by scientific name) it finds the article's
-// lead image, then pulls the photographer + license for an attribution line.
-// Stored as { items: { <speciesIndex>: { f: filename, h: md5[0:2], by, l } } }.
-// Images are CC-licensed (reuse OK with credit); the app derives any width from
-// the upload.wikimedia.org thumb URL and shows the credit on the detail card.
-//
-// Usage: node tools/makeMedia.js   (no API key needed)
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, '..', 'data');
 const API = 'https://en.wikipedia.org/w/api.php';
@@ -25,7 +16,6 @@ const decodeEntities = (s) => String(s).replace(
   /&(?:#(\d+)|#x([0-9a-f]+)|(amp|lt|gt|quot|apos|nbsp));/gi,
   (m, dec, hex, name) => (dec ? String.fromCodePoint(+dec) : hex ? String.fromCodePoint(parseInt(hex, 16)) : ENT[name.toLowerCase()] ?? m)
 );
-// Strip HTML tags AND decode entities (Commons Artist values are HTML, e.g. "Fish &amp; Wildlife").
 const strip = (html) => (html ? decodeEntities(String(html).replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim() : '');
 
 async function api(params) {
@@ -44,7 +34,6 @@ async function api(params) {
   }
 }
 
-// Scientific name -> lead-image filename (article main image), batched + redirect-aware.
 async function leadImages(sci) {
   const out = new Array(sci.length).fill(null);
   for (let i = 0; i < sci.length; i += BATCH) {
@@ -66,9 +55,6 @@ async function leadImages(sci) {
   return out;
 }
 
-// Odd formats (TIFF/video) get a thumb name the app can't guess from the extension
-// (lossy/lossless, .jpg/.png, double-dash for video), so we derive a {w}/{f} template
-// from the server's own thumburl. Returns null for normal rasters (plain {w}px-{f}).
 const ODD_MIME = (mime) => mime === 'image/tiff' || mime.startsWith('video/') || mime === 'application/ogg';
 function thumbTemplate(file, ii) {
   if (!ii.thumburl || !ODD_MIME(ii.mime || '')) return null;
@@ -76,7 +62,6 @@ function thumbTemplate(file, ii) {
   return name.replace(/\d+px/, '{w}px').replace(file, '{f}');
 }
 
-// Filename -> { by, l, mime, w, t? } via Commons imageinfo (proxied through en.wikipedia).
 async function imageInfo(files) {
   const info = new Map();
   const uniq = [...new Set(files.filter(Boolean))];

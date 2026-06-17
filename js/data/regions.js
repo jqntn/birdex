@@ -23,7 +23,6 @@ export async function loadRegionNames() {
   }
 }
 
-// Readable name for an eBird subnational1 code (e.g. "FR-IDF" -> "Île-de-France").
 export const regionName = (code) => subNames[code] || null;
 
 export const regionList = () => index?.regions ?? [];

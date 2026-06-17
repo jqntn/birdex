@@ -32,9 +32,6 @@ export function renderStats(root) {
     )
   );
 
-  // "Most new species in a day": recompute from first-seen dates so it shows on any
-  // save, including ones created before agg.biggestLiferDay existed. (Same result as
-  // the import-time value — it's derivable from the stored per-species first dates.)
   const liferByDate = {};
   for (const code in save.species) {
     const d = save.species[code]?.date;
@@ -44,10 +41,6 @@ export function renderStats(root) {
   for (const [d, c] of Object.entries(liferByDate)) {
     if (!liferDay || c > liferDay.count) liferDay = { date: d, count: c };
   }
-  // "Most species in a day" (distinct species, repeats included) needs the raw import
-  // rows, so it only exists on saves made since that feature shipped. The presence of
-  // the biggestLiferDay key marks the new agg format; on old saves agg.biggestDay held
-  // the lifer-day value, so don't surface it here (a re-import populates the real one).
   const speciesDay = 'biggestLiferDay' in agg ? agg.biggestDay : null;
 
   const dayHero = (d, label) => el('section', { class: 'stat-hero' },

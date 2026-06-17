@@ -62,8 +62,6 @@ export function deriveFromSightings(sightings, regionSet, biggestDay = null) {
     };
   }
 
-  // Most new species (lifers) recorded on a single date: count species whose first
-  // sighting falls on that date. (Distinct-species-per-day lives in biggestDay, from the parser.)
   let biggestLiferDay = null;
   for (const [date, c] of Object.entries(byDate)) {
     if (!biggestLiferDay || c > biggestLiferDay.count) biggestLiferDay = { date, count: c };

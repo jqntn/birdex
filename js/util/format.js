@@ -9,7 +9,6 @@ export function parseEbirdDate(s) {
   const str = String(s).trim();
   const p = (n) => String(n).padStart(2, '0');
 
-  // Full data export: ISO "YYYY-MM-DD" (optionally followed by a time).
   const iso = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (iso) {
     const y = +iso[1], mon = +iso[2] - 1, d = +iso[3];
@@ -17,7 +16,6 @@ export function parseEbirdDate(s) {
     return { y, m: mon, d, iso: `${y}-${p(mon + 1)}-${p(d)}` };
   }
 
-  // Life list page: "25 May 2026".
   const m = str.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/);
   if (!m) return null;
   const day = +m[1];

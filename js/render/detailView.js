@@ -33,9 +33,6 @@ export function mountDetail(rootParent) {
   rootParent.append(overlay, lightbox);
 }
 
-// Truncate the author to fit on one line, appending our own ellipsis after trimming
-// trailing whitespace — so the credit always has exactly one space before the "·"
-// (the browser's text-overflow:ellipsis can leave a stray space depending on the cut).
 let measureCtx;
 function fitCreditAuthor() {
   const credit = box && box.querySelector('.detail-credit');
@@ -65,17 +62,15 @@ export function close() {
 
 function openLightbox(i, rid) {
   lightbox.className = `lightbox r-${rid}`;
-  // Show the already-loaded detail thumb instantly, then swap to the contain-fit thumbnail —
-  // longest side ~1280 (so tall portraits aren't fetched at full height), browser-readable.
   lightboxImg.src = photoUrl(i, 500);
   const full = new Image();
   full.onload = () => { if (lightbox.style.display !== 'none') lightboxImg.src = full.src; };
   const fw = containWidth(i, 1280);
   let triedFallback = false;
   full.onerror = () => {
-    if (triedFallback) return;          // give up; the 500px placeholder stays
+    if (triedFallback) return;
     triedFallback = true;
-    full.src = photoFallbackUrl(i, fw); // generating endpoint resolves odd formats (TIFF→.jpg, etc.)
+    full.src = photoFallbackUrl(i, fw);
   };
   full.src = photoUrl(i, fw);
   lightbox.style.display = 'flex';
@@ -102,7 +97,6 @@ export function openDetail(i) {
   if (hasPhoto(i)) {
     const c = photoCredit(i);
     const meta = [c.license, 'Wikimedia Commons'].filter(Boolean).join(' · ');
-    // One line: the author shrinks with an ellipsis if long; license + source stay.
     credit = el('a', { class: 'detail-credit', href: c.fileUrl, target: '_blank', rel: 'noopener' },
       c.by ? el('span', { class: 'credit-author', dataset: { full: `© ${c.by}` } }, `© ${c.by}`) : null,
       el('span', { class: 'credit-meta' }, c.by ? ` · ${meta}` : meta)

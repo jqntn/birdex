@@ -25,14 +25,8 @@ export function parseCSV(text) {
 
 export const binomial = (sci) => sci.trim().split(/\s+/).slice(0, 2).join(' ');
 
-// Markers of non-countable eBird taxa in the full data export: spuh ("Anas sp."),
-// slashes ("Anas crecca/carolinensis"), hybrids ("... x ..." / "×"), and
-// domestic/feral forms or group brackets ("(Domestic type)", "[Group]").
 export const NON_SPECIES = /\bsp\.|\/| x |×|\(|\[/i;
 
-// Parses an eBird CSV (the full "Download My Data" export, or a life list) and
-// aggregates every observation down to one record per species, tracking the
-// earliest sighting (first seen / lifer) and the latest (last seen).
 export function parseEbirdData(text) {
   const rows = parseCSV(text);
   if (!rows.length) return { sightings: new Map(), rows: 0, countable: 0, skipped: 0, biggestDay: null };
@@ -76,7 +70,6 @@ export function parseEbirdData(text) {
 
     const key = normSci(bin);
     const iso = parseEbirdDate(cells[ci.date])?.iso || null;
-    // Track distinct species seen per calendar date (lifers AND repeats) for the "biggest day".
     if (iso) {
       let day = dayMap.get(iso);
       if (!day) dayMap.set(iso, (day = new Set()));
@@ -84,7 +77,6 @@ export function parseEbirdData(text) {
     }
     const region = (cells[ci.region] || '').trim();
     const country = countryOf(region);
-    // Every eBird row is a presence; "X" (present, uncounted) and blanks count as 1.
     const rawCount = parseInt((cells[ci.count] || '').trim(), 10);
     const cnt = Number.isFinite(rawCount) && rawCount > 0 ? rawCount : 1;
     const sub = ci.sub >= 0 ? (cells[ci.sub] || '').trim() : '';
@@ -112,7 +104,6 @@ export function parseEbirdData(text) {
     }
   }
 
-  // Biggest day = the date with the most distinct species observed (any species, not just new ones).
   let biggestDay = null;
   for (const [date, set] of dayMap) {
     if (!biggestDay || set.size > biggestDay.count) biggestDay = { date, count: set.size };

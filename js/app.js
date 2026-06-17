@@ -231,10 +231,6 @@ function registerSW() {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (refreshing) return;
     refreshing = true;
-    // A new service worker took control. If we already had one, this is an update —
-    // reload so the page actually runs the fresh precached assets instead of the
-    // stale ones it loaded with. (On first install there's no prior controller and
-    // the assets are already fresh, so no reload is needed.)
     if (hadController) location.reload();
   });
 }

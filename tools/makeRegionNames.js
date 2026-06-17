@@ -4,12 +4,6 @@ import { dirname, join } from 'node:path';
 import { loadEnv } from './lib/env.js';
 import { COUNTRIES } from './regionCodes.js';
 
-// Builds data/regionNames.json: a map of eBird subnational1 codes to readable
-// names (e.g. "FR-IDF" -> "Île-de-France", "JP-13" -> "Tokyo"), used to show the
-// region alongside the country on a species card. Needs the eBird API key.
-//
-// Usage: node tools/makeRegionNames.js
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, '..', 'data');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

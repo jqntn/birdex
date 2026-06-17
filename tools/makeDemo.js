@@ -3,15 +3,6 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { parseCSV, binomial, NON_SPECIES } from '../js/csv/ebirdParser.js';
 
-// Builds the shipped demo dataset (data/demo.csv) from a raw eBird "Download My
-// Data" export. Keeps only the five columns the app actually reads, dropping all
-// personal information (locations like Maison/Mamie, lat/long, checklist IDs,
-// county, comments, media) and the rows the parser discards anyway (spuh, slash,
-// hybrid, domestic forms). The raw source is gitignored and never committed.
-//
-// Usage: node tools/makeDemo.js [path-to-MyEBirdData.csv]
-//   defaults to tools/MyEBirdData.csv
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 

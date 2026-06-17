@@ -5,8 +5,6 @@ import { el } from '../util/dom.js';
 import { getLocale } from '../i18n.js';
 import { hasPhoto, photoUrl, photoFallbackUrl } from '../data/media.js';
 
-// A single egg-shaped silhouette for every species without a photo: pointed top,
-// rounded wider bottom, widest in the lower half.
 const EGG = 'M36 8C47 8 55 24 55 37C55 46 47 53 36 53C25 53 17 46 17 37C17 24 25 8 36 8Z';
 
 export function silhouetteSVG() {

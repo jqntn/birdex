@@ -2,11 +2,6 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-// One-off: enrich an existing data/media.json with native width `w` (every item) and a
-// thumb-name template `t` (TIFF/video only) — WITHOUT re-resolving lead images, so the
-// committed dataset doesn't churn. Future full rebuilds get the same fields via makeMedia.js.
-// Usage: node tools/augmentMedia.js
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA = join(__dirname, '..', 'data', 'media.json');
 const API = 'https://en.wikipedia.org/w/api.php';
@@ -31,8 +26,6 @@ async function api(params) {
   }
 }
 
-// Odd formats (TIFF/video) get a server-determined thumb name we can't guess from the
-// extension (lossy/lossless, .jpg/.png, double-dash for video). Derive a {w}/{f} template.
 const ODD_MIME = (mime) => mime === 'image/tiff' || mime.startsWith('video/') || mime === 'application/ogg';
 function thumbTemplate(file, ii) {
   if (!ii.thumburl) return null;
@@ -55,7 +48,6 @@ const titleToFile = (title) => title.replace(/^File:/, '').replace(/ /g, '_');
   const files = [...fileToKeys.keys()];
   console.log(`[augment] ${files.length} unique files across ${Object.keys(items).length} items`);
 
-  // Pass 1: native size + mime for every file.
   const meta = new Map();
   for (let i = 0; i < files.length; i += BATCH) {
     const slice = files.slice(i, i + BATCH);
@@ -69,7 +61,6 @@ const titleToFile = (title) => title.replace(/^File:/, '').replace(/ /g, '_');
     await sleep(100);
   }
 
-  // Pass 2: thumb template for the odd-format subset only.
   const odd = files.filter((f) => ODD_MIME(meta.get(f)?.mime || ''));
   console.log(`[augment] ${odd.length} odd-format files needing a template`);
   const tmpl = new Map();
@@ -86,7 +77,6 @@ const titleToFile = (title) => title.replace(/^File:/, '').replace(/ /g, '_');
     await sleep(100);
   }
 
-  // Apply: rebuild each item so key order stays { f, h, by, l, w, ph?, t? }.
   let withW = 0, withPh = 0, withT = 0, missing = 0;
   for (const [f, keys] of fileToKeys) {
     const m = meta.get(f);
