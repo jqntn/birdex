@@ -22,13 +22,17 @@ export function mountDetail(rootParent) {
   lightboxImg = el('img', { class: 'lightbox-img', alt: '' });
   lightbox.append(lightboxImg);
   lightbox.addEventListener('click', closeLightbox);
+  lightboxImg.addEventListener('load', sizeLightbox);
 
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (lightbox.style.display !== 'none') closeLightbox();
     else if (overlay.style.display !== 'none') close();
   });
-  window.addEventListener('resize', () => { if (overlay.style.display !== 'none') fitCreditAuthor(); });
+  window.addEventListener('resize', () => {
+    if (overlay.style.display !== 'none') fitCreditAuthor();
+    if (lightbox.style.display !== 'none') sizeLightbox();
+  });
   rootParent.append(overlay, lightbox);
 }
 
@@ -75,9 +79,20 @@ function openLightbox(i, rid) {
   lightbox.style.display = 'flex';
 }
 
+function sizeLightbox() {
+  const w = lightboxImg.naturalWidth, h = lightboxImg.naturalHeight;
+  if (!w || !h) return;
+  const maxW = window.innerWidth * 0.92 - 6, maxH = window.innerHeight * 0.92 - 6;
+  let dw = maxW, dh = (maxW * h) / w;
+  if (dh > maxH) { dh = maxH; dw = (maxH * w) / h; }
+  lightboxImg.style.width = `${Math.round(dw)}px`;
+  lightboxImg.style.height = `${Math.round(dh)}px`;
+}
+
 function closeLightbox() {
   lightbox.style.display = 'none';
   lightboxImg.removeAttribute('src');
+  lightboxImg.style.width = lightboxImg.style.height = '';
 }
 
 export function openDetail(i) {
