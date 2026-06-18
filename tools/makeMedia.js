@@ -55,7 +55,7 @@ async function leadImages(sci) {
   return out;
 }
 
-const ODD_MIME = (mime) => mime === 'image/tiff' || mime.startsWith('video/') || mime === 'application/ogg';
+const ODD_MIME = (mime) => mime === 'image/tiff' || mime.startsWith('video/') || mime === 'application/ogg' || mime === 'image/svg+xml';
 function thumbTemplate(file, ii) {
   if (!ii.thumburl || !ODD_MIME(ii.mime || '')) return null;
   const name = decodeURIComponent(new URL(ii.thumburl).pathname.split('/').pop());
@@ -99,9 +99,8 @@ async function imageInfo(files) {
   for (let i = 0; i < sci.length; i++) {
     const file = files[i];
     if (!file) continue;
-    if (/\.svg$/i.test(file)) { skipped++; continue; }
     const inf = info.get(file);
-    if (!inf || inf.mime === 'image/svg+xml') { skipped++; continue; }
+    if (!inf) { skipped++; continue; }
     const h = createHash('md5').update(file).digest('hex').slice(0, 2);
     const portrait = inf.h && inf.w && inf.h > inf.w;
     items[i] = { f: file, h, by: inf.by || '', l: inf.l || '', w: inf.w || 0, ...(portrait ? { ph: inf.h } : {}), ...(inf.t ? { t: inf.t } : {}) };

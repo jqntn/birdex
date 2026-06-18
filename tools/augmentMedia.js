@@ -26,7 +26,7 @@ async function api(params) {
   }
 }
 
-const ODD_MIME = (mime) => mime === 'image/tiff' || mime.startsWith('video/') || mime === 'application/ogg';
+const ODD_MIME = (mime) => mime === 'image/tiff' || mime.startsWith('video/') || mime === 'application/ogg' || mime === 'image/svg+xml';
 function thumbTemplate(file, ii) {
   if (!ii.thumburl) return null;
   const name = decodeURIComponent(new URL(ii.thumburl).pathname.split('/').pop());
