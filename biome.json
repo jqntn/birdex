@@ -25,8 +25,7 @@
 				"noBitwiseOperators": "off",
 				"noEmptyBlockStatements": "off",
 				"noAlert": "off",
-				"noUnnecessaryConditions": "off",
-				"noNestedPromises": "off"
+				"noUnnecessaryConditions": "off"
 			}
 		}
 	},

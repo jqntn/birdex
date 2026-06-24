@@ -46,21 +46,23 @@ const PRECACHE = [
 	"./data/regionNames.json",
 ];
 
+async function cacheOne(c, u) {
+	try {
+		const r = await fetch(u, { cache: "reload" });
+		if (r.ok) {
+			await c.put(u, r);
+		}
+	} catch {}
+}
+
+async function precache() {
+	const c = await caches.open(CACHE);
+	await Promise.all(PRECACHE.map((u) => cacheOne(c, u)));
+	await self.skipWaiting();
+}
+
 self.addEventListener("install", (e) => {
-	e.waitUntil(
-		caches
-			.open(CACHE)
-			.then((c) =>
-				Promise.all(
-					PRECACHE.map((u) =>
-						fetch(u, { cache: "reload" })
-							.then((r) => (r.ok ? c.put(u, r) : null))
-							.catch(() => null),
-					),
-				),
-			)
-			.then(() => self.skipWaiting()),
-	);
+	e.waitUntil(precache());
 });
 
 self.addEventListener("activate", (e) => {
