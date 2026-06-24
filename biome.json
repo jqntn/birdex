@@ -23,7 +23,6 @@
 			},
 			"suspicious": {
 				"noBitwiseOperators": "off",
-				"noEmptyBlockStatements": "off",
 				"noAlert": "off",
 				"noUnnecessaryConditions": "off"
 			}

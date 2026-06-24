@@ -6,6 +6,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const ENV_LINE_RE = /^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/i;
 
+const ignore = () => undefined;
+
 export function loadEnv() {
 	try {
 		const text = readFileSync(join(__dirname, "..", ".env"), "utf8");
@@ -26,5 +28,7 @@ export function loadEnv() {
 				process.env[key] = val;
 			}
 		}
-	} catch {}
+	} catch {
+		ignore();
+	}
 }

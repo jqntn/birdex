@@ -2,6 +2,8 @@ const CACHE = "birdex-20260624-202727";
 const THUMBS = "birdex-thumbs";
 const THUMBS_MAX = 600;
 
+const ignore = () => undefined;
+
 const PRECACHE = [
 	"./",
 	"./index.html",
@@ -52,7 +54,9 @@ async function cacheOne(c, u) {
 		if (r.ok) {
 			await c.put(u, r);
 		}
-	} catch {}
+	} catch {
+		ignore();
+	}
 }
 
 async function precache() {

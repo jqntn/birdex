@@ -1,5 +1,7 @@
 import { DEFAULT_LOCALE, DEFAULT_REGION, LS_KEY } from "./config.js";
 
+const ignore = () => undefined;
+
 const blankSave = () => ({
 	version: 1,
 	importedAt: null,
@@ -28,7 +30,9 @@ export function loadSave() {
 export function saveAll(save) {
 	try {
 		localStorage.setItem(LS_KEY, JSON.stringify(save));
-	} catch {}
+	} catch {
+		ignore();
+	}
 }
 
 export function patchSave(current, patch) {
@@ -41,7 +45,9 @@ export function patchSave(current, patch) {
 export function clearAll() {
 	try {
 		localStorage.removeItem(LS_KEY);
-	} catch {}
+	} catch {
+		ignore();
+	}
 }
 
 export { blankSave };
