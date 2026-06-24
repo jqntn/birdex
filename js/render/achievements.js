@@ -300,7 +300,7 @@ export function buildContext() {
 	const famCaught = new Map();
 	const orderTotal = new Set();
 	const orderCaught = new Set();
-	for (let i = 0; i < total; i++) {
+	for (let i = 0; i < total; i += 1) {
 		const inRegion = regionSet ? regionSet.has(i) : true;
 		if (!inRegion) {
 			continue;
@@ -317,7 +317,7 @@ export function buildContext() {
 	let familiesComplete = 0;
 	for (const [fi, totalN] of famTotal) {
 		if (totalN > 0 && famCaught.get(fi) === totalN) {
-			familiesComplete++;
+			familiesComplete += 1;
 		}
 	}
 	const orderCoverPct =

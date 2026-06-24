@@ -12,9 +12,9 @@ const ICONS_DIR = join(
 
 const CRC = (() => {
 	const t = new Uint32Array(256);
-	for (let n = 0; n < 256; n++) {
+	for (let n = 0; n < 256; n += 1) {
 		let c = n;
-		for (let k = 0; k < 8; k++) {
+		for (let k = 0; k < 8; k += 1) {
 			c = c & 1 ? 0xed_b8_83_20 ^ (c >>> 1) : c >>> 1;
 		}
 		t[n] = c >>> 0;
@@ -46,7 +46,7 @@ function encodePng(width, height, rgba) {
 	ihdr[8] = 8;
 	ihdr[9] = 6;
 	const raw = Buffer.alloc((width * 4 + 1) * height);
-	for (let y = 0; y < height; y++) {
+	for (let y = 0; y < height; y += 1) {
 		raw[y * (width * 4 + 1)] = 0;
 		rgba.copy(raw, y * (width * 4 + 1) + 1, y * width * 4, (y + 1) * width * 4);
 	}
@@ -84,8 +84,8 @@ function drawIcon(size, { maskable = false } = {}) {
 	];
 	const dist = (x, y, cx, cy) => Math.hypot(x - cx, y - cy);
 
-	for (let y = 0; y < S; y++) {
-		for (let x = 0; x < S; x++) {
+	for (let y = 0; y < S; y += 1) {
+		for (let x = 0; x < S; x += 1) {
 			let col = null;
 			let a = 255;
 

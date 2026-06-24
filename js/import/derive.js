@@ -32,12 +32,12 @@ export function deriveFromSightings(
 
 		const inRegion = regionSet ? regionSet.has(idx) : true;
 		if (inRegion) {
-			seenInRegion++;
+			seenInRegion += 1;
 		}
 
 		const tier = RARITY[rarityTier(idx)].id;
 		shinyKeyByCode.set(code, shinyKey(rec.sci));
-		byRarity[tier]++;
+		byRarity[tier] += 1;
 
 		if (rec.date) {
 			const y = rec.date.slice(0, 4);

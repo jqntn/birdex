@@ -36,7 +36,7 @@ function makeDemo(srcPath) {
 	const out = [KEEP.join(",")];
 	let kept = 0;
 	let dropped = 0;
-	for (let r = 1; r < rows.length; r++) {
+	for (let r = 1; r < rows.length; r += 1) {
 		const cells = rows[r];
 		if (cells.length === 1 && cells[0] === "") {
 			continue;
@@ -46,11 +46,11 @@ function makeDemo(srcPath) {
 			continue;
 		}
 		if (NON_SPECIES.test(sci) || binomial(sci).split(" ").length < 2) {
-			dropped++;
+			dropped += 1;
 			continue;
 		}
 		out.push(KEEP.map((name) => esc(cells[col[name]])).join(","));
-		kept++;
+		kept += 1;
 	}
 
 	const dest = join(ROOT, "data", "demo.csv");

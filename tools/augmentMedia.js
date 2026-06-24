@@ -12,7 +12,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function api(params) {
 	const url = `${API}?${new URLSearchParams({ format: "json", formatversion: "2", ...params })}`;
-	for (let attempt = 0; ; attempt++) {
+	for (let attempt = 0; ; attempt += 1) {
 		let res;
 		try {
 			res = await fetch(url, {
@@ -143,7 +143,7 @@ const titleToFile = (title) =>
 		const t = tmpl.get(f);
 		const portrait = m?.w && m.h && m.h > m.w;
 		if (!m?.w) {
-			missing++;
+			missing += 1;
 		}
 		for (const k of keys) {
 			const it = items[k];
@@ -157,13 +157,13 @@ const titleToFile = (title) =>
 				...(t ? { t } : {}),
 			};
 			if (m?.w) {
-				withW++;
+				withW += 1;
 			}
 			if (portrait) {
-				withPh++;
+				withPh += 1;
 			}
 			if (t) {
-				withT++;
+				withT += 1;
 			}
 		}
 	}

@@ -166,7 +166,7 @@ async function trimCache(cache, max) {
 	if (keys.length <= max) {
 		return;
 	}
-	for (let i = 0; i < keys.length - max; i++) {
+	for (let i = 0; i < keys.length - max; i += 1) {
 		cache.delete(keys[i]);
 	}
 }

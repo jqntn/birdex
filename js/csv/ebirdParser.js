@@ -21,30 +21,30 @@ function parseCSV(text) {
 					i += 2;
 				} else {
 					q = false;
-					i++;
+					i += 1;
 				}
 			} else {
 				field += c;
-				i++;
+				i += 1;
 			}
 		} else if (c === '"') {
 			q = true;
-			i++;
+			i += 1;
 		} else if (c === ",") {
 			row.push(field);
 			field = "";
-			i++;
+			i += 1;
 		} else if (c === "\r") {
-			i++;
+			i += 1;
 		} else if (c === "\n") {
 			row.push(field);
 			rows.push(row);
 			row = [];
 			field = "";
-			i++;
+			i += 1;
 		} else {
 			field += c;
-			i++;
+			i += 1;
 		}
 	}
 	if (field.length > 0 || row.length > 0) {
@@ -98,7 +98,7 @@ function parseEbirdData(text) {
 	let countable = 0;
 	let skipped = 0;
 
-	for (let r = 1; r < rows.length; r++) {
+	for (let r = 1; r < rows.length; r += 1) {
 		const cells = rows[r];
 		if (cells.length === 1 && cells[0] === "") {
 			continue;
@@ -107,27 +107,27 @@ function parseEbirdData(text) {
 		if (!sciRaw) {
 			continue;
 		}
-		dataRows++;
+		dataRows += 1;
 
 		if (ci.category >= 0) {
 			const cat = (cells[ci.category] || "").trim().toLowerCase();
 			if (cat && cat !== "issf" && !COUNTABLE_CATEGORIES.has(cat)) {
-				skipped++;
+				skipped += 1;
 				continue;
 			}
 		}
 		if (ci.countable >= 0 && (cells[ci.countable] || "").trim() === "0") {
-			skipped++;
+			skipped += 1;
 			continue;
 		}
 		if (NON_SPECIES.test(sciRaw)) {
-			skipped++;
+			skipped += 1;
 			continue;
 		}
 
 		const bin = binomial(sciRaw);
 		if (bin.split(" ").length < 2) {
-			skipped++;
+			skipped += 1;
 			continue;
 		}
 
@@ -164,10 +164,10 @@ function parseEbirdData(text) {
 				rowCount: 0,
 			};
 			agg.set(key, a);
-			countable++;
+			countable += 1;
 		}
 		a.totalCount += cnt;
-		a.rowCount++;
+		a.rowCount += 1;
 		if (sub) {
 			a.subs.add(sub);
 		}

@@ -19,7 +19,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 	const Concurrency = 3;
 
 	async function fetchOne(country) {
-		for (let attempt = 0; ; attempt++) {
+		for (let attempt = 0; ; attempt += 1) {
 			try {
 				const res = await fetch(
 					`https://api.ebird.org/v2/ref/region/list/subnational1/${country.code}?key=${key}`,

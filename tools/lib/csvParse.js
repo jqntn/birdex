@@ -21,33 +21,33 @@ export function parseCSV(text) {
 					i += 2;
 				} else {
 					inQuotes = false;
-					i++;
+					i += 1;
 				}
 			} else {
 				field += c;
-				i++;
+				i += 1;
 			}
 			continue;
 		}
 
 		if (c === '"') {
 			inQuotes = true;
-			i++;
+			i += 1;
 		} else if (c === ",") {
 			row.push(field);
 			field = "";
-			i++;
+			i += 1;
 		} else if (c === "\r") {
-			i++;
+			i += 1;
 		} else if (c === "\n") {
 			row.push(field);
 			rows.push(row);
 			row = [];
 			field = "";
-			i++;
+			i += 1;
 		} else {
 			field += c;
-			i++;
+			i += 1;
 		}
 	}
 
@@ -66,13 +66,13 @@ export function parseCSVObjects(text) {
 	}
 	const header = rows[0].map((h) => h.trim());
 	const out = [];
-	for (let r = 1; r < rows.length; r++) {
+	for (let r = 1; r < rows.length; r += 1) {
 		const cells = rows[r];
 		if (cells.length === 1 && cells[0] === "") {
 			continue;
 		}
 		const obj = {};
-		for (let c = 0; c < header.length; c++) {
+		for (let c = 0; c < header.length; c += 1) {
 			obj[header[c]] = cells[c] ?? "";
 		}
 		out.push(obj);

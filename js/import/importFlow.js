@@ -28,7 +28,7 @@ function recomputeRegionStats(save, regionSet) {
 			: true;
 		save.species[code].outOfRegion = !inRegion;
 		if (inRegion) {
-			seen++;
+			seen += 1;
 		}
 	}
 	save.agg.seenInRegion = seen;

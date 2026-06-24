@@ -34,7 +34,7 @@ const strip = (html) =>
 
 async function api(params) {
 	const url = `${API}?${new URLSearchParams({ format: "json", formatversion: "2", ...params })}`;
-	for (let attempt = 0; ; attempt++) {
+	for (let attempt = 0; ; attempt += 1) {
 		let res;
 		try {
 			res = await fetch(url, {
@@ -75,7 +75,7 @@ async function leadImages(sci) {
 		const norm = new Map((q.normalized || []).map((n) => [n.from, n.to]));
 		const redir = new Map((q.redirects || []).map((r) => [r.from, r.to]));
 		const page = new Map((q.pages || []).map((p) => [p.title, p]));
-		for (let j = 0; j < slice.length; j++) {
+		for (let j = 0; j < slice.length; j += 1) {
 			let t = slice[j];
 			if (norm.has(t)) {
 				t = norm.get(t);
@@ -167,14 +167,14 @@ async function imageInfo(files) {
 	const items = {};
 	let kept = 0;
 	let skipped = 0;
-	for (let i = 0; i < sci.length; i++) {
+	for (let i = 0; i < sci.length; i += 1) {
 		const file = files[i];
 		if (!file) {
 			continue;
 		}
 		const inf = info.get(file);
 		if (!inf) {
-			skipped++;
+			skipped += 1;
 			continue;
 		}
 		const h = createHash("md5").update(file).digest("hex").slice(0, 2);
@@ -188,7 +188,7 @@ async function imageInfo(files) {
 			...(portrait ? { ph: inf.h } : {}),
 			...(inf.t ? { t: inf.t } : {}),
 		};
-		kept++;
+		kept += 1;
 	}
 
 	const dest = join(DATA_DIR, "media.json");

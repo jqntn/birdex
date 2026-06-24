@@ -102,7 +102,7 @@ function render() {
 
 	clear(win);
 	const frag = document.createDocumentFragment();
-	for (let k = startIdx; k < endIdx; k++) {
+	for (let k = startIdx; k < endIdx; k += 1) {
 		const i = list[k];
 		const caught = state.caughtSet.has(i);
 		const shiny =

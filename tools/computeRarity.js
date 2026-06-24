@@ -39,14 +39,14 @@ function computeRarity(build = new Date().toISOString()) {
 		}
 		const region = JSON.parse(readFileSync(join(REGIONS_DIR, f), "utf8"));
 		for (const idx of deltaUnpack(region.deltas)) {
-			occ[idx]++;
+			occ[idx] += 1;
 		}
-		countryFiles++;
+		countryFiles += 1;
 	}
 
 	const partial = countryFiles === 0;
 	const tiers = new Uint8Array(count);
-	for (let i = 0; i < count; i++) {
+	for (let i = 0; i < count; i += 1) {
 		if (partial) {
 			tiers[i] = extinct[i] ? 4 : 0;
 			continue;
@@ -67,7 +67,7 @@ function computeRarity(build = new Date().toISOString()) {
 
 	const dist = [0, 0, 0, 0, 0];
 	for (const t of tiers) {
-		dist[t]++;
+		dist[t] += 1;
 	}
 
 	writeFileSync(

@@ -19,7 +19,6 @@
 				"noTernary": "off",
 				"noMagicNumbers": "off",
 				"noHexColors": "off",
-				"noIncrementDecrement": "off",
 				"noContinue": "off",
 				"useNamingConvention": "off",
 				"noExcessiveLinesPerFile": "off",

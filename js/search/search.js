@@ -15,7 +15,7 @@ export function buildIndex() {
 		await Promise.all([loadNames("fr"), loadNames("en")]);
 		const n = count();
 		const docs = new Array(n);
-		for (let i = 0; i < n; i++) {
+		for (let i = 0; i < n; i += 1) {
 			docs[i] = {
 				i,
 				sci: sciName(i),

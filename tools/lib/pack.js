@@ -12,7 +12,7 @@ export function deltaPack(indices) {
 export function deltaUnpack(deltas) {
 	const out = new Array(deltas.length);
 	let acc = 0;
-	for (let i = 0; i < deltas.length; i++) {
+	for (let i = 0; i < deltas.length; i += 1) {
 		acc += deltas[i];
 		out[i] = acc;
 	}

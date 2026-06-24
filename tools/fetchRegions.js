@@ -81,7 +81,7 @@ async function buildRegions({
 				);
 				return { country, count: indices.length, indices };
 			} catch (e) {
-				attempt++;
+				attempt += 1;
 				if (
 					(e.status === 429 || (e.status >= 500 && e.status < 600)) &&
 					attempt <= MAX_RETRIES
