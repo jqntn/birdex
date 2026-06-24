@@ -1,6 +1,6 @@
 import { DEFAULT_LOCALE, DEFAULT_REGION } from "./config.js";
 
-export const state = {
+const state = {
 	locale: DEFAULT_LOCALE,
 	region: DEFAULT_REGION,
 
@@ -17,7 +17,7 @@ export const state = {
 
 const subs = new Map();
 
-export function subscribe(keys, fn) {
+function subscribe(keys, fn) {
 	for (const k of [].concat(keys)) {
 		if (!subs.has(k)) {
 			subs.set(k, new Set());
@@ -31,7 +31,7 @@ export function subscribe(keys, fn) {
 	};
 }
 
-export function emit(patch) {
+function emit(patch) {
 	Object.assign(state, patch);
 	const notified = new Set();
 	for (const k of Object.keys(patch)) {
@@ -43,3 +43,5 @@ export function emit(patch) {
 		}
 	}
 }
+
+export { emit, state, subscribe };

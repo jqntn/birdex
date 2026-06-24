@@ -14,7 +14,7 @@ const CONCURRENCY = 3;
 const SPACING_MS = 200;
 const MAX_RETRIES = 3;
 
-export async function buildRegions({
+async function buildRegions({
 	force = false,
 	build = new Date().toISOString(),
 } = {}) {
@@ -189,3 +189,5 @@ if (process.argv[1]?.endsWith("fetchRegions.js")) {
 		process.exit(1);
 	});
 }
+
+export { buildRegions };

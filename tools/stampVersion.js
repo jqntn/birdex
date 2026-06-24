@@ -7,7 +7,7 @@ const ROOT = join(__dirname, "..");
 
 const CACHE_RE = /const CACHE = ['"][^'"]*['"];/;
 
-export function makeBuildId(d = new Date()) {
+function makeBuildId(d = new Date()) {
 	const p = (n) => String(n).padStart(2, "0");
 	return (
 		`${d.getUTCFullYear()}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}-` +
@@ -15,7 +15,7 @@ export function makeBuildId(d = new Date()) {
 	);
 }
 
-export function stampVersion(build = makeBuildId()) {
+function stampVersion(build = makeBuildId()) {
 	writeFileSync(join(ROOT, "version.js"), `export const BUILD = "${build}";\n`);
 
 	const swPath = join(ROOT, "sw.js");
@@ -37,3 +37,5 @@ export function stampVersion(build = makeBuildId()) {
 if (process.argv[1]?.endsWith("stampVersion.js")) {
 	stampVersion();
 }
+
+export { makeBuildId, stampVersion };

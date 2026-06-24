@@ -33,7 +33,7 @@ let box;
 let lightbox;
 let lightboxImg;
 
-export function mountDetail(rootParent) {
+function mountDetail(rootParent) {
 	overlay = el("div", {
 		class: "overlay",
 		id: "detail-overlay",
@@ -105,7 +105,7 @@ function fitCreditAuthor() {
 	author.textContent = `${full.slice(0, lo).replace(TRAILING_WS_RE, "")}…`;
 }
 
-export function close() {
+function close() {
 	if (lightbox.style.display !== "none") {
 		closeLightbox();
 	}
@@ -162,7 +162,7 @@ function closeLightbox() {
 	lightboxImg.style.height = "";
 }
 
-export function openDetail(i) {
+function openDetail(i) {
 	const rid = RARITY[rarityTier(i)].id;
 	const sci = sciName(i);
 	const caught = state.caughtSet.has(i);
@@ -317,3 +317,5 @@ function fact(label, value) {
 		el("span", { class: "fact-value" }, value),
 	);
 }
+
+export { close, mountDetail, openDetail };

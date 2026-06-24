@@ -12,7 +12,7 @@ const COUNTRY_CODES = new Set(COUNTRIES.map((c) => c.code));
 
 const JSON_EXT_RE = /\.json$/;
 
-export function computeRarity(build = new Date().toISOString()) {
+function computeRarity(build = new Date().toISOString()) {
 	const core = JSON.parse(
 		readFileSync(join(DATA_DIR, "taxonomy.core.json"), "utf8"),
 	);
@@ -89,3 +89,5 @@ export function computeRarity(build = new Date().toISOString()) {
 if (process.argv[1]?.endsWith("computeRarity.js")) {
 	computeRarity();
 }
+
+export { computeRarity };

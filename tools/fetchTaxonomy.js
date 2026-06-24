@@ -16,7 +16,7 @@ const isExtinct = (v) => {
 	return s === "TRUE" || s === "1" || s === "YES";
 };
 
-export async function buildTaxonomy(build = new Date().toISOString()) {
+async function buildTaxonomy(build = new Date().toISOString()) {
 	mkdirSync(DATA_DIR, { recursive: true });
 
 	console.log("[taxonomy] fetching English taxonomy…");
@@ -140,3 +140,5 @@ if (
 		process.exit(1);
 	});
 }
+
+export { buildTaxonomy };

@@ -1,7 +1,7 @@
 import { COUNTABLE_CATEGORIES } from "../config.js";
 import { countryOf, normSci, parseEbirdDate } from "../util/format.js";
 
-export function parseCSV(text) {
+function parseCSV(text) {
 	let input = text;
 	if (input.charCodeAt(0) === 0xfe_ff) {
 		input = input.slice(1);
@@ -55,12 +55,11 @@ export function parseCSV(text) {
 }
 
 const WHITESPACE_RE = /\s+/;
-export const binomial = (sci) =>
-	sci.trim().split(WHITESPACE_RE).slice(0, 2).join(" ");
+const binomial = (sci) => sci.trim().split(WHITESPACE_RE).slice(0, 2).join(" ");
 
-export const NON_SPECIES = /\bsp\.|\/| x |×|\(|\[/i;
+const NON_SPECIES = /\bsp\.|\/| x |×|\(|\[/i;
 
-export function parseEbirdData(text) {
+function parseEbirdData(text) {
 	const rows = parseCSV(text);
 	if (rows.length === 0) {
 		return {
@@ -216,3 +215,5 @@ export function parseEbirdData(text) {
 
 	return { sightings, rows: dataRows, countable, skipped, biggestDay };
 }
+
+export { binomial, NON_SPECIES, parseCSV, parseEbirdData };

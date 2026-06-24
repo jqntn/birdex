@@ -1,6 +1,6 @@
 import { state } from "./state.js";
 
-export const getLocale = () => state.locale;
+const getLocale = () => state.locale;
 
 const STRINGS = {
 	fr: {
@@ -120,8 +120,10 @@ const STRINGS = {
 	},
 };
 
-export function t(key, ...args) {
+function t(key, ...args) {
 	const table = STRINGS[state.locale] || STRINGS.en;
 	const v = table[key] ?? STRINGS.en[key] ?? key;
 	return typeof v === "function" ? v(...args) : v;
 }
+
+export { getLocale, t };

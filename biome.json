@@ -22,7 +22,6 @@
 				"noIncrementDecrement": "off",
 				"noContinue": "off",
 				"useNamingConvention": "off",
-				"useExportsLast": "off",
 				"noExcessiveLinesPerFile": "off",
 				"useGlobalThis": "off"
 			},

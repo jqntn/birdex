@@ -1,5 +1,4 @@
-export const normSci = (s) =>
-	String(s).toLowerCase().trim().replace(/\s+/g, " ");
+const normSci = (s) => String(s).toLowerCase().trim().replace(/\s+/g, " ");
 
 const ISO_DATE_RE = /^(\d{4})-(\d{2})-(\d{2})/;
 const TEXT_DATE_RE = /^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/;
@@ -17,7 +16,7 @@ const MONTHS = {
 	nov: 10,
 	dec: 11,
 };
-export function parseEbirdDate(s) {
+function parseEbirdDate(s) {
 	if (!s) {
 		return null;
 	}
@@ -48,7 +47,7 @@ export function parseEbirdDate(s) {
 	return { y: year, m: mon, d: day, iso: `${year}-${p(mon + 1)}-${p(day)}` };
 }
 
-export const countryOf = (sp) => {
+const countryOf = (sp) => {
 	if (!sp) {
 		return null;
 	}
@@ -56,9 +55,9 @@ export const countryOf = (sp) => {
 	return c.length === 2 ? c.toUpperCase() : c || null;
 };
 
-export const pct = (n, d) => (d > 0 ? Math.round((n / d) * 1000) / 10 : 0);
+const pct = (n, d) => (d > 0 ? Math.round((n / d) * 1000) / 10 : 0);
 
-export function flagEmoji(cc) {
+function flagEmoji(cc) {
 	if (cc?.length !== 2) {
 		return "🏳️";
 	}
@@ -69,7 +68,7 @@ export function flagEmoji(cc) {
 	);
 }
 
-export const fmtDate = (iso, locale = "fr") => {
+const fmtDate = (iso, locale = "fr") => {
 	if (!iso) {
 		return "";
 	}
@@ -80,3 +79,5 @@ export const fmtDate = (iso, locale = "fr") => {
 		day: "numeric",
 	});
 };
+
+export { countryOf, flagEmoji, fmtDate, normSci, parseEbirdDate, pct };

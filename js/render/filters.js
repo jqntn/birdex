@@ -14,7 +14,7 @@ import { clear, el } from "../util/dom.js";
 let onChange = null;
 let rootEl = null;
 
-export function mountFilters(root, opts = {}) {
+function mountFilters(root, opts = {}) {
 	({ onChange } = opts);
 	rootEl = root;
 	render(root);
@@ -124,7 +124,7 @@ function render(root) {
 	root.append(seen, orderSel, famSel, rarSel);
 }
 
-export function filterPredicate() {
+function filterPredicate() {
 	const f = state.filters;
 	const caught = state.caughtSet;
 	const region = state.regionSet;
@@ -162,3 +162,5 @@ export function filterPredicate() {
 		return true;
 	};
 }
+
+export { filterPredicate, mountFilters };

@@ -19,7 +19,7 @@ let cols = 2;
 let onCardClick = null;
 let scheduled = false;
 
-export function mountGrid(root, { onSelect } = {}) {
+function mountGrid(root, { onSelect } = {}) {
 	onCardClick = onSelect;
 	clear(root);
 	scroll = el("div", { class: "dex-scroll", id: "dex-scroll" });
@@ -112,6 +112,8 @@ function render() {
 	win.append(frag);
 }
 
-export function refreshGrid() {
+function refreshGrid() {
 	render();
 }
+
+export { mountGrid, refreshGrid };

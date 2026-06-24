@@ -8,13 +8,13 @@ import { el } from "../util/dom.js";
 const EGG =
 	"M36 8C47 8 55 24 55 37C55 46 47 53 36 53C25 53 17 46 17 37C17 24 25 8 36 8Z";
 
-export function silhouetteSVG() {
+function silhouetteSVG() {
 	return `<svg viewBox="0 0 72 60" class="sil" aria-hidden="true"><path d="${EGG}"/></svg>`;
 }
 
-export const rarityId = (i) => RARITY[rarityTier(i)].id;
+const rarityId = (i) => RARITY[rarityTier(i)].id;
 
-export function card(i, { caught, isNew, shiny } = {}) {
+function card(i, { caught, isNew, shiny } = {}) {
 	const rid = rarityId(i);
 	const name = commonName(i, getLocale());
 	const photo = hasPhoto(i);
@@ -49,7 +49,7 @@ function escapeHtml(s) {
 	);
 }
 
-export function progressBar(done, total, label) {
+function progressBar(done, total, label) {
 	const p = total ? (done / total) * 100 : 0;
 	return el(
 		"div",
@@ -67,3 +67,5 @@ export function progressBar(done, total, label) {
 		),
 	);
 }
+
+export { card, progressBar, rarityId, silhouetteSVG };

@@ -10,7 +10,7 @@ import { progressBar } from "./components.js";
 
 const L = (o) => (getLocale() === "fr" ? o.fr : o.en);
 
-export function renderStats(root) {
+function renderStats(root) {
 	clear(root);
 	const { save } = state;
 	const agg = save?.agg;
@@ -205,3 +205,5 @@ function section(title, body) {
 		body,
 	);
 }
+
+export { renderStats };

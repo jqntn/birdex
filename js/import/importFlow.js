@@ -11,12 +11,12 @@ import { deriveFromSightings } from "./derive.js";
 let cbImported = null;
 let cbSkip = null;
 
-export function setImportCallbacks({ onImported, onSkip }) {
+function setImportCallbacks({ onImported, onSkip }) {
 	cbImported = onImported;
 	cbSkip = onSkip;
 }
 
-export function recomputeRegionStats(save, regionSet) {
+function recomputeRegionStats(save, regionSet) {
 	if (!save?.agg) {
 		return save;
 	}
@@ -35,7 +35,7 @@ export function recomputeRegionStats(save, regionSet) {
 	return save;
 }
 
-export function importText(text) {
+function importText(text) {
 	const parsed = parseEbirdData(text);
 	const prev = state.save;
 	const prevShiny = prev?.species
@@ -92,7 +92,7 @@ async function handleFile(file) {
 	importText(text);
 }
 
-export async function loadDemo() {
+async function loadDemo() {
 	if (state.save?.importedAt && !confirm(t("replaceConfirm"))) {
 		return;
 	}
@@ -115,7 +115,7 @@ function demoButton() {
 	);
 }
 
-export function renderOnboarding(root) {
+function renderOnboarding(root) {
 	clear(root);
 	const card = el(
 		"div",
@@ -153,7 +153,7 @@ export function renderOnboarding(root) {
 	root.append(card);
 }
 
-export function dropzone() {
+function dropzone() {
 	const input = el("input", {
 		type: "file",
 		accept: ".csv,text/csv",
@@ -192,3 +192,12 @@ export function dropzone() {
 	});
 	return zone;
 }
+
+export {
+	dropzone,
+	importText,
+	loadDemo,
+	recomputeRegionStats,
+	renderOnboarding,
+	setImportCallbacks,
+};
