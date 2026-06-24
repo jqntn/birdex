@@ -34,6 +34,7 @@ import { emit, state, subscribe } from "./state.js";
 import { $, clear, el } from "./util/dom.js";
 
 const SPECIES_HASH_RE = /^#\/species\/(.+)$/;
+const ignore = () => undefined;
 
 let baseIndices = [];
 let searchTimer = null;
@@ -328,7 +329,7 @@ function registerSw() {
 	const hadController = Boolean(navigator.serviceWorker.controller);
 	navigator.serviceWorker
 		.register("./sw.js", { updateViaCache: "none" })
-		.catch(() => undefined);
+		.catch(ignore);
 	let refreshing = false;
 	navigator.serviceWorker.addEventListener("controllerchange", () => {
 		if (refreshing) {
