@@ -32,9 +32,9 @@ import { renderStats } from "./render/statsPage.js";
 import { buildIndex, search } from "./search/search.js";
 import { emit, state, subscribe } from "./state.js";
 import { $, clear, el } from "./util/dom.js";
+import { ignore } from "./util/noop.js";
 
 const SPECIES_HASH_RE = /^#\/species\/(.+)$/;
-const ignore = () => undefined;
 
 let baseIndices = [];
 let searchTimer = null;

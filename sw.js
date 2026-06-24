@@ -1,4 +1,4 @@
-const CACHE = "birdex-20260624-202727";
+const CACHE = "birdex-20260624-215447";
 const THUMBS = "birdex-thumbs";
 const THUMBS_MAX = 600;
 
@@ -23,6 +23,7 @@ const PRECACHE = [
 	"./js/util/dom.js",
 	"./js/util/hash.js",
 	"./js/util/format.js",
+	"./js/util/noop.js",
 	"./js/data/taxonomy.js",
 	"./js/data/regions.js",
 	"./js/data/rarity.js",

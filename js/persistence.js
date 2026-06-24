@@ -1,6 +1,5 @@
 import { DEFAULT_LOCALE, DEFAULT_REGION, LS_KEY } from "./config.js";
-
-const ignore = () => undefined;
+import { ignore } from "./util/noop.js";
 
 const blankSave = () => ({
 	version: 1,
