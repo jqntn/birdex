@@ -12,7 +12,7 @@ const L = (o) => (getLocale() === "fr" ? o.fr : o.en);
 
 export function renderStats(root) {
 	clear(root);
-	const save = state.save;
+	const { save } = state;
 	const agg = save?.agg;
 	const total = tax.count();
 
@@ -141,7 +141,7 @@ export function renderStats(root) {
 		.sort((a, b) => b[1] - a[1])
 		.slice(0, 8);
 	if (topFams.length > 0) {
-		const maxF = topFams[0][1];
+		const [[, maxF]] = topFams;
 		const rows = el("div", { class: "hbars" });
 		for (const [fi, v] of topFams) {
 			rows.append(

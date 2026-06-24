@@ -62,7 +62,7 @@ const titleToFile = (title) =>
 	const items = data.items || {};
 	const fileToKeys = new Map();
 	for (const k of Object.keys(items)) {
-		const f = items[k].f;
+		const { f } = items[k];
 		if (!f) {
 			continue;
 		}

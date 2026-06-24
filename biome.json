@@ -19,13 +19,11 @@
 			"security": { "noSecrets": "off" },
 			"style": {
 				"noTernary": "off",
-				"noNestedTernary": "off",
 				"noMagicNumbers": "off",
 				"noHexColors": "off",
 				"noIncrementDecrement": "off",
 				"noContinue": "off",
 				"useNamingConvention": "off",
-				"useDestructuring": "off",
 				"useExportsLast": "off",
 				"noExcessiveLinesPerFile": "off",
 				"useGlobalThis": "off"
@@ -34,7 +32,6 @@
 				"noBitwiseOperators": "off",
 				"noEmptyBlockStatements": "off",
 				"noAlert": "off",
-				"useAwait": "off",
 				"noUnnecessaryConditions": "off",
 				"noNestedPromises": "off"
 			}

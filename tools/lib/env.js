@@ -14,8 +14,8 @@ export function loadEnv() {
 			if (!m) {
 				continue;
 			}
-			const key = m[1];
-			let val = m[2].trim();
+			const [, key, rawVal] = m;
+			let val = rawVal.trim();
 			if (
 				(val.startsWith('"') && val.endsWith('"')) ||
 				(val.startsWith("'") && val.endsWith("'"))

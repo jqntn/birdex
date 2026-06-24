@@ -185,7 +185,7 @@ export function dropzone() {
 	zone.addEventListener("drop", (e) => {
 		e.preventDefault();
 		zone.classList.remove("drag");
-		const f = e.dataTransfer.files[0];
+		const [f] = e.dataTransfer.files;
 		if (f) {
 			handleFile(f);
 		}

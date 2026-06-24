@@ -52,7 +52,7 @@ export const countryOf = (sp) => {
 	if (!sp) {
 		return null;
 	}
-	const c = String(sp).trim().split("-")[0];
+	const [c] = String(sp).trim().split("-");
 	return c.length === 2 ? c.toUpperCase() : c || null;
 };
 

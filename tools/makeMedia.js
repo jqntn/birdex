@@ -18,12 +18,12 @@ const ENT = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
 const decodeEntities = (s) =>
 	String(s).replace(
 		/&(?:#(\d+)|#x([0-9a-f]+)|(amp|lt|gt|quot|apos|nbsp));/gi,
-		(m, dec, hex, name) =>
-			dec
-				? String.fromCodePoint(Number(dec))
-				: hex
-					? String.fromCodePoint(Number.parseInt(hex, 16))
-					: (ENT[name.toLowerCase()] ?? m),
+		(m, dec, hex, name) => {
+			const fromHex = hex
+				? String.fromCodePoint(Number.parseInt(hex, 16))
+				: (ENT[name.toLowerCase()] ?? m);
+			return dec ? String.fromCodePoint(Number(dec)) : fromHex;
+		},
 	);
 const strip = (html) =>
 	html
@@ -156,7 +156,7 @@ async function imageInfo(files) {
 	const core = JSON.parse(
 		readFileSync(join(DATA_DIR, "taxonomy.core.json"), "utf8"),
 	);
-	const sci = core.sci;
+	const { sci } = core;
 	console.log(`[media] resolving lead images for ${sci.length} species…`);
 	const files = await leadImages(sci);
 	console.log(

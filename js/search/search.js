@@ -5,7 +5,7 @@ import { loadNames } from "../data/taxonomy.js";
 let fuse = null;
 let building = null;
 
-export async function buildIndex() {
+export function buildIndex() {
 	if (fuse) {
 		return fuse;
 	}

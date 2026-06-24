@@ -9,7 +9,7 @@ let onChange = null;
 let rootEl = null;
 
 export function mountFilters(root, opts = {}) {
-	onChange = opts.onChange;
+	({ onChange } = opts);
 	rootEl = root;
 	render(root);
 	subscribe(["locale"], () => render(rootEl));

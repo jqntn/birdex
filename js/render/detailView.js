@@ -72,7 +72,7 @@ function fitCreditAuthor() {
 		return;
 	}
 	const meta = credit.querySelector(".credit-meta");
-	const full = author.dataset.full;
+	const { full } = author.dataset;
 	const cs = getComputedStyle(author);
 	measureCtx = measureCtx || document.createElement("canvas").getContext("2d");
 	measureCtx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
