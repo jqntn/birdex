@@ -21,8 +21,8 @@ const CRC = (() => {
 	}
 	return (buf) => {
 		let c = 0xff_ff_ff_ff;
-		for (let i = 0; i < buf.length; i++) {
-			c = t[(c ^ buf[i]) & 0xff] ^ (c >>> 8);
+		for (const byte of buf) {
+			c = t[(c ^ byte) & 0xff] ^ (c >>> 8);
 		}
 		return (c ^ 0xff_ff_ff_ff) >>> 0;
 	};
@@ -127,7 +127,9 @@ function drawIcon(size, { maskable = false } = {}) {
 
 			const o = (y * S + x) * 4;
 			if (a === 0) {
-				buf[o] = buf[o + 1] = buf[o + 2] = 0;
+				buf[o] = 0;
+				buf[o + 1] = 0;
+				buf[o + 2] = 0;
 				buf[o + 3] = 0;
 			} else {
 				buf[o] = col[0];

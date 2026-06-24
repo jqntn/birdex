@@ -21,7 +21,7 @@ export function recomputeRegionStats(save, regionSet) {
 		return save;
 	}
 	let seen = 0;
-	for (const code in save.species) {
+	for (const code of Object.keys(save.species)) {
 		const i = tax.idxOfCode(code);
 		const inRegion = regionSet
 			? i !== null && i !== undefined && regionSet.has(i)

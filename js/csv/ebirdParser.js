@@ -2,20 +2,21 @@ import { COUNTABLE_CATEGORIES } from "../config.js";
 import { countryOf, normSci, parseEbirdDate } from "../util/format.js";
 
 export function parseCSV(text) {
-	if (text.charCodeAt(0) === 0xfe_ff) {
-		text = text.slice(1);
+	let input = text;
+	if (input.charCodeAt(0) === 0xfe_ff) {
+		input = input.slice(1);
 	}
 	const rows = [];
 	let row = [];
 	let field = "";
 	let q = false;
 	let i = 0;
-	const n = text.length;
+	const n = input.length;
 	while (i < n) {
-		const c = text[i];
+		const c = input[i];
 		if (q) {
 			if (c === '"') {
-				if (text[i + 1] === '"') {
+				if (input[i + 1] === '"') {
 					field += '"';
 					i += 2;
 				} else {
@@ -53,7 +54,9 @@ export function parseCSV(text) {
 	return rows;
 }
 
-export const binomial = (sci) => sci.trim().split(/\s+/).slice(0, 2).join(" ");
+const WHITESPACE_RE = /\s+/;
+export const binomial = (sci) =>
+	sci.trim().split(WHITESPACE_RE).slice(0, 2).join(" ");
 
 export const NON_SPECIES = /\bsp\.|\/| x |×|\(|\[/i;
 
@@ -199,7 +202,7 @@ export function parseEbirdData(text) {
 			common: a.common,
 			count: a.firstCount,
 			totalCount: a.totalCount,
-			timesSeen: a.subs.size > 0 || a.rowCount,
+			timesSeen: a.subs.size > 0 ? a.subs.size : a.rowCount,
 			sp: a.firstSp,
 			country: a.firstCountry,
 			date: a.firstDate,

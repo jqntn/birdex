@@ -36,6 +36,9 @@ async function api(params) {
 	}
 }
 
+const THUMB_PX_RE = /\d+px/;
+const FILE_PREFIX_RE = /^File:/;
+const SPACE_RE = / /g;
 const ODD_MIME = (mime) =>
 	mime === "image/tiff" ||
 	mime.startsWith("video/") ||
@@ -48,10 +51,11 @@ function thumbTemplate(file, ii) {
 	const name = decodeURIComponent(
 		new URL(ii.thumburl).pathname.split("/").pop(),
 	);
-	return name.replace(/\d+px/, "{w}px").replace(file, "{f}");
+	return name.replace(THUMB_PX_RE, "{w}px").replace(file, "{f}");
 }
 
-const titleToFile = (title) => title.replace(/^File:/, "").replace(/ /g, "_");
+const titleToFile = (title) =>
+	title.replace(FILE_PREFIX_RE, "").replace(SPACE_RE, "_");
 
 (async () => {
 	const data = JSON.parse(readFileSync(DATA, "utf8"));

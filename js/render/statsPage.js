@@ -39,7 +39,7 @@ export function renderStats(root) {
 	);
 
 	const liferByDate = {};
-	for (const code in save.species) {
+	for (const code of Object.keys(save.species)) {
 		const d = save.species[code]?.date;
 		if (d) {
 			liferByDate[d] = (liferByDate[d] || 0) + 1;
@@ -129,7 +129,7 @@ export function renderStats(root) {
 	root.append(section(t("rarityDist"), el("div", {}, stack, legend)));
 
 	const famCount = new Map();
-	for (const code in save.species) {
+	for (const code of Object.keys(save.species)) {
 		const i = tax.idxOfCode(code);
 		if (i === null || i === undefined) {
 			continue;

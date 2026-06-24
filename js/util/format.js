@@ -1,6 +1,8 @@
 export const normSci = (s) =>
 	String(s).toLowerCase().trim().replace(/\s+/g, " ");
 
+const ISO_DATE_RE = /^(\d{4})-(\d{2})-(\d{2})/;
+const TEXT_DATE_RE = /^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/;
 const MONTHS = {
 	jan: 0,
 	feb: 1,
@@ -22,7 +24,7 @@ export function parseEbirdDate(s) {
 	const str = String(s).trim();
 	const p = (n) => String(n).padStart(2, "0");
 
-	const iso = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+	const iso = str.match(ISO_DATE_RE);
 	if (iso) {
 		const y = Number(iso[1]);
 		const mon = Number(iso[2]) - 1;
@@ -33,7 +35,7 @@ export function parseEbirdDate(s) {
 		return { y, m: mon, d, iso: `${y}-${p(mon + 1)}-${p(d)}` };
 	}
 
-	const m = str.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/);
+	const m = str.match(TEXT_DATE_RE);
 	if (!m) {
 		return null;
 	}

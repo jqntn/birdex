@@ -14,9 +14,12 @@ const KEEP = [
 	"Date",
 ];
 
+const NEEDS_QUOTE_RE = /[",\n]/;
+const QUOTE_RE = /"/g;
+
 const esc = (v) => {
 	const s = String(v ?? "");
-	return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+	return NEEDS_QUOTE_RE.test(s) ? `"${s.replace(QUOTE_RE, '""')}"` : s;
 };
 
 function makeDemo(srcPath) {

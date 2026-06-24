@@ -16,6 +16,8 @@ import { clear, el } from "../util/dom.js";
 import { flagEmoji, fmtDate } from "../util/format.js";
 import { silhouetteSVG } from "./components.js";
 
+const TRAILING_WS_RE = /\s+$/;
+
 let overlay;
 let box;
 let lightbox;
@@ -90,7 +92,7 @@ function fitCreditAuthor() {
 			hi = mid - 1;
 		}
 	}
-	author.textContent = `${full.slice(0, lo).replace(/\s+$/, "")}…`;
+	author.textContent = `${full.slice(0, lo).replace(TRAILING_WS_RE, "")}…`;
 }
 
 export function close() {
@@ -146,7 +148,8 @@ function sizeLightbox() {
 function closeLightbox() {
 	lightbox.style.display = "none";
 	lightboxImg.removeAttribute("src");
-	lightboxImg.style.width = lightboxImg.style.height = "";
+	lightboxImg.style.width = "";
+	lightboxImg.style.height = "";
 }
 
 export function openDetail(i) {

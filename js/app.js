@@ -28,6 +28,8 @@ import { buildIndex, search } from "./search/search.js";
 import { emit, state, subscribe } from "./state.js";
 import { $, clear, el } from "./util/dom.js";
 
+const SPECIES_HASH_RE = /^#\/species\/(.+)$/;
+
 let baseIndices = [];
 let searchTimer = null;
 
@@ -50,7 +52,7 @@ async function bootstrap() {
 
 	if (save?.species) {
 		const caughtSet = new Set();
-		for (const code in save.species) {
+		for (const code of Object.keys(save.species)) {
 			const i = tax.idxOfCode(code);
 			if (i !== null && i !== undefined) {
 				caughtSet.add(i);
@@ -101,10 +103,10 @@ function mountShell() {
 	});
 	recompute();
 
-	const search = $("#search");
-	search.placeholder = t("search");
-	search.value = state.query;
-	search.addEventListener("input", (e) => {
+	const searchInput = $("#search");
+	searchInput.placeholder = t("search");
+	searchInput.value = state.query;
+	searchInput.addEventListener("input", (e) => {
 		clearTimeout(searchTimer);
 		const v = e.target.value;
 		searchTimer = setTimeout(() => {
@@ -150,9 +152,9 @@ function updateChromeText() {
 	}
 }
 
-function setActiveTab(route) {
+function setActiveTab(activeRoute) {
 	for (const tab of document.querySelectorAll(".tab")) {
-		tab.classList.toggle("active", tab.dataset.route === route);
+		tab.classList.toggle("active", tab.dataset.route === activeRoute);
 	}
 }
 
@@ -188,8 +190,8 @@ function recompute() {
 	emit({ visible: source.filter(pred) });
 }
 
-function go(route) {
-	location.hash = `#/${route}`;
+function go(targetRoute) {
+	location.hash = `#/${targetRoute}`;
 }
 
 function showPanel(name) {
@@ -202,7 +204,7 @@ function route() {
 	const hash = location.hash || "#/dex";
 	const filters = $("#filters");
 
-	const sp = hash.match(/^#\/species\/(.+)$/);
+	const sp = hash.match(SPECIES_HASH_RE);
 	if (sp) {
 		const i = tax.idxOfCode(sp[1]);
 		if (i !== null && i !== undefined) {

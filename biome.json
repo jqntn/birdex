@@ -6,7 +6,38 @@
 	"linter": {
 		"rules": {
 			"preset": "all",
-			"correctness": { "useQwikValidLexicalScope": "off" }
+			"correctness": { "useQwikValidLexicalScope": "off" },
+			"complexity": {
+				"noExcessiveCognitiveComplexity": "off",
+				"noExcessiveLinesPerFunction": "off",
+				"useMaxParams": "off"
+			},
+			"performance": {
+				"noNamespaceImport": "off",
+				"noAwaitInLoops": "off"
+			},
+			"security": { "noSecrets": "off" },
+			"style": {
+				"noTernary": "off",
+				"noNestedTernary": "off",
+				"noMagicNumbers": "off",
+				"noHexColors": "off",
+				"noIncrementDecrement": "off",
+				"noContinue": "off",
+				"useNamingConvention": "off",
+				"useDestructuring": "off",
+				"useExportsLast": "off",
+				"noExcessiveLinesPerFile": "off",
+				"useGlobalThis": "off"
+			},
+			"suspicious": {
+				"noBitwiseOperators": "off",
+				"noEmptyBlockStatements": "off",
+				"noAlert": "off",
+				"useAwait": "off",
+				"noUnnecessaryConditions": "off",
+				"noNestedPromises": "off"
+			}
 		}
 	},
 	"overrides": [

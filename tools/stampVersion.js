@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 
+const CACHE_RE = /const CACHE = ['"][^'"]*['"];/;
+
 export function makeBuildId(d = new Date()) {
 	const p = (n) => String(n).padStart(2, "0");
 	return (
@@ -19,9 +21,8 @@ export function stampVersion(build = makeBuildId()) {
 	const swPath = join(ROOT, "sw.js");
 	if (existsSync(swPath)) {
 		let sw = readFileSync(swPath, "utf8");
-		const re = /const CACHE = ['"][^'"]*['"];/;
-		if (re.test(sw)) {
-			sw = sw.replace(re, `const CACHE = "birdex-${build}";`);
+		if (CACHE_RE.test(sw)) {
+			sw = sw.replace(CACHE_RE, `const CACHE = "birdex-${build}";`);
 			writeFileSync(swPath, sw);
 			console.log(`[version] BUILD=${build}, sw.js cache → birdex-${build}`);
 		} else {

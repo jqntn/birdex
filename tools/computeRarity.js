@@ -10,6 +10,8 @@ const REGIONS_DIR = join(DATA_DIR, "regions");
 
 const COUNTRY_CODES = new Set(COUNTRIES.map((c) => c.code));
 
+const JSON_EXT_RE = /\.json$/;
+
 export function computeRarity(build = new Date().toISOString()) {
 	const core = JSON.parse(
 		readFileSync(join(DATA_DIR, "taxonomy.core.json"), "utf8"),
@@ -31,7 +33,7 @@ export function computeRarity(build = new Date().toISOString()) {
 		files = [];
 	}
 	for (const f of files) {
-		const code = f.replace(/\.json$/, "");
+		const code = f.replace(JSON_EXT_RE, "");
 		if (!COUNTRY_CODES.has(code)) {
 			continue;
 		}

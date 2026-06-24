@@ -83,7 +83,8 @@ function render() {
 	empty.style.display = total === 0 ? "block" : "none";
 	if (total === 0) {
 		clear(win);
-		top.style.height = bottom.style.height = "0px";
+		top.style.height = "0px";
+		bottom.style.height = "0px";
 		return;
 	}
 

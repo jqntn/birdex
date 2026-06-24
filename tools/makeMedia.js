@@ -11,6 +11,9 @@ const BATCH = 50;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+const PX_RE = /\d+px/;
+const FILE_PREFIX_RE = /^File:/;
+
 const ENT = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
 const decodeEntities = (s) =>
 	String(s).replace(
@@ -105,7 +108,7 @@ function thumbTemplate(file, ii) {
 	const name = decodeURIComponent(
 		new URL(ii.thumburl).pathname.split("/").pop(),
 	);
-	return name.replace(/\d+px/, "{w}px").replace(file, "{f}");
+	return name.replace(PX_RE, "{w}px").replace(file, "{f}");
 }
 
 async function imageInfo(files) {
@@ -129,7 +132,7 @@ async function imageInfo(files) {
 			if (!ii) {
 				continue;
 			}
-			const file = p.title.replace(/^File:/, "").replace(/ /g, "_");
+			const file = p.title.replace(FILE_PREFIX_RE, "").replace(/ /g, "_");
 			const m = ii.extmetadata || {};
 			const t = thumbTemplate(file, ii);
 			info.set(file, {

@@ -1,6 +1,7 @@
 export function parseCSV(text) {
-	if (text.charCodeAt(0) === 0xfe_ff) {
-		text = text.slice(1);
+	let input = text;
+	if (input.charCodeAt(0) === 0xfe_ff) {
+		input = input.slice(1);
 	}
 
 	const rows = [];
@@ -8,14 +9,14 @@ export function parseCSV(text) {
 	let field = "";
 	let inQuotes = false;
 	let i = 0;
-	const n = text.length;
+	const n = input.length;
 
 	while (i < n) {
-		const c = text[i];
+		const c = input[i];
 
 		if (inQuotes) {
 			if (c === '"') {
-				if (text[i + 1] === '"') {
+				if (input[i + 1] === '"') {
 					field += '"';
 					i += 2;
 				} else {
