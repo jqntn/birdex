@@ -9,7 +9,12 @@ import {
 	regionList,
 	regionMeta,
 } from "./data/regions.js";
-import * as tax from "./data/taxonomy.js";
+import {
+	count,
+	idxOfCode,
+	loadTaxonomy,
+	speciesCode,
+} from "./data/taxonomy.js";
 import { t } from "./i18n.js";
 import {
 	dropzone,
@@ -42,18 +47,18 @@ async function bootstrap() {
 
 	showSplash();
 	await Promise.all([
-		tax.loadTaxonomy(state.locale),
+		loadTaxonomy(state.locale),
 		loadRarity(),
 		loadRegionIndex(),
 		loadMedia(),
 		loadRegionNames(),
 	]);
-	baseIndices = Array.from({ length: tax.count() }, (_, i) => i);
+	baseIndices = Array.from({ length: count() }, (_, i) => i);
 
 	if (save?.species) {
 		const caughtSet = new Set();
 		for (const code of Object.keys(save.species)) {
-			const i = tax.idxOfCode(code);
+			const i = idxOfCode(code);
 			if (i !== null && i !== undefined) {
 				caughtSet.add(i);
 			}
@@ -98,7 +103,7 @@ function mountShell() {
 	mountFilters($("#filters"), { onChange: recompute });
 	mountGrid(panels.dex, {
 		onSelect: (i) => {
-			location.hash = `#/species/${tax.speciesCode(i)}`;
+			location.hash = `#/species/${speciesCode(i)}`;
 		},
 	});
 	recompute();
@@ -206,7 +211,7 @@ function route() {
 
 	const sp = hash.match(SPECIES_HASH_RE);
 	if (sp) {
-		const i = tax.idxOfCode(sp[1]);
+		const i = idxOfCode(sp[1]);
 		if (i !== null && i !== undefined) {
 			openDetail(i);
 			return;

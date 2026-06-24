@@ -1,4 +1,4 @@
-import * as tax from "../data/taxonomy.js";
+import { speciesCode } from "../data/taxonomy.js";
 import { t } from "../i18n.js";
 import { state, subscribe } from "../state.js";
 import { clear, el } from "../util/dom.js";
@@ -106,7 +106,7 @@ function render() {
 		const i = list[k];
 		const caught = state.caughtSet.has(i);
 		const shiny =
-			caught && Boolean(state.save?.species?.[tax.speciesCode(i)]?.shiny);
+			caught && Boolean(state.save?.species?.[speciesCode(i)]?.shiny);
 		frag.append(card(i, { caught, isNew: state.newLifers.has(i), shiny }));
 	}
 	win.append(frag);

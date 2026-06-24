@@ -1,6 +1,6 @@
 import { DATA, EBIRD_EXPORT_URL } from "../config.js";
 import { parseEbirdData } from "../csv/ebirdParser.js";
-import * as tax from "../data/taxonomy.js";
+import { idxOfCode } from "../data/taxonomy.js";
 import { t } from "../i18n.js";
 import { patchSave } from "../persistence.js";
 import { reconcileAchievements } from "../render/achievements.js";
@@ -22,7 +22,7 @@ export function recomputeRegionStats(save, regionSet) {
 	}
 	let seen = 0;
 	for (const code of Object.keys(save.species)) {
-		const i = tax.idxOfCode(code);
+		const i = idxOfCode(code);
 		const inRegion = regionSet
 			? i !== null && i !== undefined && regionSet.has(i)
 			: true;
@@ -56,7 +56,7 @@ export function importText(text) {
 	if (hadPrevImport) {
 		for (const code of newCodes) {
 			if (!prevSnapshot.has(code)) {
-				const i = tax.idxOfCode(code);
+				const i = idxOfCode(code);
 				if (i !== null && i !== undefined) {
 					newLifers.add(i);
 				}

@@ -1,7 +1,7 @@
 import { RARITY } from "../config.js";
 import { COUNTRY_CONTINENT } from "../data/continents.js";
 import { rarityTier, shinyKey } from "../data/rarity.js";
-import * as tax from "../data/taxonomy.js";
+import { idxOfSci, speciesCode } from "../data/taxonomy.js";
 
 export function deriveFromSightings(
 	sightings,
@@ -22,12 +22,12 @@ export function deriveFromSightings(
 	let seenInRegion = 0;
 
 	for (const [, rec] of sightings) {
-		const idx = tax.idxOfSci(rec.sci);
+		const idx = idxOfSci(rec.sci);
 		if (idx === undefined) {
 			unmatched.push(rec);
 			continue;
 		}
-		const code = tax.speciesCode(idx);
+		const code = speciesCode(idx);
 		caughtSet.add(idx);
 
 		const inRegion = regionSet ? regionSet.has(idx) : true;

@@ -1,6 +1,5 @@
 import Fuse from "../../vendor/fuse.esm.js";
-import * as tax from "../data/taxonomy.js";
-import { loadNames } from "../data/taxonomy.js";
+import { commonName, count, loadNames, sciName } from "../data/taxonomy.js";
 
 let fuse = null;
 let building = null;
@@ -14,14 +13,14 @@ export function buildIndex() {
 	}
 	building = (async () => {
 		await Promise.all([loadNames("fr"), loadNames("en")]);
-		const n = tax.count();
+		const n = count();
 		const docs = new Array(n);
 		for (let i = 0; i < n; i++) {
 			docs[i] = {
 				i,
-				sci: tax.sciName(i),
-				fr: tax.commonName(i, "fr"),
-				en: tax.commonName(i, "en"),
+				sci: sciName(i),
+				fr: commonName(i, "fr"),
+				en: commonName(i, "en"),
 			};
 		}
 		fuse = new Fuse(docs, {

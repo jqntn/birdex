@@ -1,6 +1,12 @@
 import { RARITY } from "../config.js";
 import { rarityTier } from "../data/rarity.js";
-import * as tax from "../data/taxonomy.js";
+import {
+	families,
+	familyIdxOf,
+	familyName,
+	orderIdxOf,
+	orders,
+} from "../data/taxonomy.js";
 import { getLocale, t } from "../i18n.js";
 import { emit, state, subscribe } from "../state.js";
 import { clear, el } from "../util/dom.js";
@@ -51,15 +57,12 @@ function render(root) {
 			},
 		},
 		el("option", { value: "" }, t("order")),
-		...tax
-			.orders()
-			.map((o, i) =>
-				el("option", { value: i, selected: f.orderIdx === i }, o.name),
-			),
+		...orders().map((o, i) =>
+			el("option", { value: i, selected: f.orderIdx === i }, o.name),
+		),
 	);
 
-	const fams = tax
-		.families()
+	const fams = families()
 		.map((fam, i) => ({ fam, i }))
 		.filter(
 			({ fam }) =>
@@ -68,9 +71,7 @@ function render(root) {
 				fam.orderIdx === f.orderIdx,
 		)
 		.sort((a, b) =>
-			tax
-				.familyName(a.i, getLocale())
-				.localeCompare(tax.familyName(b.i, getLocale())),
+			familyName(a.i, getLocale()).localeCompare(familyName(b.i, getLocale())),
 		);
 	const famSel = el(
 		"select",
@@ -91,7 +92,7 @@ function render(root) {
 			el(
 				"option",
 				{ value: i, selected: f.familyIdx === i },
-				tax.familyName(i, getLocale()),
+				familyName(i, getLocale()),
 			),
 		),
 	);
@@ -140,14 +141,14 @@ export function filterPredicate() {
 		if (
 			f.orderIdx !== null &&
 			f.orderIdx !== undefined &&
-			tax.orderIdxOf(i) !== f.orderIdx
+			orderIdxOf(i) !== f.orderIdx
 		) {
 			return false;
 		}
 		if (
 			f.familyIdx !== null &&
 			f.familyIdx !== undefined &&
-			tax.familyIdxOf(i) !== f.familyIdx
+			familyIdxOf(i) !== f.familyIdx
 		) {
 			return false;
 		}

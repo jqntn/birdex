@@ -1,7 +1,7 @@
 import { RARITY } from "../config.js";
 import { hasPhoto, photoFallbackUrl, photoUrl } from "../data/media.js";
 import { rarityTier } from "../data/rarity.js";
-import * as tax from "../data/taxonomy.js";
+import { commonName, dexNumber } from "../data/taxonomy.js";
 import { getLocale } from "../i18n.js";
 import { el } from "../util/dom.js";
 
@@ -16,7 +16,7 @@ export const rarityId = (i) => RARITY[rarityTier(i)].id;
 
 export function card(i, { caught, isNew, shiny } = {}) {
 	const rid = rarityId(i);
-	const name = tax.commonName(i, getLocale());
+	const name = commonName(i, getLocale());
 	const photo = hasPhoto(i);
 	const node = el("button", {
 		class: `card r-${rid} ${caught ? "caught" : "unseen"}${isNew ? " is-new" : ""}${shiny ? " shiny" : ""}${photo ? " has-photo" : ""}`,
@@ -28,7 +28,7 @@ export function card(i, { caught, isNew, shiny } = {}) {
 		(photo
 			? `<img class="card-photo" src="${photoUrl(i, 250)}" alt="" data-fb="${photoFallbackUrl(i, 250)}" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb')}else{this.remove()}">`
 			: "") +
-		`<span class="card-num">#${String(tax.dexNumber(i)).padStart(4, "0")}</span>` +
+		`<span class="card-num">#${String(dexNumber(i)).padStart(4, "0")}</span>` +
 		`<span class="card-name">${escapeHtml(name)}</span>`;
 	if (shiny) {
 		node.insertAdjacentHTML("beforeend", '<span class="card-shiny">✦</span>');

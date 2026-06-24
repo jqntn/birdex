@@ -1,7 +1,7 @@
 import { RARITY } from "../config.js";
 import { CONTINENT_NAMES, COUNTRY_NAMES } from "../data/continents.js";
 import { regionMeta, regionSpeciesCount } from "../data/regions.js";
-import * as tax from "../data/taxonomy.js";
+import { count, familyIdxOf, familyName, idxOfCode } from "../data/taxonomy.js";
 import { getLocale, t } from "../i18n.js";
 import { state } from "../state.js";
 import { clear, el } from "../util/dom.js";
@@ -14,7 +14,7 @@ export function renderStats(root) {
 	clear(root);
 	const { save } = state;
 	const agg = save?.agg;
-	const total = tax.count();
+	const total = count();
 
 	root.append(el("div", { class: "page-head" }, el("h2", {}, t("stats"))));
 
@@ -130,11 +130,11 @@ export function renderStats(root) {
 
 	const famCount = new Map();
 	for (const code of Object.keys(save.species)) {
-		const i = tax.idxOfCode(code);
+		const i = idxOfCode(code);
 		if (i === null || i === undefined) {
 			continue;
 		}
-		const fi = tax.familyIdxOf(i);
+		const fi = familyIdxOf(i);
 		famCount.set(fi, (famCount.get(fi) || 0) + 1);
 	}
 	const topFams = [...famCount.entries()]
@@ -148,7 +148,7 @@ export function renderStats(root) {
 				el(
 					"div",
 					{ class: "hbar-row" },
-					el("span", { class: "hbar-label" }, tax.familyName(fi, getLocale())),
+					el("span", { class: "hbar-label" }, familyName(fi, getLocale())),
 					el(
 						"span",
 						{ class: "hbar-track" },

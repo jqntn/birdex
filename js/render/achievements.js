@@ -1,5 +1,5 @@
 import { regionMeta, regionSpeciesCount } from "../data/regions.js";
-import * as tax from "../data/taxonomy.js";
+import { count, familyIdxOf, orderIdxOf } from "../data/taxonomy.js";
 import { getLocale, t } from "../i18n.js";
 import { state } from "../state.js";
 import { clear, el } from "../util/dom.js";
@@ -294,7 +294,7 @@ function m(id, group, icon, nameEn, nameFr, descEn, descFr, value, goal) {
 export function buildContext() {
 	const { save, caughtSet, regionSet, region } = state;
 	const agg = save?.agg;
-	const total = tax.count();
+	const total = count();
 
 	const famTotal = new Map();
 	const famCaught = new Map();
@@ -305,8 +305,8 @@ export function buildContext() {
 		if (!inRegion) {
 			continue;
 		}
-		const fi = tax.familyIdxOf(i);
-		const oi = tax.orderIdxOf(i);
+		const fi = familyIdxOf(i);
+		const oi = orderIdxOf(i);
 		famTotal.set(fi, (famTotal.get(fi) || 0) + 1);
 		orderTotal.add(oi);
 		if (caughtSet.has(i)) {

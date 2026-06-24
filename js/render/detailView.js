@@ -9,7 +9,17 @@ import {
 } from "../data/media.js";
 import { rarityTier } from "../data/rarity.js";
 import { regionName } from "../data/regions.js";
-import * as tax from "../data/taxonomy.js";
+import {
+	commonName,
+	dexNumber,
+	familyIdxOf,
+	familyName,
+	isExtinct,
+	orderIdxOf,
+	orderName,
+	sciName,
+	speciesCode,
+} from "../data/taxonomy.js";
 import { getLocale, t } from "../i18n.js";
 import { state } from "../state.js";
 import { clear, el } from "../util/dom.js";
@@ -154,9 +164,9 @@ function closeLightbox() {
 
 export function openDetail(i) {
 	const rid = RARITY[rarityTier(i)].id;
-	const sci = tax.sciName(i);
+	const sci = sciName(i);
 	const caught = state.caughtSet.has(i);
-	const rec = caught ? state.save?.species?.[tax.speciesCode(i)] : null;
+	const rec = caught ? state.save?.species?.[speciesCode(i)] : null;
 	const shiny = Boolean(rec?.shiny);
 
 	clear(box);
@@ -210,7 +220,7 @@ export function openDetail(i) {
 		media.insertAdjacentHTML("beforeend", '<span class="shiny-mark">✦</span>');
 	}
 
-	const ext = tax.isExtinct(i)
+	const ext = isExtinct(i)
 		? el("span", { class: "tag tag-extinct" }, t("extinct"))
 		: null;
 	const oor = rec?.outOfRegion
@@ -223,9 +233,9 @@ export function openDetail(i) {
 		el(
 			"div",
 			{ class: "detail-num" },
-			`#${String(tax.dexNumber(i)).padStart(4, "0")}`,
+			`#${String(dexNumber(i)).padStart(4, "0")}`,
 		),
-		el("h2", { class: "detail-name" }, tax.commonName(i, getLocale())),
+		el("h2", { class: "detail-name" }, commonName(i, getLocale())),
 		el("div", { class: "detail-sci" }, sci),
 		el(
 			"div",
@@ -246,8 +256,8 @@ export function openDetail(i) {
 	const facts = el(
 		"div",
 		{ class: "detail-facts" },
-		fact(t("order"), tax.orderName(tax.orderIdxOf(i))),
-		fact(t("family"), tax.familyName(tax.familyIdxOf(i), getLocale())),
+		fact(t("order"), orderName(orderIdxOf(i))),
+		fact(t("family"), familyName(familyIdxOf(i), getLocale())),
 		caught
 			? fact(t("firstSeen"), rec?.date ? fmtDate(rec.date, getLocale()) : "—")
 			: null,
@@ -279,7 +289,7 @@ export function openDetail(i) {
 		"a",
 		{
 			class: "detail-ebird",
-			href: EBIRD_SPECIES_URL(tax.speciesCode(i)),
+			href: EBIRD_SPECIES_URL(speciesCode(i)),
 			target: "_blank",
 			rel: "noopener",
 		},

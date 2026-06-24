@@ -13,7 +13,6 @@
 				"useMaxParams": "off"
 			},
 			"performance": {
-				"noNamespaceImport": "off",
 				"noAwaitInLoops": "off"
 			},
 			"security": { "noSecrets": "off" },
