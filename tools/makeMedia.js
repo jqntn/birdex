@@ -124,7 +124,7 @@ async function imageInfo(files) {
 					prop: "imageinfo",
 					iiprop: "extmetadata|mime|size|url",
 					iiurlwidth: "1280",
-					iiextmetadatafilter: "Artist|LicenseShortName",
+					iiextmetadatafilter: ["Artist", "LicenseShortName"].join("|"),
 				})
 			).query || {};
 		for (const p of q.pages || []) {
