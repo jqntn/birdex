@@ -1,4 +1,4 @@
-# Birdex 🪶
+# Birdex
 
 A Pokédex of **real-world birds**, built from your [eBird](https://ebird.org) life list.
 Fully client-side, no build step, no server, no account — an installable offline PWA
