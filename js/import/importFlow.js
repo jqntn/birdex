@@ -23,7 +23,9 @@ export function recomputeRegionStats(save, regionSet) {
 	let seen = 0;
 	for (const code in save.species) {
 		const i = tax.idxOfCode(code);
-		const inRegion = regionSet ? i != null && regionSet.has(i) : true;
+		const inRegion = regionSet
+			? i !== null && i !== undefined && regionSet.has(i)
+			: true;
 		save.species[code].outOfRegion = !inRegion;
 		if (inRegion) {
 			seen++;
@@ -55,7 +57,7 @@ export function importText(text) {
 		for (const code of newCodes) {
 			if (!prevSnapshot.has(code)) {
 				const i = tax.idxOfCode(code);
-				if (i != null) {
+				if (i !== null && i !== undefined) {
 					newLifers.add(i);
 				}
 			}

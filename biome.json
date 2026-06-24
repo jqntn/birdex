@@ -6,8 +6,7 @@
 	"linter": {
 		"rules": {
 			"preset": "all",
-			"correctness": { "useQwikValidLexicalScope": "off" },
-			"suspicious": { "noEqualsToNull": "off" }
+			"correctness": { "useQwikValidLexicalScope": "off" }
 		}
 	},
 	"overrides": [

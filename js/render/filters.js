@@ -61,7 +61,12 @@ function render(root) {
 	const fams = tax
 		.families()
 		.map((fam, i) => ({ fam, i }))
-		.filter(({ fam }) => f.orderIdx == null || fam.orderIdx === f.orderIdx)
+		.filter(
+			({ fam }) =>
+				f.orderIdx === null ||
+				f.orderIdx === undefined ||
+				fam.orderIdx === f.orderIdx,
+		)
 		.sort((a, b) =>
 			tax
 				.familyName(a.i, getLocale())
@@ -132,13 +137,25 @@ export function filterPredicate() {
 		if (f.seen === "unseen" && caught.has(i)) {
 			return false;
 		}
-		if (f.orderIdx != null && tax.orderIdxOf(i) !== f.orderIdx) {
+		if (
+			f.orderIdx !== null &&
+			f.orderIdx !== undefined &&
+			tax.orderIdxOf(i) !== f.orderIdx
+		) {
 			return false;
 		}
-		if (f.familyIdx != null && tax.familyIdxOf(i) !== f.familyIdx) {
+		if (
+			f.familyIdx !== null &&
+			f.familyIdx !== undefined &&
+			tax.familyIdxOf(i) !== f.familyIdx
+		) {
 			return false;
 		}
-		if (f.rarity != null && RARITY[rarityTier(i)].id !== f.rarity) {
+		if (
+			f.rarity !== null &&
+			f.rarity !== undefined &&
+			RARITY[rarityTier(i)].id !== f.rarity
+		) {
 			return false;
 		}
 		return true;

@@ -40,7 +40,7 @@ export function parseEbirdDate(s) {
 	const day = Number(m[1]);
 	const mon = MONTHS[m[2].slice(0, 3).toLowerCase()];
 	const year = Number(m[3]);
-	if (mon == null) {
+	if (mon === null || mon === undefined) {
 		return null;
 	}
 	return { y: year, m: mon, d: day, iso: `${year}-${p(mon + 1)}-${p(day)}` };

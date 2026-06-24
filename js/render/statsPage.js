@@ -131,7 +131,7 @@ export function renderStats(root) {
 	const famCount = new Map();
 	for (const code in save.species) {
 		const i = tax.idxOfCode(code);
-		if (i == null) {
+		if (i === null || i === undefined) {
 			continue;
 		}
 		const fi = tax.familyIdxOf(i);

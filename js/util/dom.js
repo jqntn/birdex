@@ -4,7 +4,7 @@ export const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 export function el(tag, props = {}, ...children) {
 	const node = document.createElement(tag);
 	for (const [k, v] of Object.entries(props)) {
-		if (v == null || v === false) {
+		if (v === null || v === undefined || v === false) {
 			continue;
 		}
 		if (k === "class") {
@@ -24,7 +24,7 @@ export function el(tag, props = {}, ...children) {
 		}
 	}
 	for (const c of children.flat()) {
-		if (c == null || c === false) {
+		if (c === null || c === undefined || c === false) {
 			continue;
 		}
 		node.append(c.nodeType ? c : document.createTextNode(String(c)));

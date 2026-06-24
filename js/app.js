@@ -52,7 +52,7 @@ async function bootstrap() {
 		const caughtSet = new Set();
 		for (const code in save.species) {
 			const i = tax.idxOfCode(code);
-			if (i != null) {
+			if (i !== null && i !== undefined) {
 				caughtSet.add(i);
 			}
 		}
@@ -205,7 +205,7 @@ function route() {
 	const sp = hash.match(/^#\/species\/(.+)$/);
 	if (sp) {
 		const i = tax.idxOfCode(sp[1]);
-		if (i != null) {
+		if (i !== null && i !== undefined) {
 			openDetail(i);
 			return;
 		}

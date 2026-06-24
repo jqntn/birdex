@@ -294,7 +294,7 @@ export function openDetail(i) {
 }
 
 function fact(label, value) {
-	if (value == null || value === "") {
+	if (value === null || value === undefined || value === "") {
 		return null;
 	}
 	return el(
