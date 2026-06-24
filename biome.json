@@ -13,13 +13,13 @@
 				"useMaxParams": "off"
 			},
 			"style": {
-				"noTernary": "off",
-				"noMagicNumbers": "off",
-				"noHexColors": "off",
 				"noContinue": "off",
-				"useNamingConvention": "off",
 				"noExcessiveLinesPerFile": "off",
-				"useGlobalThis": "off"
+				"noHexColors": "off",
+				"noMagicNumbers": "off",
+				"noTernary": "off",
+				"useGlobalThis": "off",
+				"useNamingConvention": "off"
 			},
 			"suspicious": {
 				"noAlert": "off",
