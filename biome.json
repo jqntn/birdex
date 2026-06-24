@@ -12,9 +12,6 @@
 				"noExcessiveLinesPerFunction": "off",
 				"useMaxParams": "off"
 			},
-			"performance": {
-				"noAwaitInLoops": "off"
-			},
 			"style": {
 				"noTernary": "off",
 				"noMagicNumbers": "off",
@@ -39,6 +36,7 @@
 			"linter": {
 				"rules": {
 					"correctness": { "noNodejsModules": "off", "noProcessGlobal": "off" },
+					"performance": { "noAwaitInLoops": "off" },
 					"style": { "noProcessEnv": "off" },
 					"suspicious": { "noConsole": "off" }
 				}
