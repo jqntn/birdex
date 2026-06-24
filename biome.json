@@ -1,0 +1,25 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
+	"files": {
+		"includes": ["**", "!**/vendor", "!**/data"]
+	},
+	"linter": {
+		"rules": {
+			"preset": "all",
+			"correctness": { "useQwikValidLexicalScope": "off" },
+			"suspicious": { "noEqualsToNull": "off" }
+		}
+	},
+	"overrides": [
+		{
+			"includes": ["tools/**"],
+			"linter": {
+				"rules": {
+					"correctness": { "noNodejsModules": "off", "noProcessGlobal": "off" },
+					"style": { "noProcessEnv": "off" },
+					"suspicious": { "noConsole": "off" }
+				}
+			}
+		}
+	]
+}

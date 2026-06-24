@@ -1,14 +1,14 @@
 {
-  "name": "birdex-tools",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "description": "Codegen for Birdex — fetches eBird taxonomy + region species lists, computes rarity, stamps build version. Not shipped to the browser.",
-  "scripts": {
-    "build": "node buildAll.js",
-    "taxonomy": "node fetchTaxonomy.js",
-    "regions": "node fetchRegions.js",
-    "rarity": "node computeRarity.js",
-    "stamp": "node stampVersion.js"
-  }
+	"name": "birdex-tools",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"description": "Codegen for Birdex — fetches eBird taxonomy + region species lists, computes rarity, stamps build version. Not shipped to the browser.",
+	"scripts": {
+		"build": "node buildAll.js",
+		"taxonomy": "node fetchTaxonomy.js",
+		"regions": "node fetchRegions.js",
+		"rarity": "node computeRarity.js",
+		"stamp": "node stampVersion.js"
+	}
 }

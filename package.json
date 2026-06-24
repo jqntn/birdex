@@ -1,0 +1,16 @@
+{
+	"name": "birdex",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"description": "Birdex — a Pokedex-style life list for birds. Vanilla-JS PWA served as a static site on GitHub Pages.",
+	"scripts": {
+		"check": "biome check .",
+		"format": "biome check --write .",
+		"prepare": "lefthook install"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.1",
+		"lefthook": "2.1.9"
+	}
+}

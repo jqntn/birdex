@@ -251,18 +251,18 @@ ZW|Zimbabwe|AF
 `;
 
 export const COUNTRIES = RAW.trim()
-  .split('\n')
-  .map((line) => {
-    const [code, name, continent] = line.split('|');
-    return { code, name, continent };
-  });
+	.split("\n")
+	.map((line) => {
+		const [code, name, continent] = line.split("|");
+		return { code, name, continent };
+	});
 
 export const CONTINENT_NAMES = {
-  AF: { en: 'Africa', fr: 'Afrique' },
-  AN: { en: 'Antarctica', fr: 'Antarctique' },
-  AS: { en: 'Asia', fr: 'Asie' },
-  EU: { en: 'Europe', fr: 'Europe' },
-  NA: { en: 'North America', fr: 'Amérique du Nord' },
-  OC: { en: 'Oceania', fr: 'Océanie' },
-  SA: { en: 'South America', fr: 'Amérique du Sud' },
+	AF: { en: "Africa", fr: "Afrique" },
+	AN: { en: "Antarctica", fr: "Antarctique" },
+	AS: { en: "Asia", fr: "Asie" },
+	EU: { en: "Europe", fr: "Europe" },
+	NA: { en: "North America", fr: "Amérique du Nord" },
+	OC: { en: "Oceania", fr: "Océanie" },
+	SA: { en: "South America", fr: "Amérique du Sud" },
 };
