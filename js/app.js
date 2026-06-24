@@ -68,14 +68,14 @@ async function bootstrap() {
 	}
 	await switchRegion(state.region, { silent: true });
 
-	(window.requestIdleCallback || ((f) => setTimeout(f, 200)))(() =>
+	(globalThis.requestIdleCallback || ((f) => setTimeout(f, 200)))(() =>
 		buildIndex(),
 	);
 
 	mountShell();
 	setImportCallbacks({ onImported, onSkip: () => go("dex") });
 
-	window.addEventListener("hashchange", route);
+	globalThis.addEventListener("hashchange", route);
 	const first = !(save && (save.importedAt || save.skippedOnboarding));
 	if (first && !location.hash) {
 		location.hash = "#/welcome";
@@ -346,7 +346,7 @@ bootstrap().catch((e) => {
 	$("#view").innerHTML = `<div class="splash">⚠ ${e.message}</div>`;
 });
 
-window.birdex = {
+globalThis.birdex = {
 	state,
 	reset: () => {
 		clearAll();
