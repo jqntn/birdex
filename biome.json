@@ -22,8 +22,8 @@
 				"useGlobalThis": "off"
 			},
 			"suspicious": {
-				"noBitwiseOperators": "off",
 				"noAlert": "off",
+				"noBitwiseOperators": "off",
 				"noUnnecessaryConditions": "off"
 			}
 		}
