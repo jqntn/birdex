@@ -328,7 +328,7 @@ function registerSw() {
 	const hadController = Boolean(navigator.serviceWorker.controller);
 	navigator.serviceWorker
 		.register("./sw.js", { updateViaCache: "none" })
-		.catch(() => {});
+		.catch(() => undefined);
 	let refreshing = false;
 	navigator.serviceWorker.addEventListener("controllerchange", () => {
 		if (refreshing) {
