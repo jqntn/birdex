@@ -35,6 +35,9 @@ import { $, clear, el } from "./util/dom.js";
 import { ignore } from "./util/noop.js";
 
 const SPECIES_HASH_RE = /^#\/species\/(.+)$/;
+const IDLE_FALLBACK_MS = 200;
+const SEARCH_DEBOUNCE_MS = 140;
+const TOAST_MS = 6000;
 
 let baseIndices = [];
 let searchTimer = null;
@@ -68,8 +71,8 @@ async function bootstrap() {
 	}
 	await switchRegion(state.region, { silent: true });
 
-	(globalThis.requestIdleCallback || ((f) => setTimeout(f, 200)))(() =>
-		buildIndex(),
+	(globalThis.requestIdleCallback || ((f) => setTimeout(f, IDLE_FALLBACK_MS)))(
+		() => buildIndex(),
 	);
 
 	mountShell();
@@ -118,7 +121,7 @@ function mountShell() {
 		searchTimer = setTimeout(() => {
 			emit({ query: v });
 			recompute();
-		}, 140);
+		}, SEARCH_DEBOUNCE_MS);
 	});
 
 	const picker = $("#region-picker");
@@ -308,7 +311,7 @@ function onImported(summary) {
 	}
 	toast(msg);
 	if (summary.unmatched) {
-		toast(t("needsReview", summary.unmatched), 6000);
+		toast(t("needsReview", summary.unmatched), TOAST_MS);
 	}
 	go("dex");
 }
