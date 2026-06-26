@@ -30,10 +30,7 @@ export function deriveFromSightings(
 		const code = speciesCode(idx);
 		caughtSet.add(idx);
 
-		let inRegion = true;
-		if (regionSet) {
-			inRegion = regionSet.has(idx);
-		}
+		const inRegion = regionSet.has(idx);
 		if (inRegion) {
 			seenInRegion += 1;
 		}

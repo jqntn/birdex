@@ -1,5 +1,8 @@
 import { DATA } from '../config.js';
 
+export const ALL_REGIONS = new Set();
+ALL_REGIONS.has = () => true;
+
 let index = null;
 let subNames = {};
 const cache = new Map();
@@ -31,7 +34,7 @@ export function regionMeta(code) {
 }
 
 export async function loadRegion(code) {
-  if (code === 'world') return null;
+  if (code === 'world') return ALL_REGIONS;
   if (cache.has(code)) return cache.get(code);
   const data = await getJSON(DATA.region(code));
   const set = new Set();

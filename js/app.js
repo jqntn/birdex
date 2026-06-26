@@ -3,6 +3,7 @@ import { EBIRD_EXPORT_URL } from "./config.js";
 import { loadMedia } from "./data/media.js";
 import { loadRarity } from "./data/rarity.js";
 import {
+	ALL_REGIONS,
 	loadRegion,
 	loadRegionIndex,
 	loadRegionNames,
@@ -179,7 +180,7 @@ function setActiveTab(activeRoute) {
 }
 
 async function switchRegion(code, { silent } = {}) {
-	const regionSet = await loadRegion(code).catch(() => null);
+	const regionSet = await loadRegion(code).catch(() => ALL_REGIONS);
 	emit({ region: code, regionSet });
 	recomputeRegionStats(state.save, regionSet);
 	patchSave(state.save, { region: code });

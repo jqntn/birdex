@@ -1,4 +1,5 @@
 import { DEFAULT_LOCALE, DEFAULT_REGION } from "./config.js";
+import { ALL_REGIONS } from "./data/regions.js";
 import { blankSave } from "./persistence.js";
 
 const state = {
@@ -7,7 +8,7 @@ const state = {
 
 	save: blankSave(),
 	caughtSet: new Set(),
-	regionSet: null,
+	regionSet: ALL_REGIONS,
 
 	filters: { seen: "all", orderIdx: null, familyIdx: null, rarity: null },
 	query: "",

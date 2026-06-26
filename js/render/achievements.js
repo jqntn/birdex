@@ -301,11 +301,7 @@ export function buildContext() {
 	const orderTotal = new Set();
 	const orderCaught = new Set();
 	for (let i = 0; i < total; i += 1) {
-		let inRegion = true;
-		if (regionSet) {
-			inRegion = regionSet.has(i);
-		}
-		if (!inRegion) {
+		if (!regionSet.has(i)) {
 			continue;
 		}
 		const fi = familyIdxOf(i);

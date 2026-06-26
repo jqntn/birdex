@@ -144,7 +144,7 @@ function filterPredicate() {
 	const caught = state.caughtSet;
 	const region = state.regionSet;
 	return (i) => {
-		if (region && !region.has(i)) {
+		if (!region.has(i)) {
 			return false;
 		}
 		if (f.seen === "seen" && !caught.has(i)) {
