@@ -23,7 +23,7 @@ import {
 	renderOnboarding,
 	setImportCallbacks,
 } from "./import/importFlow.js";
-import { clearAll, loadSave, patchSave } from "./persistence.js";
+import { clearAll, patchSave } from "./persistence.js";
 import { renderBadges } from "./render/achievements.js";
 import { mountDetail, openDetail } from "./render/detailView.js";
 import { mountGrid } from "./render/dexGrid.js";
@@ -43,9 +43,9 @@ let baseIndices = [];
 let searchTimer = null;
 
 async function bootstrap() {
-	const save = loadSave();
+	const { save } = state;
 	if (save) {
-		emit({ save, locale: save.locale, region: save.region });
+		emit({ locale: save.locale, region: save.region });
 	}
 	document.documentElement.lang = state.locale;
 

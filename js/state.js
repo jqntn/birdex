@@ -1,10 +1,11 @@
 import { DEFAULT_LOCALE, DEFAULT_REGION } from "./config.js";
+import { loadSave } from "./persistence.js";
 
 const state = {
 	locale: DEFAULT_LOCALE,
 	region: DEFAULT_REGION,
 
-	save: null,
+	save: loadSave(),
 	caughtSet: new Set(),
 	regionSet: null,
 
