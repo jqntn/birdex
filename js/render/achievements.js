@@ -293,7 +293,7 @@ function m(id, group, icon, nameEn, nameFr, descEn, descFr, value, goal) {
 
 export function buildContext() {
 	const { save, caughtSet, regionSet, region } = state;
-	const agg = save?.agg;
+	const { agg } = save;
 	const total = count();
 
 	const famTotal = new Map();

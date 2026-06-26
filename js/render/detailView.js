@@ -166,7 +166,7 @@ function openDetail(i) {
 	const rid = RARITY[rarityTier(i)].id;
 	const sci = sciName(i);
 	const caught = state.caughtSet.has(i);
-	const rec = caught ? state.save?.species?.[speciesCode(i)] : null;
+	const rec = caught ? state.save.species[speciesCode(i)] : null;
 	const shiny = Boolean(rec?.shiny);
 
 	clear(box);

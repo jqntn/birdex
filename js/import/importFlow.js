@@ -17,7 +17,7 @@ function setImportCallbacks({ onImported, onSkip }) {
 }
 
 function recomputeRegionStats(save, regionSet) {
-	if (!save?.agg) {
+	if (!save.agg) {
 		return save;
 	}
 	let seen = 0;
@@ -38,9 +38,9 @@ function recomputeRegionStats(save, regionSet) {
 function importText(text) {
 	const parsed = parseEbirdData(text);
 	const prev = state.save;
-	const prevShiny = prev?.species
-		? Object.keys(prev.species).filter((c) => prev.species[c].shiny)
-		: [];
+	const prevShiny = Object.keys(prev.species).filter(
+		(c) => prev.species[c].shiny,
+	);
 	const { species, caughtSet, agg, unmatched } = deriveFromSightings(
 		parsed.sightings,
 		state.regionSet,
@@ -48,8 +48,8 @@ function importText(text) {
 		prevShiny,
 	);
 
-	const hadPrevImport = Boolean(prev?.importedAt);
-	const prevSnapshot = new Set(prev?.prevSnapshot || []);
+	const hadPrevImport = Boolean(prev.importedAt);
+	const prevSnapshot = new Set(prev.prevSnapshot || []);
 
 	const newCodes = Object.keys(species);
 	const newLifers = new Set();
@@ -93,7 +93,7 @@ async function handleFile(file) {
 }
 
 async function loadDemo() {
-	if (state.save?.importedAt && !confirm(t("replaceConfirm"))) {
+	if (state.save.importedAt && !confirm(t("replaceConfirm"))) {
 		return;
 	}
 	try {

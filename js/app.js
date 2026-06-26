@@ -23,7 +23,7 @@ import {
 	renderOnboarding,
 	setImportCallbacks,
 } from "./import/importFlow.js";
-import { clearAll, patchSave } from "./persistence.js";
+import { clearAll, loadSave, patchSave } from "./persistence.js";
 import { renderBadges } from "./render/achievements.js";
 import { mountDetail, openDetail } from "./render/detailView.js";
 import { mountGrid } from "./render/dexGrid.js";
@@ -43,10 +43,11 @@ let baseIndices = [];
 let searchTimer = null;
 
 async function bootstrap() {
-	const { save } = state;
-	if (save) {
-		emit({ locale: save.locale, region: save.region });
+	const loaded = loadSave();
+	if (loaded) {
+		emit({ save: loaded, locale: loaded.locale, region: loaded.region });
 	}
+	const { save } = state;
 	document.documentElement.lang = state.locale;
 
 	showSplash();
@@ -59,16 +60,14 @@ async function bootstrap() {
 	]);
 	baseIndices = Array.from({ length: count() }, (_, i) => i);
 
-	if (save?.species) {
-		const caughtSet = new Set();
-		for (const code of Object.keys(save.species)) {
-			const i = idxOfCode(code);
-			if (i !== null && i !== undefined) {
-				caughtSet.add(i);
-			}
+	const caughtSet = new Set();
+	for (const code of Object.keys(save.species)) {
+		const i = idxOfCode(code);
+		if (i !== null && i !== undefined) {
+			caughtSet.add(i);
 		}
-		emit({ caughtSet });
 	}
+	emit({ caughtSet });
 	await switchRegion(state.region, { silent: true });
 
 	(globalThis.requestIdleCallback || ((f) => setTimeout(f, IDLE_FALLBACK_MS)))(
@@ -79,7 +78,7 @@ async function bootstrap() {
 	setImportCallbacks({ onImported, onSkip: () => go("dex") });
 
 	globalThis.addEventListener("hashchange", route);
-	const first = !(save && (save.importedAt || save.skippedOnboarding));
+	const first = !(loaded?.importedAt || loaded?.skippedOnboarding);
 	if (first && !location.hash) {
 		location.hash = "#/welcome";
 	}
@@ -170,12 +169,8 @@ function setActiveTab(activeRoute) {
 async function switchRegion(code, { silent } = {}) {
 	const regionSet = await loadRegion(code).catch(() => null);
 	emit({ region: code, regionSet });
-	if (state.save) {
-		recomputeRegionStats(state.save, regionSet);
-		patchSave(state.save, { region: code });
-	} else {
-		patchSave(null, { region: code });
-	}
+	recomputeRegionStats(state.save, regionSet);
+	patchSave(state.save, { region: code });
 	if (!silent) {
 		recompute();
 		rerenderCurrent();

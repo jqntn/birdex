@@ -13,7 +13,7 @@ const L = (o) => (getLocale() === "fr" ? o.fr : o.en);
 function renderStats(root) {
 	clear(root);
 	const { save } = state;
-	const agg = save?.agg;
+	const { agg } = save;
 	const total = count();
 
 	root.append(el("div", { class: "page-head" }, el("h2", {}, t("stats"))));

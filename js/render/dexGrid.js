@@ -105,8 +105,7 @@ function render() {
 	for (let k = startIdx; k < endIdx; k += 1) {
 		const i = list[k];
 		const caught = state.caughtSet.has(i);
-		const shiny =
-			caught && Boolean(state.save?.species?.[speciesCode(i)]?.shiny);
+		const shiny = caught && Boolean(state.save.species[speciesCode(i)]?.shiny);
 		frag.append(card(i, { caught, isNew: state.newLifers.has(i), shiny }));
 	}
 	win.append(frag);
