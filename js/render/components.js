@@ -18,16 +18,34 @@ function card(i, { caught, isNew, shiny } = {}) {
 	const rid = rarityId(i);
 	const name = commonName(i, getLocale());
 	const photo = hasPhoto(i);
+	let caughtClass = "unseen";
+	if (caught) {
+		caughtClass = "caught";
+	}
+	let newClass = "";
+	if (isNew) {
+		newClass = " is-new";
+	}
+	let shinyClass = "";
+	if (shiny) {
+		shinyClass = " shiny";
+	}
+	let photoClass = "";
+	if (photo) {
+		photoClass = " has-photo";
+	}
 	const node = el("button", {
-		class: `card r-${rid} ${caught ? "caught" : "unseen"}${isNew ? " is-new" : ""}${shiny ? " shiny" : ""}${photo ? " has-photo" : ""}`,
+		class: `card r-${rid} ${caughtClass}${newClass}${shinyClass}${photoClass}`,
 		dataset: { idx: i },
 		type: "button",
 	});
+	let photoImg = "";
+	if (photo) {
+		photoImg = `<img class="card-photo" src="${photoUrl(i, 250)}" alt="" data-fb="${photoFallbackUrl(i, 250)}" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb')}else{this.remove()}">`;
+	}
 	node.innerHTML =
 		`<span class="card-sil">${silhouetteSVG(i)}</span>` +
-		(photo
-			? `<img class="card-photo" src="${photoUrl(i, 250)}" alt="" data-fb="${photoFallbackUrl(i, 250)}" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb')}else{this.remove()}">`
-			: "") +
+		photoImg +
 		`<span class="card-num">#${String(dexNumber(i)).padStart(4, "0")}</span>` +
 		`<span class="card-name">${escapeHtml(name)}</span>`;
 	if (shiny) {
@@ -50,11 +68,18 @@ function escapeHtml(s) {
 }
 
 function progressBar(done, total, label) {
-	const p = total ? (done / total) * 100 : 0;
+	let p = 0;
+	if (total) {
+		p = (done / total) * 100;
+	}
+	let labelEl = null;
+	if (label) {
+		labelEl = el("div", { class: "progress-label" }, label);
+	}
 	return el(
 		"div",
 		{ class: "progress" },
-		label ? el("div", { class: "progress-label" }, label) : null,
+		labelEl,
 		el(
 			"div",
 			{ class: "progress-track" },

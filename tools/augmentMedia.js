@@ -147,14 +147,22 @@ const titleToFile = (title) =>
 		}
 		for (const k of keys) {
 			const it = items[k];
+			const phPart = {};
+			if (portrait) {
+				phPart.ph = m.h;
+			}
+			const tPart = {};
+			if (t) {
+				tPart.t = t;
+			}
 			items[k] = {
 				f: it.f,
 				h: it.h,
 				by: it.by || "",
 				l: it.l || "",
 				w: m?.w || 0,
-				...(portrait ? { ph: m.h } : {}),
-				...(t ? { t } : {}),
+				...phPart,
+				...tPart,
 			};
 			if (m?.w) {
 				withW += 1;

@@ -301,7 +301,10 @@ export function buildContext() {
 	const orderTotal = new Set();
 	const orderCaught = new Set();
 	for (let i = 0; i < total; i += 1) {
-		const inRegion = regionSet ? regionSet.has(i) : true;
+		let inRegion = true;
+		if (regionSet) {
+			inRegion = regionSet.has(i);
+		}
 		if (!inRegion) {
 			continue;
 		}
@@ -320,29 +323,48 @@ export function buildContext() {
 			familiesComplete += 1;
 		}
 	}
-	const orderCoverPct =
-		orderTotal.size > 0 ? (orderCaught.size / orderTotal.size) * 100 : 0;
+	let orderCoverPct = 0;
+	if (orderTotal.size > 0) {
+		orderCoverPct = (orderCaught.size / orderTotal.size) * 100;
+	}
 
 	const regionDenom = regionSpeciesCount(region, total);
-	const regionPct = regionDenom
-		? ((agg?.seenInRegion || 0) / regionDenom) * 100
-		: 0;
-	const biggestYear = agg ? Math.max(0, ...Object.values(agg.byYear || {})) : 0;
+	let regionPct = 0;
+	if (regionDenom) {
+		regionPct = ((agg?.seenInRegion || 0) / regionDenom) * 100;
+	}
+	let biggestYear = 0;
+	if (agg) {
+		biggestYear = Math.max(0, ...Object.values(agg.byYear || {}));
+	}
 	const r = agg?.byRarity || {};
+
+	let countries = 0;
+	if (agg) {
+		countries = Object.keys(agg.byCountry || {}).length;
+	}
+	let continents = 0;
+	if (agg) {
+		continents = (agg.continents || []).length;
+	}
+	let shinies = 0;
+	if (agg) {
+		shinies = (agg.shinies || []).length;
+	}
 
 	return {
 		lifers: agg?.liferCount || 0,
 		familiesComplete,
 		orderCoverPct,
-		countries: agg ? Object.keys(agg.byCountry || {}).length : 0,
-		continents: agg ? (agg.continents || []).length : 0,
+		countries,
+		continents,
 		endemic: r.endemic || 0,
 		legendary: r.legendary || 0,
 		rarePlus: (r.rare || 0) + (r.endemic || 0) + (r.legendary || 0),
 		biggestDay: agg?.biggestDay?.count || 0,
 		biggestLiferDay: agg?.biggestLiferDay?.count || 0,
 		biggestYear,
-		shinies: agg ? (agg.shinies || []).length : 0,
+		shinies,
 		regionPct,
 	};
 }
@@ -405,9 +427,13 @@ export function renderBadges(root) {
 
 	const grid = el("div", { class: "badge-grid" });
 	for (const a of list) {
+		let unlockedClass = "locked";
+		if (a.unlocked) {
+			unlockedClass = "unlocked";
+		}
 		const card = el(
 			"div",
-			{ class: `badge ${a.unlocked ? "unlocked" : "locked"}` },
+			{ class: `badge ${unlockedClass}` },
 			el("div", { class: "badge-icon" }, a.icon),
 			el("div", { class: "badge-name" }, L(a.name)),
 			el("div", { class: "badge-desc" }, L(a.desc)),

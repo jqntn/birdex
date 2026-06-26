@@ -15,7 +15,11 @@ const CRC = (() => {
 	for (let n = 0; n < 256; n += 1) {
 		let c = n;
 		for (let k = 0; k < 8; k += 1) {
-			c = c & 1 ? 0xed_b8_83_20 ^ (c >>> 1) : c >>> 1;
+			if (c & 1) {
+				c = 0xed_b8_83_20 ^ (c >>> 1);
+			} else {
+				c >>>= 1;
+			}
 		}
 		t[n] = c >>> 0;
 	}
@@ -71,7 +75,10 @@ function mix(c1, c2, t) {
 function drawIcon(size, { maskable = false } = {}) {
 	const buf = Buffer.alloc(size * size * 4);
 	const S = size;
-	const radius = maskable ? 0 : S * 0.19;
+	let radius = S * 0.19;
+	if (maskable) {
+		radius = 0;
+	}
 	const k = S / 512;
 	const lensX = S * 0.5;
 	const lensY = S * 0.527;
@@ -107,14 +114,15 @@ function drawIcon(size, { maskable = false } = {}) {
 					const hx = lensX - ringR * 0.24;
 					const hy = lensY - ringR * 0.36;
 					const dh = dist(x, y, hx, hy) / (ringR * 1.5);
-					col =
-						dh < 0.55
-							? mix([214, 239, 255], [74, 163, 224], dh / 0.55)
-							: mix(
-									[74, 163, 224],
-									[21, 49, 74],
-									Math.min(1, (dh - 0.55) / 0.45),
-								);
+					if (dh < 0.55) {
+						col = mix([214, 239, 255], [74, 163, 224], dh / 0.55);
+					} else {
+						col = mix(
+							[74, 163, 224],
+							[21, 49, 74],
+							Math.min(1, (dh - 0.55) / 0.45),
+						);
+					}
 				}
 				for (const lt of lights) {
 					if (dist(x, y, lt.x, lt.y) <= lt.r) {

@@ -27,7 +27,13 @@ export function el(tag, props = {}, ...children) {
 		if (c === null || c === undefined || c === false) {
 			continue;
 		}
-		node.append(c.nodeType ? c : document.createTextNode(String(c)));
+		let child;
+		if (c.nodeType) {
+			child = c;
+		} else {
+			child = document.createTextNode(String(c));
+		}
+		node.append(child);
 	}
 	return node;
 }

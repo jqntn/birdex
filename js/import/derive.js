@@ -30,7 +30,10 @@ export function deriveFromSightings(
 		const code = speciesCode(idx);
 		caughtSet.add(idx);
 
-		const inRegion = regionSet ? regionSet.has(idx) : true;
+		let inRegion = true;
+		if (regionSet) {
+			inRegion = regionSet.has(idx);
+		}
 		if (inRegion) {
 			seenInRegion += 1;
 		}
@@ -84,7 +87,13 @@ export function deriveFromSightings(
 	if (shinySet.size < shinyTarget) {
 		const ranked = [...shinyKeyByCode.entries()]
 			.filter(([code]) => !shinySet.has(code))
-			.sort((a, b) => a[1] - b[1] || (a[0] < b[0] ? -1 : 1));
+			.sort((a, b) => {
+				let tie = 1;
+				if (a[0] < b[0]) {
+					tie = -1;
+				}
+				return a[1] - b[1] || tie;
+			});
 		for (const [code] of ranked) {
 			if (shinySet.size >= shinyTarget) {
 				break;

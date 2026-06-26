@@ -19,7 +19,10 @@ const QUOTE_RE = /"/g;
 
 const esc = (v) => {
 	const s = String(v ?? "");
-	return NEEDS_QUOTE_RE.test(s) ? `"${s.replace(QUOTE_RE, '""')}"` : s;
+	if (NEEDS_QUOTE_RE.test(s)) {
+		return `"${s.replace(QUOTE_RE, '""')}"`;
+	}
+	return s;
 };
 
 function makeDemo(srcPath) {

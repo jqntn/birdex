@@ -28,11 +28,15 @@ function render(root) {
 	const seen = el(
 		"div",
 		{ class: "seg" },
-		...["all", "seen", "unseen"].map((v) =>
-			el(
+		...["all", "seen", "unseen"].map((v) => {
+			let activeClass = "";
+			if (f.seen === v) {
+				activeClass = " active";
+			}
+			return el(
 				"button",
 				{
-					class: `seg-btn${f.seen === v ? " active" : ""}`,
+					class: `seg-btn${activeClass}`,
 					type: "button",
 					onclick: () => {
 						emit({ filters: { ...state.filters, seen: v } });
@@ -41,8 +45,8 @@ function render(root) {
 					},
 				},
 				t(v),
-			),
-		),
+			);
+		}),
 	);
 
 	const orderSel = el(
@@ -50,7 +54,10 @@ function render(root) {
 		{
 			class: "sel",
 			onchange: (e) => {
-				const oi = e.target.value === "" ? null : Number(e.target.value);
+				let oi = null;
+				if (e.target.value !== "") {
+					oi = Number(e.target.value);
+				}
 				emit({ filters: { ...state.filters, orderIdx: oi, familyIdx: null } });
 				render(root);
 				onChange?.();
@@ -78,10 +85,14 @@ function render(root) {
 		{
 			class: "sel",
 			onchange: (e) => {
+				let familyIdx = null;
+				if (e.target.value !== "") {
+					familyIdx = Number(e.target.value);
+				}
 				emit({
 					filters: {
 						...state.filters,
-						familyIdx: e.target.value === "" ? null : Number(e.target.value),
+						familyIdx,
 					},
 				});
 				onChange?.();
@@ -102,23 +113,27 @@ function render(root) {
 		{
 			class: "sel",
 			onchange: (e) => {
+				let rarity = null;
+				if (e.target.value !== "") {
+					rarity = e.target.value;
+				}
 				emit({
 					filters: {
 						...state.filters,
-						rarity: e.target.value === "" ? null : e.target.value,
+						rarity,
 					},
 				});
 				onChange?.();
 			},
 		},
 		el("option", { value: "" }, t("rarity")),
-		...RARITY.map((r) =>
-			el(
-				"option",
-				{ value: r.id, selected: f.rarity === r.id },
-				getLocale() === "fr" ? r.fr : r.en,
-			),
-		),
+		...RARITY.map((r) => {
+			let label = r.en;
+			if (getLocale() === "fr") {
+				label = r.fr;
+			}
+			return el("option", { value: r.id, selected: f.rarity === r.id }, label);
+		}),
 	);
 
 	root.append(seen, orderSel, famSel, rarSel);

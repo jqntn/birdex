@@ -144,8 +144,14 @@ function parseEbirdData(text) {
 		const region = (cells[ci.region] || "").trim();
 		const country = countryOf(region);
 		const rawCount = Number.parseInt((cells[ci.count] || "").trim(), 10);
-		const cnt = Number.isFinite(rawCount) && rawCount > 0 ? rawCount : 1;
-		const sub = ci.sub >= 0 ? (cells[ci.sub] || "").trim() : "";
+		let cnt = 1;
+		if (Number.isFinite(rawCount) && rawCount > 0) {
+			cnt = rawCount;
+		}
+		let sub = "";
+		if (ci.sub >= 0) {
+			sub = (cells[ci.sub] || "").trim();
+		}
 
 		let a = agg.get(key);
 		if (!a) {
@@ -196,12 +202,16 @@ function parseEbirdData(text) {
 
 	const sightings = new Map();
 	for (const [key, a] of agg) {
+		let timesSeen = a.rowCount;
+		if (a.subs.size > 0) {
+			timesSeen = a.subs.size;
+		}
 		sightings.set(key, {
 			sci: a.sci,
 			common: a.common,
 			count: a.firstCount,
 			totalCount: a.totalCount,
-			timesSeen: a.subs.size > 0 ? a.subs.size : a.rowCount,
+			timesSeen,
 			sp: a.firstSp,
 			country: a.firstCountry,
 			date: a.firstDate,

@@ -23,9 +23,10 @@ function recomputeRegionStats(save, regionSet) {
 	let seen = 0;
 	for (const code of Object.keys(save.species)) {
 		const i = idxOfCode(code);
-		const inRegion = regionSet
-			? i !== null && i !== undefined && regionSet.has(i)
-			: true;
+		let inRegion = true;
+		if (regionSet) {
+			inRegion = i !== null && i !== undefined && regionSet.has(i);
+		}
 		save.species[code].outOfRegion = !inRegion;
 		if (inRegion) {
 			seen += 1;

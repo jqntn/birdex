@@ -71,7 +71,11 @@ async function buildTaxonomy(build = new Date().toISOString()) {
 		code.push(r.SPECIES_CODE);
 		orderIdx.push(oi);
 		familyIdx.push(fi);
-		extinct.push(isExtinct(r.EXTINCT) ? 1 : 0);
+		let extinctFlag = 0;
+		if (isExtinct(r.EXTINCT)) {
+			extinctFlag = 1;
+		}
+		extinct.push(extinctFlag);
 		namesEn.push(r.COMMON_NAME);
 		namesFr.push(frByCode.get(r.SPECIES_CODE) || r.COMMON_NAME);
 	}

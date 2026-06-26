@@ -8,7 +8,12 @@ import { clear, el } from "../util/dom.js";
 import { flagEmoji } from "../util/format.js";
 import { progressBar } from "./components.js";
 
-const L = (o) => (getLocale() === "fr" ? o.fr : o.en);
+const L = (o) => {
+	if (getLocale() === "fr") {
+		return o.fr;
+	}
+	return o.en;
+};
 
 function renderStats(root) {
 	clear(root);
@@ -25,15 +30,15 @@ function renderStats(root) {
 
 	const rDenom = regionSpeciesCount(state.region, total);
 	const rm = regionMeta(state.region);
+	let rmLabel = t("world");
+	if (rm) {
+		rmLabel = L(rm);
+	}
 	root.append(
 		el(
 			"section",
 			{ class: "stat-block" },
-			progressBar(
-				agg.seenInRegion,
-				rDenom,
-				`${t("completion")} — ${rm ? L(rm) : t("world")}`,
-			),
+			progressBar(agg.seenInRegion, rDenom, `${t("completion")} — ${rmLabel}`),
 			progressBar(agg.liferCount, total, `${t("completion")} — ${t("world")}`),
 		),
 	);
@@ -51,7 +56,10 @@ function renderStats(root) {
 			liferDay = { date: d, count: c };
 		}
 	}
-	const speciesDay = "biggestLiferDay" in agg ? agg.biggestDay : null;
+	let speciesDay = null;
+	if ("biggestLiferDay" in agg) {
+		speciesDay = agg.biggestDay;
+	}
 
 	const dayHero = (d, label) =>
 		el(

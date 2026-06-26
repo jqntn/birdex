@@ -123,7 +123,10 @@ const STRINGS = {
 function t(key, ...args) {
 	const table = STRINGS[state.locale] || STRINGS.en;
 	const v = table[key] ?? STRINGS.en[key] ?? key;
-	return typeof v === "function" ? v(...args) : v;
+	if (typeof v === "function") {
+		return v(...args);
+	}
+	return v;
 }
 
 export { getLocale, t };

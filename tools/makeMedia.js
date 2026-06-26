@@ -19,18 +19,26 @@ const decodeEntities = (s) =>
 	String(s).replace(
 		/&(?:#(\d+)|#x([0-9a-f]+)|(amp|lt|gt|quot|apos|nbsp));/gi,
 		(m, dec, hex, name) => {
-			const fromHex = hex
-				? String.fromCodePoint(Number.parseInt(hex, 16))
-				: (ENT[name.toLowerCase()] ?? m);
-			return dec ? String.fromCodePoint(Number(dec)) : fromHex;
+			let fromHex;
+			if (hex) {
+				fromHex = String.fromCodePoint(Number.parseInt(hex, 16));
+			} else {
+				fromHex = ENT[name.toLowerCase()] ?? m;
+			}
+			if (dec) {
+				return String.fromCodePoint(Number(dec));
+			}
+			return fromHex;
 		},
 	);
-const strip = (html) =>
-	html
-		? decodeEntities(String(html).replace(/<[^>]+>/g, ""))
-				.replace(/\s+/g, " ")
-				.trim()
-		: "";
+const strip = (html) => {
+	if (html) {
+		return decodeEntities(String(html).replace(/<[^>]+>/g, ""))
+			.replace(/\s+/g, " ")
+			.trim();
+	}
+	return "";
+};
 
 async function api(params) {
 	const url = `${API}?${new URLSearchParams({ format: "json", formatversion: "2", ...params })}`;
@@ -135,13 +143,17 @@ async function imageInfo(files) {
 			const file = p.title.replace(FILE_PREFIX_RE, "").replace(/ /g, "_");
 			const m = ii.extmetadata || {};
 			const t = thumbTemplate(file, ii);
+			let tField = {};
+			if (t) {
+				tField = { t };
+			}
 			info.set(file, {
 				by: strip(m.Artist?.value),
 				l: strip(m.LicenseShortName?.value),
 				mime: ii.mime || "",
 				w: ii.width || 0,
 				h: ii.height || 0,
-				...(t ? { t } : {}),
+				...tField,
 			});
 		}
 		if ((i / BATCH) % 20 === 0) {
@@ -179,14 +191,22 @@ async function imageInfo(files) {
 		}
 		const h = createHash("md5").update(file).digest("hex").slice(0, 2);
 		const portrait = inf.h && inf.w && inf.h > inf.w;
+		let phField = {};
+		if (portrait) {
+			phField = { ph: inf.h };
+		}
+		let tField = {};
+		if (inf.t) {
+			tField = { t: inf.t };
+		}
 		items[i] = {
 			f: file,
 			h,
 			by: inf.by || "",
 			l: inf.l || "",
 			w: inf.w || 0,
-			...(portrait ? { ph: inf.h } : {}),
-			...(inf.t ? { t: inf.t } : {}),
+			...phField,
+			...tField,
 		};
 		kept += 1;
 	}

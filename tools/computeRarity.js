@@ -48,7 +48,11 @@ function computeRarity(build = new Date().toISOString()) {
 	const tiers = new Uint8Array(count);
 	for (let i = 0; i < count; i += 1) {
 		if (partial) {
-			tiers[i] = extinct[i] ? 4 : 0;
+			if (extinct[i]) {
+				tiers[i] = 4;
+			} else {
+				tiers[i] = 0;
+			}
 			continue;
 		}
 		const o = occ[i];
@@ -79,8 +83,14 @@ function computeRarity(build = new Date().toISOString()) {
 			tiers: Array.from(tiers),
 		}),
 	);
+	let source;
+	if (partial) {
+		source = "PARTIAL (no country lists; extinct→legendary only) ";
+	} else {
+		source = `from ${countryFiles} countries `;
+	}
 	console.log(
-		`[rarity] ${partial ? "PARTIAL (no country lists; extinct→legendary only) " : `from ${countryFiles} countries `}` +
+		`[rarity] ${source}` +
 			`dist common/uncommon/rare/endemic/legendary = ${dist.join("/")}`,
 	);
 	return { partial, dist };

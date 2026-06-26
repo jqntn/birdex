@@ -127,8 +127,15 @@ function mountShell() {
 	const picker = $("#region-picker");
 	clear(picker);
 	for (const r of regionList()) {
-		const label =
-			(state.locale === "fr" ? r.fr : r.en) + (r.type === "country" ? "" : "");
+		let name = r.en;
+		if (state.locale === "fr") {
+			name = r.fr;
+		}
+		let suffix = "";
+		if (r.type === "country") {
+			suffix = "";
+		}
+		const label = name + suffix;
 		picker.append(
 			el("option", { value: r.code, selected: r.code === state.region }, label),
 		);
@@ -156,7 +163,11 @@ function updateChromeText() {
 	for (const opt of picker.options) {
 		const r = regionMeta(opt.value);
 		if (r) {
-			opt.textContent = state.locale === "fr" ? r.fr : r.en;
+			let name = r.en;
+			if (state.locale === "fr") {
+				name = r.fr;
+			}
+			opt.textContent = name;
 		}
 	}
 }
@@ -179,7 +190,10 @@ async function switchRegion(code, { silent } = {}) {
 }
 
 function toggleLocale() {
-	const next = state.locale === "fr" ? "en" : "fr";
+	let next = "fr";
+	if (state.locale === "fr") {
+		next = "en";
+	}
 	emit({ locale: next });
 	document.documentElement.lang = next;
 	patchSave(state.save, { locale: next });
@@ -201,7 +215,11 @@ function go(targetRoute) {
 
 function showPanel(name) {
 	for (const [k, p] of Object.entries(panels)) {
-		p.style.display = k === name ? "" : "none";
+		let display = "none";
+		if (k === name) {
+			display = "";
+		}
+		p.style.display = display;
 	}
 }
 

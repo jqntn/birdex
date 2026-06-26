@@ -80,7 +80,11 @@ function render() {
 	const list = state.visible;
 	const total = list.length;
 
-	empty.style.display = total === 0 ? "block" : "none";
+	let emptyDisplay = "none";
+	if (total === 0) {
+		emptyDisplay = "block";
+	}
+	empty.style.display = emptyDisplay;
 	if (total === 0) {
 		clear(win);
 		top.style.height = "0px";

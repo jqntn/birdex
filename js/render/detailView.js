@@ -86,7 +86,11 @@ function fitCreditAuthor() {
 	const cs = getComputedStyle(author);
 	measureCtx = measureCtx || document.createElement("canvas").getContext("2d");
 	measureCtx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
-	const avail = credit.clientWidth - (meta ? meta.offsetWidth : 0) - 6;
+	let metaWidth = 0;
+	if (meta) {
+		metaWidth = meta.offsetWidth;
+	}
+	const avail = credit.clientWidth - metaWidth - 6;
 	if (avail <= 0 || measureCtx.measureText(full).width <= avail) {
 		author.textContent = full;
 		return;
@@ -166,11 +170,18 @@ function openDetail(i) {
 	const rid = RARITY[rarityTier(i)].id;
 	const sci = sciName(i);
 	const caught = state.caughtSet.has(i);
-	const rec = caught ? state.save.species[speciesCode(i)] : null;
+	let rec = null;
+	if (caught) {
+		rec = state.save.species[speciesCode(i)];
+	}
 	const shiny = Boolean(rec?.shiny);
 
 	clear(box);
-	box.className = `detail-box r-${rid}${shiny ? " shiny" : ""}`;
+	let shinyClass = "";
+	if (shiny) {
+		shinyClass = " shiny";
+	}
+	box.className = `detail-box r-${rid}${shinyClass}`;
 
 	const media = el("div", { class: "detail-media" });
 	media.innerHTML = `<div class="detail-sil">${silhouetteSVG()}</div>`;
@@ -178,6 +189,18 @@ function openDetail(i) {
 	if (hasPhoto(i)) {
 		const c = photoCredit(i);
 		const meta = [c.license, "Wikimedia Commons"].filter(Boolean).join(" · ");
+		let creditAuthor = null;
+		if (c.by) {
+			creditAuthor = el(
+				"span",
+				{ class: "credit-author", dataset: { full: `© ${c.by}` } },
+				`© ${c.by}`,
+			);
+		}
+		let creditMetaText = meta;
+		if (c.by) {
+			creditMetaText = ` · ${meta}`;
+		}
 		credit = el(
 			"a",
 			{
@@ -186,14 +209,8 @@ function openDetail(i) {
 				target: "_blank",
 				rel: "noopener",
 			},
-			c.by
-				? el(
-						"span",
-						{ class: "credit-author", dataset: { full: `© ${c.by}` } },
-						`© ${c.by}`,
-					)
-				: null,
-			el("span", { class: "credit-meta" }, c.by ? ` · ${meta}` : meta),
+			creditAuthor,
+			el("span", { class: "credit-meta" }, creditMetaText),
 		);
 		const img = el("img", {
 			class: "detail-photo",
@@ -220,13 +237,23 @@ function openDetail(i) {
 		media.insertAdjacentHTML("beforeend", '<span class="shiny-mark">✦</span>');
 	}
 
-	const ext = isExtinct(i)
-		? el("span", { class: "tag tag-extinct" }, t("extinct"))
-		: null;
-	const oor = rec?.outOfRegion
-		? el("span", { class: "tag tag-oor" }, t("outOfRegion"))
-		: null;
+	let ext = null;
+	if (isExtinct(i)) {
+		ext = el("span", { class: "tag tag-extinct" }, t("extinct"));
+	}
+	let oor = null;
+	if (rec?.outOfRegion) {
+		oor = el("span", { class: "tag tag-oor" }, t("outOfRegion"));
+	}
 
+	let rarityLabel = RARITY[rarityTier(i)].en;
+	if (getLocale() === "fr") {
+		rarityLabel = RARITY[rarityTier(i)].fr;
+	}
+	let shinyTag = null;
+	if (shiny) {
+		shinyTag = el("span", { class: "tag tag-shiny" }, `✦ ${t("shiny")}`);
+	}
 	const header = el(
 		"div",
 		{ class: "detail-head" },
@@ -240,49 +267,54 @@ function openDetail(i) {
 		el(
 			"div",
 			{ class: "detail-tags" },
-			el(
-				"span",
-				{ class: `tag tag-rarity r-${rid}` },
-				getLocale() === "fr"
-					? RARITY[rarityTier(i)].fr
-					: RARITY[rarityTier(i)].en,
-			),
-			shiny ? el("span", { class: "tag tag-shiny" }, `✦ ${t("shiny")}`) : null,
+			el("span", { class: `tag tag-rarity r-${rid}` }, rarityLabel),
+			shinyTag,
 			ext,
 			oor,
 		),
 	);
 
+	let firstSeenFact = null;
+	if (caught) {
+		let firstSeenValue = "—";
+		if (rec?.date) {
+			firstSeenValue = fmtDate(rec.date, getLocale());
+		}
+		firstSeenFact = fact(t("firstSeen"), firstSeenValue);
+	}
+	let lastSeenFact = null;
+	if (caught) {
+		let lastSeenValue = "—";
+		if (rec?.lastDate || rec?.date) {
+			lastSeenValue = fmtDate(rec.lastDate || rec.date, getLocale());
+		}
+		lastSeenFact = fact(t("lastSeen"), lastSeenValue);
+	}
+	let locationFact = null;
+	if (caught && rec?.country) {
+		locationFact = fact(
+			t("location"),
+			`${flagEmoji(rec.country)} ${[regionName(rec.sp), COUNTRY_NAMES[rec.country] || rec.country].filter(Boolean).join(", ")}`,
+		);
+	}
+	let countFact = null;
+	if (caught && (rec?.totalCount ?? rec?.count)) {
+		countFact = fact(t("count"), String(rec?.totalCount ?? rec?.count));
+	}
+	let statusText = t("notCaught");
+	if (caught) {
+		statusText = `✓ ${t("caught")}`;
+	}
 	const facts = el(
 		"div",
 		{ class: "detail-facts" },
 		fact(t("order"), orderName(orderIdxOf(i))),
 		fact(t("family"), familyName(familyIdxOf(i), getLocale())),
-		caught
-			? fact(t("firstSeen"), rec?.date ? fmtDate(rec.date, getLocale()) : "—")
-			: null,
-		caught
-			? fact(
-					t("lastSeen"),
-					rec?.lastDate || rec?.date
-						? fmtDate(rec.lastDate || rec.date, getLocale())
-						: "—",
-				)
-			: null,
-		caught && rec?.country
-			? fact(
-					t("location"),
-					`${flagEmoji(rec.country)} ${[regionName(rec.sp), COUNTRY_NAMES[rec.country] || rec.country].filter(Boolean).join(", ")}`,
-				)
-			: null,
-		caught && (rec?.totalCount ?? rec?.count)
-			? fact(t("count"), String(rec?.totalCount ?? rec?.count))
-			: null,
-		el(
-			"div",
-			{ class: "detail-status" },
-			caught ? `✓ ${t("caught")}` : t("notCaught"),
-		),
+		firstSeenFact,
+		lastSeenFact,
+		locationFact,
+		countFact,
+		el("div", { class: "detail-status" }, statusText),
 	);
 
 	const ebird = el(

@@ -52,10 +52,18 @@ const countryOf = (sp) => {
 		return null;
 	}
 	const [c] = String(sp).trim().split("-");
-	return c.length === 2 ? c.toUpperCase() : c || null;
+	if (c.length === 2) {
+		return c.toUpperCase();
+	}
+	return c || null;
 };
 
-const pct = (n, d) => (d > 0 ? Math.round((n / d) * 1000) / 10 : 0);
+const pct = (n, d) => {
+	if (d > 0) {
+		return Math.round((n / d) * 1000) / 10;
+	}
+	return 0;
+};
 
 function flagEmoji(cc) {
 	if (cc?.length !== 2) {
@@ -73,7 +81,11 @@ const fmtDate = (iso, locale = "fr") => {
 		return "";
 	}
 	const d = new Date(`${iso}T00:00:00`);
-	return d.toLocaleDateString(locale === "fr" ? "fr-FR" : "en-US", {
+	let dateLocale = "en-US";
+	if (locale === "fr") {
+		dateLocale = "fr-FR";
+	}
+	return d.toLocaleDateString(dateLocale, {
 		year: "numeric",
 		month: "long",
 		day: "numeric",
