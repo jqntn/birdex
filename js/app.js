@@ -43,11 +43,10 @@ let baseIndices = [];
 let searchTimer = null;
 
 async function bootstrap() {
-	const loaded = loadSave();
-	if (loaded) {
-		emit({ save: loaded, locale: loaded.locale, region: loaded.region });
+	const save = loadSave();
+	if (save) {
+		emit({ save, locale: save.locale, region: save.region });
 	}
-	const { save } = state;
 	document.documentElement.lang = state.locale;
 
 	showSplash();
@@ -60,14 +59,16 @@ async function bootstrap() {
 	]);
 	baseIndices = Array.from({ length: count() }, (_, i) => i);
 
-	const caughtSet = new Set();
-	for (const code of Object.keys(save.species)) {
-		const i = idxOfCode(code);
-		if (i !== null && i !== undefined) {
-			caughtSet.add(i);
+	if (save?.species) {
+		const caughtSet = new Set();
+		for (const code of Object.keys(save.species)) {
+			const i = idxOfCode(code);
+			if (i !== null && i !== undefined) {
+				caughtSet.add(i);
+			}
 		}
+		emit({ caughtSet });
 	}
-	emit({ caughtSet });
 	await switchRegion(state.region, { silent: true });
 
 	(globalThis.requestIdleCallback || ((f) => setTimeout(f, IDLE_FALLBACK_MS)))(
@@ -78,7 +79,7 @@ async function bootstrap() {
 	setImportCallbacks({ onImported, onSkip: () => go("dex") });
 
 	globalThis.addEventListener("hashchange", route);
-	const first = !(loaded?.importedAt || loaded?.skippedOnboarding);
+	const first = !(save && (save.importedAt || save.skippedOnboarding));
 	if (first && !location.hash) {
 		location.hash = "#/welcome";
 	}
