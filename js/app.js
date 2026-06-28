@@ -1,7 +1,7 @@
 import { BUILD } from "../version.js";
 import { EBIRD_EXPORT_URL } from "./config.js";
 import { loadMedia } from "./data/media.js";
-import { loadRarity } from "./data/rarity.js";
+import { loadRarity, rarityTier } from "./data/rarity.js";
 import {
 	ALL_REGIONS,
 	loadRegion,
@@ -11,6 +11,7 @@ import {
 	regionMeta,
 } from "./data/regions.js";
 import {
+	commonName,
 	count,
 	idxOfCode,
 	loadTaxonomy,
@@ -207,7 +208,40 @@ function recompute() {
 	const pred = filterPredicate();
 	const hits = search(state.query);
 	const source = hits ?? baseIndices;
-	emit({ visible: source.filter(pred) });
+	emit({ visible: sortVisible(source.filter(pred)) });
+}
+
+function sortVisible(indices) {
+	const s = state.sort;
+	if (!s || s === "dex") {
+		return indices;
+	}
+	const sp = state.save.species;
+	const arr = indices.slice();
+	if (s === "name") {
+		const loc = state.locale;
+		arr.sort((a, b) => commonName(a, loc).localeCompare(commonName(b, loc)));
+	} else if (s === "rarity") {
+		arr.sort((a, b) => rarityTier(b) - rarityTier(a) || a - b);
+	} else if (s === "count") {
+		const c = (i) => sp[speciesCode(i)]?.totalCount || 0;
+		arr.sort((a, b) => c(b) - c(a) || a - b);
+	} else if (s === "date") {
+		const d = (i) =>
+			sp[speciesCode(i)]?.lastDate || sp[speciesCode(i)]?.date || "";
+		arr.sort((a, b) => {
+			const da = d(a);
+			const db = d(b);
+			if (da === db) {
+				return a - b;
+			}
+			if (db > da) {
+				return 1;
+			}
+			return -1;
+		});
+	}
+	return arr;
 }
 
 function go(targetRoute) {

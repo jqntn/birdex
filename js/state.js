@@ -17,6 +17,7 @@ const state = {
 		rarity: null,
 		shiny: null,
 	},
+	sort: "dex",
 	query: "",
 	visible: [],
 

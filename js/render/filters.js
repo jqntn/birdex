@@ -168,7 +168,27 @@ function render(root) {
 		),
 	);
 
-	root.append(seen, orderSel, famSel, rarSel, shinySel);
+	const sortSel = el(
+		"select",
+		{
+			class: "sel sort-sel",
+			onchange: (e) => {
+				emit({ sort: e.target.value });
+				onChange?.();
+			},
+		},
+		...[
+			["dex", "sortDex"],
+			["name", "sortName"],
+			["rarity", "sortRarity"],
+			["count", "sortCount"],
+			["date", "sortDate"],
+		].map(([value, key]) =>
+			el("option", { value, selected: state.sort === value }, t(key)),
+		),
+	);
+
+	root.append(seen, orderSel, famSel, rarSel, shinySel, sortSel);
 }
 
 function isShiny(i) {
