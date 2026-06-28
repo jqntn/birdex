@@ -35,14 +35,6 @@
 					"suspicious": { "noConsole": "off" }
 				}
 			}
-		},
-		{
-			"includes": ["sw.js"],
-			"linter": {
-				"rules": {
-					"style": { "useGlobalThis": "off" }
-				}
-			}
 		}
 	]
 }

@@ -1,4 +1,4 @@
-const CACHE = "birdex-20260628-142453";
+const CACHE = "birdex-20260628-142838";
 const THUMBS = "birdex-thumbs";
 const THUMBS_MAX = 600;
 
@@ -63,14 +63,14 @@ async function cacheOne(c, u) {
 async function precache() {
 	const c = await caches.open(CACHE);
 	await Promise.all(PRECACHE.map((u) => cacheOne(c, u)));
-	await self.skipWaiting();
+	await globalThis.skipWaiting();
 }
 
-self.addEventListener("install", (e) => {
+globalThis.addEventListener("install", (e) => {
 	e.waitUntil(precache());
 });
 
-self.addEventListener("activate", (e) => {
+globalThis.addEventListener("activate", (e) => {
 	e.waitUntil(
 		caches
 			.keys()
@@ -81,11 +81,11 @@ self.addEventListener("activate", (e) => {
 						.map((k) => caches.delete(k)),
 				),
 			)
-			.then(() => self.clients.claim()),
+			.then(() => globalThis.clients.claim()),
 	);
 });
 
-self.addEventListener("fetch", (e) => {
+globalThis.addEventListener("fetch", (e) => {
 	const { request } = e;
 	if (request.method !== "GET") {
 		return;
