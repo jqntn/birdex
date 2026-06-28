@@ -8,7 +8,7 @@ import { el } from "../util/dom.js";
 const EGG =
 	"M36 8C47 8 55 24 55 37C55 46 47 53 36 53C25 53 17 46 17 37C17 24 25 8 36 8Z";
 
-function silhouetteSVG() {
+function silhouetteSvg() {
 	return `<svg viewBox="0 0 72 60" class="sil" aria-hidden="true"><path d="${EGG}"/></svg>`;
 }
 
@@ -44,7 +44,7 @@ function card(i, { caught, isNew, shiny } = {}) {
 		photoImg = `<img class="card-photo" src="${photoUrl(i, 250)}" alt="" data-fb="${photoFallbackUrl(i, 250)}" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb')}else{this.remove()}">`;
 	}
 	node.innerHTML =
-		`<span class="card-sil">${silhouetteSVG(i)}</span>` +
+		`<span class="card-sil">${silhouetteSvg(i)}</span>` +
 		photoImg +
 		`<span class="card-num">#${String(dexNumber(i)).padStart(4, "0")}</span>` +
 		`<span class="card-name">${escapeHtml(name)}</span>`;
@@ -93,4 +93,4 @@ function progressBar(done, total, label) {
 	);
 }
 
-export { card, progressBar, rarityId, silhouetteSVG };
+export { card, progressBar, rarityId, silhouetteSvg };

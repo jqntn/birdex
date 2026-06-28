@@ -24,7 +24,7 @@ import { getLocale, t } from "../i18n.js";
 import { state } from "../state.js";
 import { clear, el } from "../util/dom.js";
 import { flagEmoji, fmtDate } from "../util/format.js";
-import { silhouetteSVG } from "./components.js";
+import { silhouetteSvg } from "./components.js";
 
 const TRAILING_WS_RE = /\s+$/;
 
@@ -184,7 +184,7 @@ function openDetail(i) {
 	box.className = `detail-box r-${rid}${shinyClass}`;
 
 	const media = el("div", { class: "detail-media" });
-	media.innerHTML = `<div class="detail-sil">${silhouetteSVG()}</div>`;
+	media.innerHTML = `<div class="detail-sil">${silhouetteSvg()}</div>`;
 	let credit = null;
 	if (hasPhoto(i)) {
 		const c = photoCredit(i);

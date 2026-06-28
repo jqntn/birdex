@@ -143,7 +143,7 @@ async function buildRegions({
 				deltas: deltaPack(indices),
 			}),
 		);
-		const names = CONTINENT_NAMES[cont] || { en: cont, fr: cont };
+		const names = CONTINENT_NAMES[cont.toLowerCase()] || { en: cont, fr: cont };
 		indexRegions.push({
 			code,
 			type: "continent",

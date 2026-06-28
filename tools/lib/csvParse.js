@@ -1,4 +1,4 @@
-export function parseCSV(text) {
+export function parseCsv(text) {
 	let input = text;
 	if (input.charCodeAt(0) === 0xfe_ff) {
 		input = input.slice(1);
@@ -59,8 +59,8 @@ export function parseCSV(text) {
 	return rows;
 }
 
-export function parseCSVObjects(text) {
-	const rows = parseCSV(text);
+export function parseCsvObjects(text) {
+	const rows = parseCsv(text);
 	if (rows.length === 0) {
 		return [];
 	}

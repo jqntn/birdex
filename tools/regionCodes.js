@@ -258,11 +258,11 @@ export const COUNTRIES = RAW.trim()
 	});
 
 export const CONTINENT_NAMES = {
-	AF: { en: "Africa", fr: "Afrique" },
-	AN: { en: "Antarctica", fr: "Antarctique" },
-	AS: { en: "Asia", fr: "Asie" },
-	EU: { en: "Europe", fr: "Europe" },
-	NA: { en: "North America", fr: "Amérique du Nord" },
-	OC: { en: "Oceania", fr: "Océanie" },
-	SA: { en: "South America", fr: "Amérique du Sud" },
+	af: { en: "Africa", fr: "Afrique" },
+	an: { en: "Antarctica", fr: "Antarctique" },
+	as: { en: "Asia", fr: "Asie" },
+	eu: { en: "Europe", fr: "Europe" },
+	na: { en: "North America", fr: "Amérique du Nord" },
+	oc: { en: "Oceania", fr: "Océanie" },
+	sa: { en: "South America", fr: "Amérique du Sud" },
 };

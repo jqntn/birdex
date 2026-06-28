@@ -1,8 +1,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseCSVObjects } from "./lib/csvParse.js";
-import { fetchTaxonomyCSV } from "./lib/ebird.js";
+import { parseCsvObjects } from "./lib/csvParse.js";
+import { fetchTaxonomyCsv } from "./lib/ebird.js";
 import { deltaPack } from "./lib/pack.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -20,11 +20,11 @@ async function buildTaxonomy(build = new Date().toISOString()) {
 	mkdirSync(DATA_DIR, { recursive: true });
 
 	console.log("[taxonomy] fetching English taxonomy…");
-	const enRows = parseCSVObjects(await fetchTaxonomyCSV());
+	const enRows = parseCsvObjects(await fetchTaxonomyCsv());
 	console.log(`[taxonomy] English rows: ${enRows.length}`);
 
 	console.log("[taxonomy] fetching French taxonomy…");
-	const frRows = parseCSVObjects(await fetchTaxonomyCSV({ locale: "fr" }));
+	const frRows = parseCsvObjects(await fetchTaxonomyCsv({ locale: "fr" }));
 	console.log(`[taxonomy] French rows: ${frRows.length}`);
 
 	const frByCode = new Map(frRows.map((r) => [r.SPECIES_CODE, r.COMMON_NAME]));

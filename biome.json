@@ -16,8 +16,7 @@
 				"noContinue": "off",
 				"noExcessiveLinesPerFile": "off",
 				"noHexColors": "off",
-				"noMagicNumbers": "off",
-				"useNamingConvention": "off"
+				"noMagicNumbers": "off"
 			},
 			"suspicious": {
 				"noAlert": "off",

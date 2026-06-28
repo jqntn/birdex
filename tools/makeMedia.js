@@ -46,7 +46,7 @@ async function api(params) {
 		let res;
 		try {
 			res = await fetch(url, {
-				headers: { "User-Agent": UA, Accept: "application/json" },
+				headers: { "User-Agent": UA, accept: "application/json" },
 			});
 		} catch (e) {
 			if (attempt < 5) {

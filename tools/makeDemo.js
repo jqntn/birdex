@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { binomial, NON_SPECIES, parseCSV } from "../js/csv/ebirdParser.js";
+import { binomial, NON_SPECIES, parseCsv } from "../js/csv/ebirdParser.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -26,7 +26,7 @@ const esc = (v) => {
 };
 
 function makeDemo(srcPath) {
-	const rows = parseCSV(readFileSync(srcPath, "utf8"));
+	const rows = parseCsv(readFileSync(srcPath, "utf8"));
 	const header = rows[0].map((h) => h.trim());
 	const col = Object.fromEntries(
 		KEEP.map((name) => [name, header.indexOf(name)]),

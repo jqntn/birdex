@@ -1,7 +1,7 @@
 const TAXONOMY_URL = "https://api.ebird.org/v2/ref/taxonomy/ebird";
 const SPPLIST_URL = "https://api.ebird.org/v2/product/spplist";
 
-export async function fetchTaxonomyCSV({ locale } = {}) {
+export async function fetchTaxonomyCsv({ locale } = {}) {
 	const params = new URLSearchParams({ fmt: "csv", cat: "species" });
 	if (locale) {
 		params.set("locale", locale);
