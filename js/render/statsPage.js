@@ -1,7 +1,13 @@
 import { RARITY } from "../config.js";
 import { CONTINENT_NAMES, COUNTRY_NAMES } from "../data/continents.js";
 import { regionMeta, regionSpeciesCount } from "../data/regions.js";
-import { count, familyIdxOf, familyName, idxOfCode } from "../data/taxonomy.js";
+import {
+	commonName,
+	count,
+	familyIdxOf,
+	familyName,
+	idxOfCode,
+} from "../data/taxonomy.js";
 import { getLocale, t } from "../i18n.js";
 import { state } from "../state.js";
 import { clear, el } from "../util/dom.js";
@@ -43,45 +49,53 @@ function renderStats(root) {
 		),
 	);
 
-	const liferByDate = {};
-	for (const code of Object.keys(save.species)) {
-		const d = save.species[code]?.date;
-		if (d) {
-			liferByDate[d] = (liferByDate[d] || 0) + 1;
-		}
-	}
-	let liferDay = null;
-	for (const [d, c] of Object.entries(liferByDate)) {
-		if (!liferDay || c > liferDay.count) {
-			liferDay = { date: d, count: c };
-		}
-	}
-	let speciesDay = null;
-	if ("biggestLiferDay" in agg) {
-		speciesDay = agg.biggestDay;
-	}
-
-	const dayHero = (d, label) =>
+	const hero = (num, label, sub) =>
 		el(
 			"section",
 			{ class: "stat-hero" },
-			el("div", { class: "hero-num" }, String(d.count)),
+			el("div", { class: "hero-num" }, String(num)),
 			el(
 				"div",
 				{ class: "hero-txt" },
 				el("div", { class: "hero-label" }, label),
-				el("div", { class: "hero-sub" }, d.date),
+				el("div", { class: "hero-sub" }, sub),
 			),
 		);
-	if (liferDay || speciesDay) {
-		const row = el("div", { class: "stat-hero-row" });
-		if (liferDay) {
-			row.append(dayHero(liferDay, t("biggestLiferDay")));
+
+	const heroes = [];
+	if (agg.biggestCountDay) {
+		heroes.push(
+			hero(
+				agg.biggestCountDay.count,
+				t("biggestCountDay"),
+				agg.biggestCountDay.date,
+			),
+		);
+	}
+	if (agg.mostCounted) {
+		const i = idxOfCode(agg.mostCounted.code);
+		let name = agg.mostCounted.code;
+		if (i !== null && i !== undefined) {
+			name = commonName(i, getLocale());
 		}
-		if (speciesDay) {
-			row.append(dayHero(speciesDay, t("biggestDay")));
-		}
-		root.append(row);
+		heroes.push(hero(agg.mostCounted.count, t("mostCounted"), name));
+	}
+	if (agg.biggestLiferDay) {
+		heroes.push(
+			hero(
+				agg.biggestLiferDay.count,
+				t("biggestLiferDay"),
+				agg.biggestLiferDay.date,
+			),
+		);
+	}
+	if (agg.biggestDay) {
+		heroes.push(
+			hero(agg.biggestDay.count, t("biggestDay"), agg.biggestDay.date),
+		);
+	}
+	if (heroes.length > 0) {
+		root.append(el("div", { class: "stat-hero-row" }, ...heroes));
 	}
 
 	const years = Object.keys(agg.byYear).sort();

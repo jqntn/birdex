@@ -44,6 +44,7 @@ function importText(text) {
 		state.regionSet,
 		parsed.biggestDay,
 		prevShiny,
+		parsed.biggestCountDay,
 	);
 
 	const hadPrevImport = Boolean(prev.importedAt);

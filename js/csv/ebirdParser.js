@@ -68,6 +68,7 @@ function parseEbirdData(text) {
 			countable: 0,
 			skipped: 0,
 			biggestDay: null,
+			biggestCountDay: null,
 		};
 	}
 
@@ -94,6 +95,7 @@ function parseEbirdData(text) {
 
 	const agg = new Map();
 	const dayMap = new Map();
+	const dayCount = new Map();
 	let dataRows = 0;
 	let countable = 0;
 	let skipped = 0;
@@ -148,6 +150,9 @@ function parseEbirdData(text) {
 		if (Number.isFinite(rawCount) && rawCount > 0) {
 			cnt = rawCount;
 		}
+		if (iso) {
+			dayCount.set(iso, (dayCount.get(iso) || 0) + cnt);
+		}
 		let sub = "";
 		if (ci.sub >= 0) {
 			sub = (cells[ci.sub] || "").trim();
@@ -200,6 +205,13 @@ function parseEbirdData(text) {
 		}
 	}
 
+	let biggestCountDay = null;
+	for (const [date, c] of dayCount) {
+		if (!biggestCountDay || c > biggestCountDay.count) {
+			biggestCountDay = { date, count: c };
+		}
+	}
+
 	const sightings = new Map();
 	for (const [key, a] of agg) {
 		let timesSeen = a.rowCount;
@@ -223,7 +235,14 @@ function parseEbirdData(text) {
 		});
 	}
 
-	return { sightings, rows: dataRows, countable, skipped, biggestDay };
+	return {
+		sightings,
+		rows: dataRows,
+		countable,
+		skipped,
+		biggestDay,
+		biggestCountDay,
+	};
 }
 
 export { binomial, NON_SPECIES, parseCsv, parseEbirdData };

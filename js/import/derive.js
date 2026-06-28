@@ -8,6 +8,7 @@ export function deriveFromSightings(
 	regionSet,
 	biggestDay = null,
 	prevShiny = [],
+	biggestCountDay = null,
 ) {
 	const species = {};
 	const caughtSet = new Set();
@@ -77,6 +78,14 @@ export function deriveFromSightings(
 		}
 	}
 
+	let mostCounted = null;
+	for (const [code, s] of Object.entries(species)) {
+		const c = s.totalCount || 0;
+		if (c > 0 && (!mostCounted || c > mostCounted.count)) {
+			mostCounted = { code, count: c };
+		}
+	}
+
 	const shinyTarget = Math.floor(caughtSet.size / 100);
 	const shinySet = new Set(
 		prevShiny.filter((code) => shinyKeyByCode.has(code)),
@@ -112,6 +121,8 @@ export function deriveFromSightings(
 		continents: [...continents],
 		biggestDay,
 		biggestLiferDay,
+		biggestCountDay,
+		mostCounted,
 		shinies,
 	};
 
