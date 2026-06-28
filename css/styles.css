@@ -851,11 +851,12 @@ a {
 }
 .stat-hero-row {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 10px;
 	margin: 10px 14px;
 }
 .stat-hero {
-	flex: 1 1 0;
+	flex: 1 1 calc(50% - 5px);
 	min-width: 0;
 	display: flex;
 	flex-direction: column;
@@ -1137,5 +1138,8 @@ a {
 	}
 	.detail-media {
 		height: 230px;
+	}
+	.stat-hero {
+		flex: 1 1 0;
 	}
 }
