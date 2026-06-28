@@ -140,6 +140,20 @@ a {
 	gap: 4px;
 	flex: 0 0 auto;
 }
+@media (max-width: 600px) {
+	.topbar-controls {
+		overflow: hidden;
+		transition:
+			width 0.2s ease,
+			opacity 0.2s ease;
+	}
+	#topbar:has(#search:focus) .topbar-controls {
+		width: 0;
+		min-width: 0;
+		opacity: 0;
+		pointer-events: none;
+	}
+}
 .icon-btn {
 	width: 36px;
 	height: 36px;
