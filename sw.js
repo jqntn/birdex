@@ -1,4 +1,4 @@
-const CACHE = "birdex-20260628-142838";
+const CACHE = "birdex-20260628-143559";
 const THUMBS = "birdex-thumbs";
 const THUMBS_MAX = 600;
 
@@ -108,7 +108,8 @@ globalThis.addEventListener("fetch", (e) => {
 		e.respondWith(
 			fetch(request)
 				.then((r) => {
-					caches.open(CACHE).then((c) => c.put("./index.html", r.clone()));
+					const copy = r.clone();
+					caches.open(CACHE).then((c) => c.put("./index.html", copy));
 					return r;
 				})
 				.catch(() => caches.match("./index.html")),
