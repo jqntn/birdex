@@ -1,4 +1,4 @@
-const CACHE = "birdex-20260628-162946";
+const CACHE = "birdex-20260628-165500";
 const THUMBS = "birdex-thumbs";
 const THUMBS_MAX = 600;
 
@@ -7,6 +7,7 @@ const ignore = () => undefined;
 const PRECACHE = [
 	"./",
 	"./index.html",
+	"./css/fonts.css",
 	"./css/styles.css",
 	"./manifest.webmanifest",
 	"./version.js",
