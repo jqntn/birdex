@@ -63,6 +63,20 @@ function renderStats(root) {
 		);
 
 	const heroes = [];
+	if (agg.biggestLiferDay) {
+		heroes.push(
+			hero(
+				agg.biggestLiferDay.count,
+				t("biggestLiferDay"),
+				agg.biggestLiferDay.date,
+			),
+		);
+	}
+	if (agg.biggestDay) {
+		heroes.push(
+			hero(agg.biggestDay.count, t("biggestDay"), agg.biggestDay.date),
+		);
+	}
 	if (agg.biggestCountDay) {
 		heroes.push(
 			hero(
@@ -79,20 +93,6 @@ function renderStats(root) {
 			name = commonName(i, getLocale());
 		}
 		heroes.push(hero(agg.mostCounted.count, t("mostCounted"), name));
-	}
-	if (agg.biggestLiferDay) {
-		heroes.push(
-			hero(
-				agg.biggestLiferDay.count,
-				t("biggestLiferDay"),
-				agg.biggestLiferDay.date,
-			),
-		);
-	}
-	if (agg.biggestDay) {
-		heroes.push(
-			hero(agg.biggestDay.count, t("biggestDay"), agg.biggestDay.date),
-		);
 	}
 	if (heroes.length > 0) {
 		root.append(el("div", { class: "stat-hero-row" }, ...heroes));
