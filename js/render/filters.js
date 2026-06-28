@@ -6,6 +6,7 @@ import {
 	familyName,
 	orderIdxOf,
 	orders,
+	speciesCode,
 } from "../data/taxonomy.js";
 import { getLocale, t } from "../i18n.js";
 import { emit, state, subscribe } from "../state.js";
@@ -136,7 +137,42 @@ function render(root) {
 		}),
 	);
 
-	root.append(seen, orderSel, famSel, rarSel);
+	const shinySel = el(
+		"select",
+		{
+			class: "sel",
+			onchange: (e) => {
+				let shiny = null;
+				if (e.target.value !== "") {
+					shiny = e.target.value;
+				}
+				emit({
+					filters: {
+						...state.filters,
+						shiny,
+					},
+				});
+				onChange?.();
+			},
+		},
+		el("option", { value: "" }, t("shiny")),
+		el(
+			"option",
+			{ value: "shiny", selected: f.shiny === "shiny" },
+			t("shinyOnly"),
+		),
+		el(
+			"option",
+			{ value: "regular", selected: f.shiny === "regular" },
+			t("notShiny"),
+		),
+	);
+
+	root.append(seen, orderSel, famSel, rarSel, shinySel);
+}
+
+function isShiny(i) {
+	return Boolean(state.save.species[speciesCode(i)]?.shiny);
 }
 
 function filterPredicate() {
@@ -172,6 +208,12 @@ function filterPredicate() {
 			f.rarity !== undefined &&
 			RARITY[rarityTier(i)].id !== f.rarity
 		) {
+			return false;
+		}
+		if (f.shiny === "shiny" && !isShiny(i)) {
+			return false;
+		}
+		if (f.shiny === "regular" && isShiny(i)) {
 			return false;
 		}
 		return true;

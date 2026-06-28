@@ -10,7 +10,13 @@ const state = {
 	caughtSet: new Set(),
 	regionSet: ALL_REGIONS,
 
-	filters: { seen: "all", orderIdx: null, familyIdx: null, rarity: null },
+	filters: {
+		seen: "all",
+		orderIdx: null,
+		familyIdx: null,
+		rarity: null,
+		shiny: null,
+	},
 	query: "",
 	visible: [],
 
