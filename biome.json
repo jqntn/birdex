@@ -29,7 +29,7 @@
 			"includes": ["tools/**"],
 			"linter": {
 				"rules": {
-					"correctness": { "noNodejsModules": "off", "noProcessGlobal": "off" },
+					"correctness": { "noNodejsModules": "off" },
 					"performance": { "noAwaitInLoops": "off" },
 					"style": { "noProcessEnv": "off" },
 					"suspicious": { "noConsole": "off" }

@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { binomial, NON_SPECIES, parseCsv } from "../js/csv/ebirdParser.js";
 

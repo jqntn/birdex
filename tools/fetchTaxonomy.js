@@ -1,5 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { parseCsvObjects } from "./lib/csvParse.js";
 import { fetchTaxonomyCsv } from "./lib/ebird.js";

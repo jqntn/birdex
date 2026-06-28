@@ -1,3 +1,4 @@
+import process from "node:process";
 import { computeRarity } from "./computeRarity.js";
 import { buildRegions } from "./fetchRegions.js";
 import { buildTaxonomy } from "./fetchTaxonomy.js";

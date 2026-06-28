@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { deltaUnpack } from "./lib/pack.js";
 import { COUNTRIES } from "./regionCodes.js";

@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { fetchRegionSpecies, sleep } from "./lib/ebird.js";
 import { loadEnv } from "./lib/env.js";
