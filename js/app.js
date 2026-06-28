@@ -213,33 +213,39 @@ function recompute() {
 
 function sortVisible(indices) {
 	const s = state.sort;
-	if (!s || s === "dex") {
-		return indices;
-	}
 	const sp = state.save.species;
-	const arr = indices.slice();
-	if (s === "name") {
-		const loc = state.locale;
-		arr.sort((a, b) => commonName(a, loc).localeCompare(commonName(b, loc)));
-	} else if (s === "rarity") {
-		arr.sort((a, b) => rarityTier(b) - rarityTier(a) || a - b);
-	} else if (s === "count") {
-		const c = (i) => sp[speciesCode(i)]?.totalCount || 0;
-		arr.sort((a, b) => c(b) - c(a) || a - b);
-	} else if (s === "date") {
-		const d = (i) =>
-			sp[speciesCode(i)]?.lastDate || sp[speciesCode(i)]?.date || "";
-		arr.sort((a, b) => {
-			const da = d(a);
-			const db = d(b);
-			if (da === db) {
-				return a - b;
-			}
-			if (db > da) {
-				return 1;
-			}
-			return -1;
-		});
+	let arr = indices;
+	if (s && s !== "dex") {
+		arr = indices.slice();
+		if (s === "name") {
+			const loc = state.locale;
+			arr.sort((a, b) => commonName(a, loc).localeCompare(commonName(b, loc)));
+		} else if (s === "rarity") {
+			arr.sort((a, b) => rarityTier(b) - rarityTier(a) || a - b);
+		} else if (s === "count") {
+			const c = (i) => sp[speciesCode(i)]?.totalCount || 0;
+			arr.sort((a, b) => c(b) - c(a) || a - b);
+		} else if (s === "date") {
+			const d = (i) =>
+				sp[speciesCode(i)]?.lastDate || sp[speciesCode(i)]?.date || "";
+			arr.sort((a, b) => {
+				const da = d(a);
+				const db = d(b);
+				if (da === db) {
+					return a - b;
+				}
+				if (db > da) {
+					return 1;
+				}
+				return -1;
+			});
+		}
+	}
+	if (state.sortDir === "rev") {
+		if (arr === indices) {
+			arr = indices.slice();
+		}
+		arr.reverse();
 	}
 	return arr;
 }

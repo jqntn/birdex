@@ -18,6 +18,7 @@ const state = {
 		shiny: null,
 	},
 	sort: "dex",
+	sortDir: "fwd",
 	query: "",
 	visible: [],
 

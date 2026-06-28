@@ -171,7 +171,7 @@ function render(root) {
 	const sortSel = el(
 		"select",
 		{
-			class: "sel sort-sel",
+			class: "sel",
 			onchange: (e) => {
 				emit({ sort: e.target.value });
 				onChange?.();
@@ -188,7 +188,33 @@ function render(root) {
 		),
 	);
 
-	root.append(seen, orderSel, famSel, rarSel, shinySel, sortSel);
+	let dirArrow = "↓";
+	if (state.sortDir === "rev") {
+		dirArrow = "↑";
+	}
+	const dirBtn = el(
+		"button",
+		{
+			class: "dir-btn",
+			type: "button",
+			title: t("reverse"),
+			"aria-label": t("reverse"),
+			onclick: () => {
+				let next = "rev";
+				if (state.sortDir === "rev") {
+					next = "fwd";
+				}
+				emit({ sortDir: next });
+				render(root);
+				onChange?.();
+			},
+		},
+		dirArrow,
+	);
+
+	const sortWrap = el("div", { class: "sort-wrap" }, sortSel, dirBtn);
+
+	root.append(seen, orderSel, famSel, rarSel, shinySel, sortWrap);
 }
 
 function isShiny(i) {

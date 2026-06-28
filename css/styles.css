@@ -186,6 +186,30 @@ a {
 	background-repeat: no-repeat;
 	background-position: right 11px center;
 }
+.sort-wrap {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	flex: 0 0 auto;
+}
+.sort-wrap .sel {
+	flex: 1 1 auto;
+}
+.dir-btn {
+	height: 34px;
+	width: 34px;
+	flex: 0 0 auto;
+	border-radius: 9px;
+	background-color: var(--surface-2);
+	color: var(--text);
+	border: 1px solid var(--line-solid);
+	font-size: 1rem;
+	display: grid;
+	place-items: center;
+}
+.dir-btn:active {
+	transform: scale(0.92);
+}
 
 .filters {
 	flex: 0 0 auto;
@@ -231,7 +255,7 @@ a {
 		flex: 1 1 0;
 		min-width: 0;
 	}
-	.filters .sort-sel {
+	.filters .sort-wrap {
 		flex: 1 1 100%;
 	}
 }
